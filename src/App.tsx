@@ -413,9 +413,10 @@ export default function App() {
 
       if (pending && newPlayerTimer <= 0) {
         const def: CardDef = CARD_DB[pending.card.id] || CARD_DB.sul;
-        const target = enemies.find((e) => e.uid === pending.target) || enemies.find((e) => e.alive);
+        const pendingTargetUid = pending.target;
+        const target = enemies.find((e) => e.uid === pendingTargetUid) || enemies.find((e) => e.alive);
 
-        if (def.block) playerBlock += def.block + (def.tags.includes('kriz') && (HEROES[prevState.hero]?.krizBonus || 0));
+        if (def.block) playerBlock += def.block + (def.tags.includes('kriz') ? (HEROES[prevState.hero]?.krizBonus || 0) : 0);
         if (def.dodge) playerDodge += def.dodge;
         if (def.fatigue) playerFatigue = Math.max(0, playerFatigue + def.fatigue);
 
