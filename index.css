@@ -1,0 +1,1131 @@
+@import "tailwindcss";
+
+:root {
+  --lada-paper: #f6eedb;
+  --lada-paper-dark: #ebd9b5;
+  --lada-parchment: #fff8e8;
+  --lada-ink: #1c1308;
+  --lada-ink-soft: #4a3420;
+  --lada-red: #c23318;
+  --lada-red-bright: #e63e1e;
+  --lada-blue: #1c4b7d;
+  --lada-blue-light: #72a4d4;
+  --lada-green: #2e6629;
+  --lada-green-light: #84bf60;
+  --lada-ochre: #d69818;
+  --lada-gold: #f4c23c;
+  --lada-wood: #5e3b1c;
+  --lada-wood-dark: #3b2310;
+  --lada-night: #1c2738;
+}
+
+body {
+  font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  background-color: var(--lada-paper);
+  color: var(--lada-ink);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .font-title {
+  font-family: 'Fraunces', Georgia, serif;
+}
+
+/* Lada Storybook Frame & Woodcut styling */
+.lada-card {
+  background: var(--lada-parchment);
+  border: 3.5px solid var(--lada-ink);
+  border-radius: 14px;
+  box-shadow: 4px 5px 0px rgba(28, 19, 8, 0.35);
+  position: relative;
+}
+
+.lada-button {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  border: 3px solid var(--lada-ink);
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fff3c9 0%, #e8bc4a 100%);
+  color: var(--lada-ink);
+  box-shadow: 0 4px 0 var(--lada-ink);
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  letter-spacing: 0.01em;
+}
+
+.lada-button:hover:not(:disabled) {
+  background: linear-gradient(180deg, #fff8d6 0%, #f0ca55 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 0 var(--lada-ink);
+}
+
+.lada-button:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--lada-ink);
+}
+
+.lada-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.2);
+  transform: none;
+  box-shadow: 0 3px 0 var(--lada-ink);
+}
+
+.lada-button-primary {
+  background: linear-gradient(180deg, #ffd95c 0%, #d69415 100%);
+}
+.lada-button-primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #ffe070 0%, #e0a020 100%);
+}
+
+.lada-button-danger {
+  background: linear-gradient(180deg, #f28b72 0%, #c4371d 100%);
+  color: #fff;
+}
+.lada-button-danger:hover:not(:disabled) {
+  background: linear-gradient(180deg, #f59e87 0%, #d64024 100%);
+}
+
+.lada-button-good {
+  background: linear-gradient(180deg, #bfe882 0%, #4f9e30 100%);
+  color: #12300b;
+}
+.lada-button-good:hover:not(:disabled) {
+  background: linear-gradient(180deg, #ccf092 0%, #58ab36 100%);
+}
+
+/* Lada Sprite Animations */
+@keyframes ladaBreathe {
+  0%, 100% {
+    transform: scale(1, 1) translateY(0);
+  }
+  50% {
+    transform: scale(1.025, 0.98) translateY(1.5px);
+  }
+}
+
+@keyframes ladaFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(-1deg);
+  }
+}
+
+@keyframes ladaTailWag {
+  0%, 100% {
+    transform: rotate(-6deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes ladaDrip {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(4px) scale(1);
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(18px) scale(0.9);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.3);
+  }
+}
+
+@keyframes ladaSmoke {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3) rotate(0deg);
+  }
+  25% {
+    opacity: 0.85;
+    transform: translate(3px, -8px) scale(0.8) rotate(10deg);
+  }
+  60% {
+    opacity: 0.65;
+    transform: translate(-4px, -18px) scale(1.15) rotate(-12deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(6px, -30px) scale(1.5) rotate(18deg);
+  }
+}
+
+@keyframes ladaSmokeDriftLeft {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.35) rotate(0deg);
+  }
+  30% {
+    opacity: 0.9;
+    transform: translate(-5px, -10px) scale(0.85) rotate(-12deg);
+  }
+  70% {
+    opacity: 0.6;
+    transform: translate(-12px, -22px) scale(1.2) rotate(14deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-18px, -34px) scale(1.6) rotate(-16deg);
+  }
+}
+
+@keyframes ladaSmokeRing {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4) rotate(-10deg);
+  }
+  20% {
+    opacity: 0.9;
+    transform: translate(4px, -8px) scale(0.8) rotate(5deg);
+  }
+  60% {
+    opacity: 0.7;
+    transform: translate(8px, -20px) scale(1.35) rotate(20deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(12px, -34px) scale(1.8) rotate(35deg);
+  }
+}
+
+@keyframes ladaChimneySmoke {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4) rotate(-5deg);
+  }
+  25% {
+    opacity: 0.85;
+    transform: translate(5px, -12px) scale(0.85) rotate(8deg);
+  }
+  60% {
+    opacity: 0.6;
+    transform: translate(14px, -28px) scale(1.3) rotate(-6deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(24px, -46px) scale(1.75) rotate(12deg);
+  }
+}
+
+@keyframes ladaBubbleRise1 {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.35);
+  }
+  15% {
+    opacity: 0.95;
+    transform: translate(2px, -6px) scale(0.85);
+  }
+  45% {
+    opacity: 0.85;
+    transform: translate(-3px, -16px) scale(1.05);
+  }
+  75% {
+    opacity: 0.7;
+    transform: translate(2.5px, -26px) scale(1.15);
+  }
+  92% {
+    opacity: 0.85;
+    transform: translate(0, -34px) scale(1.35);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0, -36px) scale(1.6);
+  }
+}
+
+@keyframes ladaBubbleRise2 {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3);
+  }
+  20% {
+    opacity: 0.95;
+    transform: translate(-3px, -8px) scale(0.9);
+  }
+  55% {
+    opacity: 0.8;
+    transform: translate(3px, -20px) scale(1.1);
+  }
+  80% {
+    opacity: 0.65;
+    transform: translate(-2px, -32px) scale(1.2);
+  }
+  94% {
+    opacity: 0.85;
+    transform: translate(1px, -38px) scale(1.4);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(1px, -40px) scale(1.7);
+  }
+}
+
+@keyframes ladaBeerFoamFizz {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  30% {
+    transform: translateY(-2px) scale(1.18);
+  }
+  65% {
+    transform: translateY(1px) scale(0.92);
+  }
+}
+
+@keyframes ladaWaterRipple {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.8;
+  }
+  60% {
+    transform: scale(1.15);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+/* Pekelné dudy (Bagpipes) Music Notes Keyframes */
+@keyframes ladaMusicNoteFloat1 {
+  0% {
+    transform: translate(0, 0) scale(0.35) rotate(-16deg);
+    opacity: 0;
+  }
+  18% {
+    transform: translate(8px, -12px) scale(1.25) rotate(14deg);
+    opacity: 1;
+  }
+  48% {
+    transform: translate(18px, -26px) scale(1.05) rotate(-10deg);
+    opacity: 0.95;
+  }
+  78% {
+    transform: translate(28px, -42px) scale(1.15) rotate(16deg);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(36px, -58px) scale(0.6) rotate(-8deg);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaMusicNoteFloat2 {
+  0% {
+    transform: translate(0, 0) scale(0.35) rotate(16deg);
+    opacity: 0;
+  }
+  20% {
+    transform: translate(-8px, -14px) scale(1.3) rotate(-12deg);
+    opacity: 1;
+  }
+  52% {
+    transform: translate(-18px, -30px) scale(1.1) rotate(12deg);
+    opacity: 0.9;
+  }
+  82% {
+    transform: translate(-26px, -46px) scale(1.15) rotate(-8deg);
+    opacity: 0.65;
+  }
+  100% {
+    transform: translate(-34px, -62px) scale(0.6) rotate(10deg);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaMusicNoteFloat3 {
+  0% {
+    transform: translate(0, 0) scale(0.3) rotate(0deg);
+    opacity: 0;
+  }
+  25% {
+    transform: translate(4px, -16px) scale(1.3) rotate(-16deg);
+    opacity: 1;
+  }
+  62% {
+    transform: translate(-6px, -36px) scale(1.15) rotate(18deg);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(6px, -58px) scale(0.55) rotate(-20deg);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaMusicNoteFloat4 {
+  0% {
+    transform: translate(0, 0) scale(0.4) rotate(-8deg);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(-10px, -16px) scale(1.2) rotate(10deg);
+    opacity: 0.95;
+  }
+  70% {
+    transform: translate(-20px, -36px) scale(1.1) rotate(-12deg);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(-28px, -52px) scale(0.6) rotate(6deg);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaBagpipePump {
+  0%, 100% {
+    transform: scale(1, 1);
+  }
+  35% {
+    transform: scale(0.93, 1.06);
+  }
+  70% {
+    transform: scale(1.05, 0.95);
+  }
+}
+
+@keyframes ladaChanterVibrate {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(1.5deg);
+  }
+  75% {
+    transform: rotate(-1.5deg);
+  }
+}
+
+@keyframes ladaFlicker {
+  0%, 100% {
+    transform: scaleY(1) skewX(0deg);
+  }
+  25% {
+    transform: scaleY(1.08) skewX(2deg);
+  }
+  50% {
+    transform: scaleY(0.95) skewX(-2deg);
+  }
+  75% {
+    transform: scaleY(1.05) skewX(1deg);
+  }
+}
+
+@keyframes ladaBlink {
+  0%, 93%, 97%, 100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.08);
+  }
+}
+
+@keyframes ladaVeilWave {
+  0%, 100% {
+    transform: rotate(0deg) skewX(0deg);
+  }
+  50% {
+    transform: rotate(4deg) skewX(3deg);
+  }
+}
+
+@keyframes ladaHitReaction {
+  0% {
+    transform: translateX(0) scale(1);
+    filter: brightness(1);
+  }
+  25% {
+    transform: translateX(-12px) scale(0.96);
+    filter: brightness(1.6) sepia(0.8) hue-rotate(-50deg);
+  }
+  50% {
+    transform: translateX(10px) scale(1.02);
+    filter: brightness(1.3);
+  }
+  75% {
+    transform: translateX(-4px) scale(0.98);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes ladaAttackLunge {
+  0% {
+    transform: translateX(0) scale(1);
+  }
+  30% {
+    transform: translateX(18px) scale(1.05) rotate(-3deg);
+  }
+  60% {
+    transform: translateX(-35px) scale(1.1) rotate(4deg);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes ladaWoundPulse {
+  0% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.anim-lada-breathe {
+  animation: ladaBreathe 2.8s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.anim-lada-float {
+  animation: ladaFloat 3.4s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+.anim-lada-tail {
+  animation: ladaTailWag 1.8s ease-in-out infinite;
+  transform-origin: 44px 88px;
+  transform-box: view-box;
+}
+
+.anim-lada-drip-1 {
+  animation: ladaDrip 2.2s infinite ease-in;
+  transform-box: fill-box;
+  transform-origin: center top;
+}
+.anim-lada-drip-2 {
+  animation: ladaDrip 2.2s infinite ease-in -1.1s;
+  transform-box: fill-box;
+  transform-origin: center top;
+}
+
+/* Multi-puff Smoke Streams */
+.anim-lada-smoke-1 {
+  animation: ladaSmoke 2.6s infinite ease-out 0s;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+.anim-lada-smoke-2 {
+  animation: ladaSmoke 2.6s infinite ease-out -0.85s;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+.anim-lada-smoke-3 {
+  animation: ladaSmoke 2.6s infinite ease-out -1.7s;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+.anim-lada-smoke-left-1 {
+  animation: ladaSmokeDriftLeft 2.8s infinite ease-out 0s;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+.anim-lada-smoke-left-2 {
+  animation: ladaSmokeDriftLeft 2.8s infinite ease-out -1.4s;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+.anim-lada-smoke-ring-1 {
+  animation: ladaSmokeRing 3.2s infinite ease-out 0s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+.anim-lada-smoke-ring-2 {
+  animation: ladaSmokeRing 3.2s infinite ease-out -1.6s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+/* Cottage & Mill Chimney Smoke Plumes */
+.anim-chimney-smoke-1 {
+  animation: ladaChimneySmoke 3.6s infinite ease-out 0s;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+.anim-chimney-smoke-2 {
+  animation: ladaChimneySmoke 3.6s infinite ease-out -1.2s;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+.anim-chimney-smoke-3 {
+  animation: ladaChimneySmoke 3.6s infinite ease-out -2.4s;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+/* Water & Pond Bubbles */
+.anim-lada-bubble-1 {
+  animation: ladaBubbleRise1 2.8s infinite ease-in-out 0s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+.anim-lada-bubble-2 {
+  animation: ladaBubbleRise2 3.1s infinite ease-in-out -0.75s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+.anim-lada-bubble-3 {
+  animation: ladaBubbleRise1 2.9s infinite ease-in-out -1.5s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+.anim-lada-bubble-4 {
+  animation: ladaBubbleRise2 3.3s infinite ease-in-out -2.2s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+/* Tavern Stein Beer Foam Fizz */
+.anim-beer-bubble-1 {
+  animation: ladaBeerFoamFizz 1.8s infinite ease-in-out 0s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+.anim-beer-bubble-2 {
+  animation: ladaBeerFoamFizz 1.9s infinite ease-in-out -0.6s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+.anim-beer-bubble-3 {
+  animation: ladaBeerFoamFizz 2.1s infinite ease-in-out -1.2s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+/* Water Ripples */
+.anim-water-ripple {
+  animation: ladaWaterRipple 2.6s infinite ease-out 0s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+.anim-water-ripple-2 {
+  animation: ladaWaterRipple 2.6s infinite ease-out -1.3s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+/* Pekelné dudy (Bagpipes) Animated Music Notes */
+.anim-music-note-1 {
+  animation: ladaMusicNoteFloat1 2.4s infinite cubic-bezier(0.2, 0.7, 0.4, 1) 0s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+.anim-music-note-2 {
+  animation: ladaMusicNoteFloat2 2.7s infinite cubic-bezier(0.2, 0.7, 0.4, 1) -0.7s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+.anim-music-note-3 {
+  animation: ladaMusicNoteFloat3 2.5s infinite cubic-bezier(0.2, 0.7, 0.4, 1) -1.4s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+.anim-music-note-4 {
+  animation: ladaMusicNoteFloat4 3.0s infinite cubic-bezier(0.2, 0.7, 0.4, 1) -1.0s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+.anim-music-note-1-delay {
+  animation: ladaMusicNoteFloat1 2.4s infinite cubic-bezier(0.2, 0.7, 0.4, 1) -1.2s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+.anim-music-note-2-delay {
+  animation: ladaMusicNoteFloat2 2.7s infinite cubic-bezier(0.2, 0.7, 0.4, 1) -1.8s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+/* Pekelné dudy Bag & Chanter Dynamics */
+.anim-bagpipe-bellows {
+  animation: ladaBagpipePump 1.8s infinite ease-in-out;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+.anim-bagpipe-chanter {
+  animation: ladaChanterVibrate 0.8s infinite ease-in-out;
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+
+.anim-lada-flicker {
+  animation: ladaFlicker 0.9s infinite ease-in-out;
+  transform-origin: bottom center;
+}
+
+.anim-lada-blink {
+  animation: ladaBlink 4.2s infinite;
+  transform-origin: center center;
+}
+
+.anim-lada-veil {
+  animation: ladaVeilWave 3.2s infinite ease-in-out;
+  transform-origin: top left;
+}
+
+/* Hunter-Specific Lada Animation Keyframes */
+@keyframes ladaFeatherSway {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  40% {
+    transform: rotate(7deg) translateY(-1px);
+  }
+  75% {
+    transform: rotate(-3deg);
+  }
+}
+
+@keyframes ladaSwayPouch {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(6deg);
+  }
+  70% {
+    transform: rotate(-5deg);
+  }
+}
+
+@keyframes ladaHerbalSteam {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.35) rotate(0deg);
+  }
+  25% {
+    opacity: 0.85;
+    transform: translate(-3px, -8px) scale(0.85) rotate(-6deg);
+  }
+  65% {
+    opacity: 0.6;
+    transform: translate(4px, -20px) scale(1.3) rotate(8deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-2px, -34px) scale(1.65) rotate(-10deg);
+  }
+}
+
+@keyframes ladaSparkleTwinkle {
+  0%, 100% {
+    opacity: 0.15;
+    transform: scale(0.6) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25) rotate(45deg);
+  }
+}
+
+@keyframes ladaWaterSprinkle {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4);
+  }
+  25% {
+    opacity: 0.95;
+    transform: translate(6px, -5px) scale(1.1);
+  }
+  75% {
+    opacity: 0.7;
+    transform: translate(14px, 3px) scale(0.9);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(20px, 12px) scale(0.35);
+  }
+}
+
+@keyframes ladaPipeGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 1.5px #ff4a1c);
+    fill: #d9431c;
+  }
+  50% {
+    filter: drop-shadow(0 0 4px #ff9e24);
+    fill: #ff851a;
+  }
+}
+
+@keyframes ladaScarfWave {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(5deg) skewX(2deg);
+  }
+}
+
+@keyframes ladaFlowerBob {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-1.5px) rotate(3deg);
+  }
+}
+
+/* Hunter-Specific Animation Utility Classes */
+.anim-feather-sway {
+  animation: ladaFeatherSway 2.8s infinite ease-in-out;
+  transform-box: fill-box;
+  transform-origin: bottom left;
+}
+
+.anim-pouch-sway {
+  animation: ladaSwayPouch 3.2s infinite ease-in-out;
+  transform-box: fill-box;
+  transform-origin: top center;
+}
+
+.anim-herbal-steam-1 {
+  animation: ladaHerbalSteam 2.6s infinite ease-out 0s;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.anim-herbal-steam-2 {
+  animation: ladaHerbalSteam 2.6s infinite ease-out -1.3s;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.anim-sparkle-twinkle {
+  animation: ladaSparkleTwinkle 2.0s infinite ease-in-out;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+.anim-water-sprinkle-1 {
+  animation: ladaWaterSprinkle 2.2s infinite ease-out 0s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+.anim-water-sprinkle-2 {
+  animation: ladaWaterSprinkle 2.2s infinite ease-out -1.1s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+.anim-pipe-glow {
+  animation: ladaPipeGlow 2.2s infinite ease-in-out;
+}
+
+.anim-scarf-wave {
+  animation: ladaScarfWave 3s infinite ease-in-out;
+  transform-box: fill-box;
+  transform-origin: top center;
+}
+
+.anim-flower-bob {
+  animation: ladaFlowerBob 2.4s infinite ease-in-out;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.anim-hit {
+  animation: ladaHitReaction 0.45s ease-out;
+}
+
+.anim-attack {
+  animation: ladaAttackLunge 0.5s ease-in-out;
+}
+
+@keyframes comicPopIn {
+  0% { transform: scale(0.3) rotate(-8deg); opacity: 0; }
+  60% { transform: scale(1.15) rotate(4deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes pipeSmokeRise {
+  0% { transform: translateY(0) scale(0.6); opacity: 0.8; }
+  50% { transform: translateY(-14px) translateX(4px) scale(1.1); opacity: 0.6; }
+  100% { transform: translateY(-28px) translateX(-2px) scale(1.4); opacity: 0; }
+}
+
+.anim-comic-pop {
+  animation: comicPopIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.anim-pipe-smoke {
+  animation: pipeSmokeRise 1.8s infinite ease-out;
+}
+
+/* =========================================================================
+ * ENEMY SPRITE ANIMATIONS & PLAYFUL SCREEN JUICE
+ * ========================================================================= */
+
+@keyframes ladaWingFlapLeft {
+  0%, 100% {
+    transform: rotate(0deg) scaleX(1);
+  }
+  50% {
+    transform: rotate(-14deg) scaleX(0.92);
+  }
+}
+
+@keyframes ladaWingFlapRight {
+  0%, 100% {
+    transform: rotate(0deg) scaleX(1);
+  }
+  50% {
+    transform: rotate(14deg) scaleX(0.92);
+  }
+}
+
+@keyframes ladaSpiderLegLeft {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-6deg);
+  }
+}
+
+@keyframes ladaSpiderLegRight {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(6deg);
+  }
+}
+
+@keyframes ladaSwaySlow {
+  0%, 100% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes ladaBellSwing {
+  0%, 100% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes ladaWeaponSway {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-4deg);
+  }
+}
+
+@keyframes ladaSparkRise1 {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4);
+  }
+  25% {
+    opacity: 1;
+    transform: translate(4px, -8px) scale(1);
+  }
+  75% {
+    opacity: 0.8;
+    transform: translate(-3px, -18px) scale(0.9);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(2px, -28px) scale(0.3);
+  }
+}
+
+@keyframes ladaSparkRise2 {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4);
+  }
+  30% {
+    opacity: 1;
+    transform: translate(-4px, -10px) scale(1.1);
+  }
+  70% {
+    opacity: 0.7;
+    transform: translate(3px, -20px) scale(0.85);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-2px, -30px) scale(0.3);
+  }
+}
+
+@keyframes ladaEyePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+}
+
+@keyframes ladaEarTwitch {
+  0%, 90%, 100% {
+    transform: rotate(0deg);
+  }
+  93% {
+    transform: rotate(-7deg);
+  }
+  96% {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes ladaStrawTwitch {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(4deg) translateY(-0.5px);
+  }
+}
+
+.anim-wing-flap-left {
+  animation: ladaWingFlapLeft 1.4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: right center;
+}
+
+.anim-wing-flap-right {
+  animation: ladaWingFlapRight 1.4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+
+.anim-spider-leg-left-1 {
+  animation: ladaSpiderLegLeft 1.2s ease-in-out infinite 0s;
+  transform-box: fill-box;
+  transform-origin: right top;
+}
+
+.anim-spider-leg-left-2 {
+  animation: ladaSpiderLegLeft 1.2s ease-in-out infinite -0.6s;
+  transform-box: fill-box;
+  transform-origin: right top;
+}
+
+.anim-spider-leg-right-1 {
+  animation: ladaSpiderLegRight 1.2s ease-in-out infinite -0.3s;
+  transform-box: fill-box;
+  transform-origin: left top;
+}
+
+.anim-spider-leg-right-2 {
+  animation: ladaSpiderLegRight 1.2s ease-in-out infinite -0.9s;
+  transform-box: fill-box;
+  transform-origin: left top;
+}
+
+.anim-sway-slow {
+  animation: ladaSwaySlow 3.2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: top center;
+}
+
+.anim-bell-swing {
+  animation: ladaBellSwing 1.8s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: top center;
+}
+
+.anim-weapon-sway {
+  animation: ladaWeaponSway 2.6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+.anim-spark-1 {
+  animation: ladaSparkRise1 2.2s infinite ease-out 0s;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.anim-spark-2 {
+  animation: ladaSparkRise2 2.5s infinite ease-out -1.2s;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.anim-eye-pulse {
+  animation: ladaEyePulse 2.8s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+.anim-ear-twitch {
+  animation: ladaEarTwitch 3.8s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+.anim-straw-twitch {
+  animation: ladaStrawTwitch 2.2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+/* Storybook paper texture */
+.bg-parchment-pattern {
+  background-color: #f7eedb;
+  background-image: 
+    radial-gradient(#1c1308 0.75px, transparent 0.75px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(220, 195, 140, 0.45) 100%);
+  background-size: 24px 24px, 100% 100%;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #ecdcb9;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: #a9804b;
+  border: 2px solid #1c1308;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #845e31;
+}
