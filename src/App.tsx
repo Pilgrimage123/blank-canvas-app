@@ -431,8 +431,9 @@ export default function App() {
         }
 
         if (def.stiffen) {
-          newPlayerTimer += def.stiffen;
-          enemies = enemies.map((e) => (e.alive ? { ...e, timer: e.timer + def.stiffen } : e));
+          const stiffenAmount = def.stiffen;
+          newPlayerTimer += stiffenAmount;
+          enemies = enemies.map((e) => (e.alive ? { ...e, timer: e.timer + stiffenAmount } : e));
           logs = addLog(`${def.name} zamořil vzduch: běžící odpočty se prodloužily o +${def.stiffen} Aug!`, logs);
         }
 
