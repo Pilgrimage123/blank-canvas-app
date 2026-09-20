@@ -1,0 +1,6 @@
+{
+  "name": "Lovec bubáků",
+  "description": "Venkovské karetní vymítání v nezaměnitelném stylu Josefa Lady s animovanými bubáky a českým folklórem.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
