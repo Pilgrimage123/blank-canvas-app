@@ -95,6 +95,7 @@ export interface EnemyInstance {
   variantIndex?: number;
   hp: number;
   maxHp: number;
+  rewardGiven?: boolean;
   dmg: number;
   interval: number;
   ready: number;
