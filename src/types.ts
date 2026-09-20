@@ -81,7 +81,7 @@ export interface EnemyTemplate {
   ready: number;
   odolnost?: number;
   shift?: number;
-  variants?: EnemyVariantDef[];
+  variants: EnemyVariantDef[];
 }
 
 export interface EnemyInstance {
