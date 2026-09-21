@@ -654,6 +654,24 @@ function getMemberLore(familyId: string, vidx: number, name: string): string {
       'Pracovitý havířský permoník s dlouhou špičatou meruňkovou čapkou, zrzavým knírem a oboustranným kovaným krumpáčem v poctivé havířské zástěře (flekli).',
       'Zkušený skalní permoník s dlouhou špičatou šalvějovou čapkou, bělostným vousem po pás, těžkým skalním krumpáčem a mosazným kahancem, bafající z fajfky.',
       'Velebný starohorský důlní mistr s dlouhou špičatou levandulovou čapkou se zlatým lemem, zapleteným stříbrným vousem a mistrovským vyřezávaným krumpáčem z černého dubu.'
+    ],
+    kmotra_liska: [
+      'Zvědavá lištička v modrém šátku teprve zkouší, jestli se pocestný nechá přelstít na první dobrou.',
+      'Kmotřička ve žlutém šátku si nasazuje kulaté brýle, aby jí neušel ani jediný lesklý krejcar.',
+      'Kmotra v červeném šátku zná každou pěšinku, slepičí vrátka i nejlepší výmluvu v celých Hrusicích.',
+      'Stará kmotra s fialovým šátkem a zlatými brýlemi vede lesní poradu tak obratně, že se nakonec omluví i hajný.'
+    ],
+    cert_elegan: [
+      'Čert voják drží rovný krok, leští si mosazný knoflík a na povel zvedá ocásek jako šavli.',
+      'Čert myslivec nosí zelený klobouk s pírkem a tvrdí, že pekelné stopy pozná i ve sněhu.',
+      'Čert džentlmen má motýlek, vycházkovou hůl a tak uhlazené rohy, že se v nich zrcadlí hospodská světla.',
+      'Čert hrabě přichází ve vínovém kabátě se zlatou korunkou a každou lumpárnu vyhlašuje jako dvorský dekret.'
+    ],
+    lotr_intelektual: [
+      'Lupičský čtenář si schovává slabikář za kabátem a při přepadení se občas zarazí u zvlášť pěkného slova.',
+      'Studovaný lapka si kreslí mapy, podtrhává důležité stezky a kořist zapisuje do pečlivě vedeného sešitu.',
+      'Lotr intelektuál nosí kulaté brýle a červenou knihu; místo výhrůžek přednáší pocestným dlouhé učené otázky.',
+      'Loupežnický učenec ovládá knihy, plány i řečnické finty, ale pořád zakopává o vlastní bambitku.'
     ]
   };
 

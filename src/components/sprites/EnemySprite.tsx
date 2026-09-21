@@ -7,6 +7,7 @@ import { renderLadaRobberSprite } from './LadaRobberSprites';
 import { renderLadaSpookySprite } from './LadaSpookySprites';
 import { renderLadaFolkloreNewSprite } from './LadaFolkloreNewSprites';
 import { renderLadaPermonikSprite } from './LadaPermonikSprites';
+import { renderLadaNewFamilySprite } from './LadaNewFamilySprites';
 
 export interface EnemySpriteProps {
   type: EnemyTypeId | string;
@@ -94,6 +95,9 @@ export const EnemySprite: React.FC<EnemySpriteProps> = ({
       if (vn.includes('rarach') || vn.includes('poletuch')) return 'letajici_rarach';
       if (vn.includes('rusalk') || vn.includes('rusalenk') || vn.includes('leknínových vod')) return 'rusalka';
       if (vn.includes('permoník') || vn.includes('permonik') || vn.includes('permoníček') || vn.includes('havířský') || vn.includes('důlní mistr')) return 'permonik';
+      if (vn.includes('lištičk') || vn.includes('kmotra') || vn.includes('kmotřičk')) return 'kmotra_liska';
+      if (vn.includes('čert voják') || vn.includes('čert myslivec') || vn.includes('čert džentlmen') || vn.includes('čert hrabě')) return 'cert_elegan';
+      if (vn.includes('lotr') || vn.includes('studovaný lapka') || vn.includes('lupičský čtenář') || vn.includes('loupežnický učenec')) return 'lotr_intelektual';
       if (vn.includes('bubák') || vn.includes('bubak')) return 'bubak';
     }
     return t;
@@ -148,6 +152,9 @@ export const EnemySprite: React.FC<EnemySpriteProps> = ({
     resolvedType === 'letajici_rarach' ||
     resolvedType === 'lesni_muz' ||
     resolvedType === 'rusalka' ||
+    resolvedType === 'kmotra_liska' ||
+    resolvedType === 'cert_elegan' ||
+    resolvedType === 'lotr_intelektual' ||
     isPermonikFamily;
 
   const getMotionClass = () => {
@@ -194,6 +201,10 @@ function renderEnemySvg(type: string, stage: number = 2, variantName?: string): 
   }
   if (type === "loupeznik" || type === "lupic") {
     return renderLadaRobberSprite(type, stage);
+  }
+  const newFamily = renderLadaNewFamilySprite(type, stage);
+  if (newFamily) {
+    return newFamily;
   }
   const newFolklore = renderLadaFolkloreNewSprite(type, stage);
   if (newFolklore) {

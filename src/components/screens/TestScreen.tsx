@@ -272,6 +272,15 @@ export const TestScreen: React.FC<TestScreenProps> = ({
               <span>⛏️</span>
               <span>Permoníci (4)</span>
             </button>
+            <button
+              type="button"
+              onClick={() => onStartPresetFight(-6, selectedHero, selectedLoc)}
+              className="bg-[#f6e3cf] hover:bg-[#eed0b2] text-[#1c1308] border border-[#1c1308] text-xs font-black px-2.5 py-1 rounded-xl shadow-xs cursor-pointer transition-transform active:scale-95 flex items-center gap-1"
+              title="Vyzkoušet nové rodiny: Kmotra liška, Čert elegán a Lotr intelektuál"
+            >
+              <span>🦊</span>
+              <span>Nové rodiny (3)</span>
+            </button>
           </div>
 
           {onOpenBestiary && (
