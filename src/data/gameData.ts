@@ -693,6 +693,72 @@ export const ENEMY_DB: EnemyTemplate[] = [
       { level: 11, hp: 24, dmg: 6, name: 'Skalní permoník s kahancem' },
       { level: 15, hp: 34, dmg: 9, name: 'Starohorský důlní mistr' }
     ]
+  },
+  {
+    id: 'kmotra_liska',
+    name: 'Kmotra liška',
+    type: 'kmotra_liska',
+    loc: ['les', 'vesnice', 'mlyn'],
+    band: [2, 14],
+    traits: ['uskok', 'stedry'],
+    roles: ['podpora', 'delostrelba'],
+    pool: ['vabnicka', 'ukryt', 'vtipek', 'odveta', 'uder'],
+    hp: 20,
+    dmg: 5,
+    interval: 5,
+    ready: 30,
+    odolnost: 36,
+    shift: 0,
+    variants: [
+      { level: 2, hp: 5, dmg: 2, name: 'Lištička s modrým šátkem' },
+      { level: 6, hp: 12, dmg: 3, name: 'Kmotřička se žlutým šátkem a brýlemi' },
+      { level: 10, hp: 20, dmg: 5, name: 'Kmotra liška s červeným šátkem' },
+      { level: 14, hp: 29, dmg: 7, name: 'Stará kmotra s fialovým šátkem a zlatými brýlemi' }
+    ]
+  },
+  {
+    id: 'cert_elegan',
+    name: 'Čert elegán',
+    type: 'cert_elegan',
+    loc: ['vesnice', 'zricenina', 'boss'],
+    band: [4, 16],
+    traits: ['svatokrad', 'stedry'],
+    roles: ['linie', 'podpora'],
+    pool: ['uder', 'odveta', 'zlovest', 'vabnicka', 'bafnuti_z_dymky'],
+    hp: 32,
+    dmg: 8,
+    interval: 6,
+    ready: 27,
+    odolnost: 48,
+    shift: 2,
+    variants: [
+      { level: 4, hp: 10, dmg: 3, name: 'Čert voják' },
+      { level: 8, hp: 21, dmg: 5, name: 'Čert myslivec' },
+      { level: 12, hp: 32, dmg: 8, name: 'Čert džentlmen' },
+      { level: 16, hp: 44, dmg: 11, name: 'Čert hrabě' }
+    ]
+  },
+  {
+    id: 'lotr_intelektual',
+    name: 'Lotr intelektuál',
+    type: 'lotr_intelektual',
+    loc: ['les', 'mlyn', 'zricenina'],
+    band: [3, 15],
+    traits: ['uskok', 'skoupy'],
+    roles: ['podpora', 'delostrelba'],
+    pool: ['zatuhnuti', 'vabnicka', 'ukryt', 'vtipek', 'uder'],
+    hp: 23,
+    dmg: 6,
+    interval: 5,
+    ready: 29,
+    odolnost: 40,
+    shift: 1,
+    variants: [
+      { level: 3, hp: 7, dmg: 2, name: 'Lupičský čtenář' },
+      { level: 7, hp: 15, dmg: 4, name: 'Studovaný lapka' },
+      { level: 11, hp: 23, dmg: 6, name: 'Lotr intelektuál' },
+      { level: 15, hp: 33, dmg: 9, name: 'Loupežnický učenec' }
+    ]
   }
 ];
 

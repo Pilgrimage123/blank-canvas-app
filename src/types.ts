@@ -41,7 +41,10 @@ export type EnemyTypeId =
   | 'letajici_rarach'
   | 'lesni_muz'
   | 'rusalka'
-  | 'permonik';
+  | 'permonik'
+  | 'kmotra_liska'
+  | 'cert_elegan'
+  | 'lotr_intelektual';
 
 export type EnemyRole = 'linie' | 'podpora' | 'delostrelba';
 

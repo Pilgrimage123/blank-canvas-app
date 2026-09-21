@@ -1399,6 +1399,17 @@ export default function App() {
       const e3 = instantiateEnemyVariant(permonikTpl, permonikTpl.variants[3], 'delostrelba', locDef, options, {}, heroDef.ready);
       e3.row = 'back';
       enemies = [e0, e1, e2, e3];
+    } else if (count === -6) {
+      const foxTpl = ENEMY_DB.find((e) => e.id === 'kmotra_liska') || ENEMY_DB[0];
+      const devilTpl = ENEMY_DB.find((e) => e.id === 'cert_elegan') || ENEMY_DB[0];
+      const scholarTpl = ENEMY_DB.find((e) => e.id === 'lotr_intelektual') || ENEMY_DB[0];
+      const fox = instantiateEnemyVariant(foxTpl, foxTpl.variants[2], 'podpora', locDef, options, {}, heroDef.ready);
+      fox.row = 'back';
+      const devil = instantiateEnemyVariant(devilTpl, devilTpl.variants[2], 'linie', locDef, options, {}, heroDef.ready);
+      devil.row = 'front';
+      const scholar = instantiateEnemyVariant(scholarTpl, scholarTpl.variants[2], 'delostrelba', locDef, options, {}, heroDef.ready);
+      scholar.row = 'back';
+      enemies = [devil, fox, scholar];
     } else {
       const allEight = createTestEightEnemies(options, heroDef.ready, locId);
       enemies = allEight.slice(0, count);
