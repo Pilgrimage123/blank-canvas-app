@@ -1,6 +1,6 @@
-import React from 'react';
-import { EnemySprite } from '../sprites/EnemySprite';
-import { HunterSprite } from '../sprites/HunterSprite';
+import React from "react";
+import { EnemySprite } from "../sprites/EnemySprite";
+import { HunterSprite } from "../sprites/HunterSprite";
 
 interface SplashScreenProps {
   onPlay: () => void;
@@ -69,8 +69,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onPlay, onOptions })
 
         {/* Narrative introduction */}
         <p className="text-sm sm:text-base font-semibold text-[#3b2a1a] max-w-md mb-6 leading-relaxed">
-          Venkovský slánkař, křížek po dědovi a čerstvý bylinkový odvar.
-          Zdejší bubáci, čerti a vodníci nejsou krvelační netvoři — jsou mrzutí, zlomyslní a je třeba je řádně posolit!
+          Venkovský slánkař, křížek po dědovi a čerstvý bylinkový odvar. Zdejší bubáci, čerti a
+          vodníci nejsou krvelační netvoři — jsou mrzutí, zlomyslní a je třeba je řádně posolit!
         </p>
 
         {/* Action Buttons */}

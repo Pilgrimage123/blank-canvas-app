@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { EnemySprite } from '../sprites/EnemySprite';
+import React, { useState } from "react";
+import { EnemySprite } from "../sprites/EnemySprite";
 
 interface ChangelogModalProps {
   onClose: () => void;
@@ -20,256 +20,314 @@ interface VersionEntry {
   flavorAuthor: string;
 }
 
+// POVINNÉ PRAVIDLO PRO VÝVOJ:
+// Všechny změny musí být zapsány do tohoto changelogu.
+// Záznamy v changelogu se mají dělat o něco méně detailní než doposud (stručnější, výstižné body zaměřené na podstatu).
 const CHANGELOG_DATA: VersionEntry[] = [
   {
-    version: 'v0.5.0',
-    tag: 'Aktuální verze',
-    date: '20. září',
-    title: '9 nových rodin bytostí Josefa Lady (Úrovně 1, 2 a 3)',
-    badge: 'Obří rozšíření',
-    flavorQuote: '„V lesích, skalách, rybnících i štolách se to jen hemží novými tvory: od skřehotavých ropuch a ohnivých kohoutů přes modravé jeskyňky a divoženky až po leknínové rusalky a důlní permoníky!“',
-    flavorAuthor: 'kronikář hrusických polesí',
+    version: "v0.5.2",
+    tag: "Aktuální verze",
+    date: "21. září",
+    title: "Úprava zásad changelogu (stručnější záznamy)",
+    badge: "Pravidla projektu",
+    flavorQuote:
+      "„Méně rozvláčného psaní, více pohádkového hraní! V hrusické kronice odteď zapisujeme změny stručně a k věci.“",
+    flavorAuthor: "pan rychtář z Bubákova",
     highlights: [
       {
-        category: 'Nové rodiny 1. úrovně',
-        icon: '🐸',
+        category: "Zásady zápisu novinek",
+        icon: "📜",
         items: [
-          'Ropucha: Bradavičnatá tůňová ropucha (od ropušky s pulčím ocáskem až po královnu blátivých ropuch se zlatou leknínovou korunkou).',
-          'Ohnivý kohout: Jiskřivý a plamenný kohout vysedávající na doškových střechách stodol.',
-          'Černý pes (Barghest): Tajemný černý pes s planoucíma ohnivýma očima, kovaným obojkem a hvozdovou barghestovskou aurou.'
-        ]
+          "Stručnější záznamy: Všechny budoucí záznamy v changelogu se formulují o něco méně detailně než dosud.",
+          "Aktualizace systémových pravidel: Požadavek na méně detailní záznamy byl zapsán do systémových pravidel projektu (AGENTS.md, GEMINI.md, README.md) i do hlavičky této kroniky.",
+        ],
       },
-      {
-        category: 'Nové rodiny 2. úrovně',
-        icon: '🧚',
-        items: [
-          'Divoženka: Lesní žínka s mechovým lýkem a věnečkem z lesních jahod a jeřabin.',
-          'Jeskyňka: Půvabná skalní elfka s modrou pletí, špičatýma ušima, krystalovou korunkou a křemenným nožem („Jen dva prstíčky strčíme...“).',
-          'Létající rarach: Poletující pekelný rarach s netopýřími křídly, rohy, špičatým ocáskem a jiskřivými vidličkami.',
-          'Lesní muž: Mohutný ochránce hvozdu obrostlý mechem a borůvčím, s březovým kyjem a choroši na uších.'
-        ]
-      },
-      {
-        category: 'Nové rodiny 3. úrovně',
-        icon: '🌊',
-        items: [
-          'Rusalka: Půvabná vodní víla se zelenými vlásky, vodním závojem a leknínovou korunkou u mlýnských jezů.',
-          'Permoník: Podzemní havířský skřítek s kahancem, stříbrným kladívkem a dýmčičkou plnou voňavého tabáku.'
-        ]
-      },
-      {
-        category: 'Zkušebna & Testovací sestavy',
-        icon: '🧪',
-        items: [
-          'Okamžité testování: Ve Zkušebně jsou k dispozici rychlé testovací střety pro novou 1. úroveň (3 bubáci), 2. úroveň (4 bubáci) i 3. úroveň (2 bubáci).',
-          'Pohádkový Bestiář: Všechny nové rodiny a jejich 4 vývojová stádia jsou kompletně zapsány v Bestiáři včetně autentického ladovského popisu.'
-        ]
-      }
-    ]
+    ],
   },
   {
-    version: 'v0.4.0',
-    tag: 'Předchozí verze',
-    date: '18. září',
-    title: 'Autentičtí Ladovští čerti & velikostní odlišení stádií (12 %)',
-    badge: 'Velká aktualizace',
-    flavorQuote: '„V pekle i v hospodě platí pořádek: mladý rarášek se sotva vyhrabe z komína, kdežto hospodský čert s tuplákem piva a rohatý kníže budí náležitý respekt!“',
-    flavorAuthor: 'hospodský z Hrusic',
+    version: "v0.5.1",
+    tag: "Předchozí verze",
+    date: "21. září",
+    title: "Vylepšení rodiny Čerta elegána & ladovské proporce",
+    badge: "Vizuální péče",
+    flavorQuote:
+      "„Čert elegán si v salónu nepotrpí na poletující kousky, ale na řádně utažený jezdecký karabáč v ruce a způsoby hodné hrusického panstva!“",
+    flavorAuthor: "zápis z hrusické zámecké kanceláře",
     highlights: [
       {
-        category: 'Nové vlastní sprity rodiny čertů',
-        icon: '🔥',
+        category: "Oprava spritů Čerta hraběte (Stádium 4)",
+        icon: "🎩",
         items: [
-          '8 unikátních Ladovských ilustrací: Všechna 4 stádia obou pekelných větví (Rarášek z pece i Hospodský čert) mají zbrusu nové, na míru kreslené vektorové sprity věrně odrážející ilustrace Josefa Lady.',
-          'Větev Rarášek: Churavý rarášek se zavázaným růžkem a teplou šálou, Vyhublý rarášek s mašlí na ocase, vyplazeným jazykem a březovou metlou, klasický Rarášek v červené vestičce s dýmkou, a Pekelný rarášek s planoucími rohy a kovanými vidlemi.',
-          'Větev Hospodský čert: Šenkýřský čertík v kostkované zástěrce, Karbanický čert s mariáškami a esem za uchem, Hospodský čert s tuplákem piva a zlatým řetízkem, a mocný Rohatý kníže se zlatou korunou a Černou knihou hříchů.'
-        ]
+          "Odstranění létajícího biče: Kompletní vymazání problematické rotující animace, která způsobovala odtržení biče a jeho poletování v prostoru mimo tělo.",
+          "Bič pevně v ruce a před tělem: Jezdecký karabáč je zřetelně ukotven v čertovské pěsti se zlatým pečetním prstenem a zaručeně vykreslen v popředí před černým kabátcem i pláštěm.",
+          "Vysoký kontrast a ladovská kresba: Karabáč má světlý podkladový lem pro dokonalou čitelnost proti tmavému oděvu, sytý inkoustový obrys, teplou koňakovou kůži, červeno-zlaté křížové pletení a kožené šlehátko na konci.",
+        ],
       },
       {
-        category: 'Velikostní odlišení bubáků (12 % za stádium)',
-        icon: '📏',
+        category: "Sjednocení velikosti rodiny Čerta elegána",
+        icon: "📏",
         items: [
-          'Vizuální růst bubáků: Všechna 4 stádia každého bubáka jsou nyní velikostně odstupňována přesně o 12 % za každé stádium.',
-          'Matematická škála: Stádium 1 (mláďata a neduživí) má 76 % základní velikosti, Stádium 2 má 88 %, Stádium 3 tvoří základ (100 %) a mocné Stádium 4 má 112 % velikosti.',
-          'Přehledné ukazatele: Velikostní poměr je přehledně vyznačen v Bestiáři, v detailním okně bubáka i v živém souboji.'
-        ]
-      }
-    ]
+          "Stejná velikost všech 4 členů: Všichni členové rodiny (Čert voják, Čert myslivec, Čert džentlmen i Čert hrabě) mají nyní přesně identické rozměry.",
+          "Běžná lidská velikost (Lovec): Velikost celé rodiny byla normalizována na 115 × 124 px, což přesně odpovídá spritu Lovce (běžný lidský vzrůst).",
+          "Vypnutí stadiálního škálování: Pro rodinu Čerta elegána bylo deaktivováno 12% zvětšování za stádium (stageScale = 1.0), takže žádný člen nepůsobí ani jako trpaslík, ani jako přerostlý kolos.",
+        ],
+      },
+    ],
   },
   {
-    version: 'v0.3.7',
-    tag: 'Předchozí verze',
-    date: '17. září',
-    title: 'Oprava náběhu souboje & plynulý přechod na tah lovce',
-    badge: 'Oprava',
-    flavorQuote: '„Jakmile bubák vyskočí a bouchne do stolu, lovec nečeká ani Augenblick a hned tasí karty!“',
-    flavorAuthor: 'hrusický kronikář',
+    version: "v0.5.0",
+    tag: "Předchozí verze",
+    date: "20. září",
+    title: "9 nových rodin bytostí Josefa Lady (Úrovně 1, 2 a 3)",
+    badge: "Obří rozšíření",
+    flavorQuote:
+      "„V lesích, skalách, rybnících i štolách se to jen hemží novými tvory: od skřehotavých ropuch a ohnivých kohoutů přes modravé jeskyňky a divoženky až po leknínové rusalky a důlní permoníky!“",
+    flavorAuthor: "kronikář hrusických polesí",
     highlights: [
       {
-        category: 'Plynulost začátku souboje',
-        icon: '⚔️',
+        category: "Nové rodiny 1. úrovně",
+        icon: "🐸",
         items: [
-          'Okamžité uvolnění tahu po akci bubáků: Pokud měli bubáci vyšší Připravenost a provedli úvodní výpad, zpoždění lovce se okamžitě dokončí a karty i akce se ihned odemknou k reakci.',
-          'Odstranění záseku časovače: Časová smyčka souboje byla stabilizována a spolehlivě odpočítává i při rychlých událostech a animacích.',
-          'Svižný 3× náběh: Prázdné Augenblicky před prvním zásahem probíhají plynule trojnásobnou rychlostí (300 ms/Aug) a při úderu se čas přirozeně zpomalí na zobrazení animace a textu.'
-        ]
-      }
-    ]
+          "Ropucha: Bradavičnatá tůňová ropucha (od ropušky s pulčím ocáskem až po královnu blátivých ropuch se zlatou leknínovou korunkou).",
+          "Ohnivý kohout: Jiskřivý a plamenný kohout vysedávající na doškových střechách stodol.",
+          "Černý pes (Barghest): Tajemný černý pes s planoucíma ohnivýma očima, kovaným obojkem a hvozdovou barghestovskou aurou.",
+        ],
+      },
+      {
+        category: "Nové rodiny 2. úrovně",
+        icon: "🧚",
+        items: [
+          "Divoženka: Lesní žínka s mechovým lýkem a věnečkem z lesních jahod a jeřabin.",
+          "Jeskyňka: Půvabná skalní elfka s modrou pletí, špičatýma ušima, krystalovou korunkou a křemenným nožem („Jen dva prstíčky strčíme...“).",
+          "Létající rarach: Poletující pekelný rarach s netopýřími křídly, rohy, špičatým ocáskem a jiskřivými vidličkami.",
+          "Lesní muž: Mohutný ochránce hvozdu obrostlý mechem a borůvčím, s březovým kyjem a choroši na uších.",
+        ],
+      },
+      {
+        category: "Nové rodiny 3. úrovně",
+        icon: "🌊",
+        items: [
+          "Rusalka: Půvabná vodní víla se zelenými vlásky, vodním závojem a leknínovou korunkou u mlýnských jezů.",
+          "Permoník: Podzemní havířský skřítek s kahancem, stříbrným kladívkem a dýmčičkou plnou voňavého tabáku.",
+        ],
+      },
+      {
+        category: "Zkušebna & Testovací sestavy",
+        icon: "🧪",
+        items: [
+          "Okamžité testování: Ve Zkušebně jsou k dispozici rychlé testovací střety pro novou 1. úroveň (3 bubáci), 2. úroveň (4 bubáci) i 3. úroveň (2 bubáci).",
+          "Pohádkový Bestiář: Všechny nové rodiny a jejich 4 vývojová stádia jsou kompletně zapsány v Bestiáři včetně autentického ladovského popisu.",
+        ],
+      },
+    ],
   },
   {
-    version: 'v0.3.6',
-    tag: 'Předchozí verze',
-    date: '17. září',
-    title: 'Sjednocení Připravenosti & 3× zrychlený rozběh',
-    badge: 'Novinka',
-    flavorQuote: '„Kdo dřív přijde, ten dřív mele — a kostelník s kropáčem je u bubáků vždycky o krok napřed!“',
-    flavorAuthor: 'kostelník z Hrusic',
+    version: "v0.4.0",
+    tag: "Předchozí verze",
+    date: "18. září",
+    title: "Autentičtí Ladovští čerti & velikostní odlišení stádií (12 %)",
+    badge: "Velká aktualizace",
+    flavorQuote:
+      "„V pekle i v hospodě platí pořádek: mladý rarášek se sotva vyhrabe z komína, kdežto hospodský čert s tuplákem piva a rohatý kníže budí náležitý respekt!“",
+    flavorAuthor: "hospodský z Hrusic",
     highlights: [
       {
-        category: 'Taktická rovnováha & iniciativa',
-        icon: '⚡',
+        category: "Nové vlastní sprity rodiny čertů",
+        icon: "🔥",
         items: [
-          'Otočení škály Připravenosti: Vyšší hodnota nyní intuitivně znamená dřívější akci (Kostelník 28, Pobuda 25, Bylinkářka 22).',
-          'Jednotné zpoždění před bojem: Hrdinové i bubáci mají nástupní zpoždění (50 − Připravenost) Aug.',
-          'Předstih Kostelníka: Kostelník (28) nastupuje již za 22 Aug, Pobuda (25) za 25 Aug a rozvážná Bylinkářka (22) za 28 Aug.'
-        ]
+          "8 unikátních Ladovských ilustrací: Všechna 4 stádia obou pekelných větví (Rarášek z pece i Hospodský čert) mají zbrusu nové, na míru kreslené vektorové sprity věrně odrážející ilustrace Josefa Lady.",
+          "Větev Rarášek: Churavý rarášek se zavázaným růžkem a teplou šálou, Vyhublý rarášek s mašlí na ocase, vyplazeným jazykem a březovou metlou, klasický Rarášek v červené vestičce s dýmkou, a Pekelný rarášek s planoucími rohy a kovanými vidlemi.",
+          "Větev Hospodský čert: Šenkýřský čertík v kostkované zástěrce, Karbanický čert s mariáškami a esem za uchem, Hospodský čert s tuplákem piva a zlatým řetízkem, a mocný Rohatý kníže se zlatou korunou a Černou knihou hříchů.",
+        ],
       },
       {
-        category: 'Rychlost & dynamika souboje',
-        icon: '⏩',
+        category: "Velikostní odlišení bubáků (12 % za stádium)",
+        icon: "📏",
         items: [
-          '3× zrychlený rozběh: Dokud nikdo nejedná (čeká se na první úder či nápřah), čas běží trojnásobnou rychlostí (300 ms na Aug).',
-          'Vizuální indikátor v záhlaví: Zelený pulzující štítek „⚡ 3× zrychlený rozběh“ jasně informuje o zrychleném toku času.',
-          'Plynulý přechod: Jakmile kdokoliv zahájí akci (útok bubáka nebo nápřah karty), čas se automaticky vrátí k běžnému taktu.'
-        ]
-      }
-    ]
+          "Vizuální růst bubáků: Všechna 4 stádia každého bubáka jsou nyní velikostně odstupňována přesně o 12 % za každé stádium.",
+          "Matematická škála: Stádium 1 (mláďata a neduživí) má 76 % základní velikosti, Stádium 2 má 88 %, Stádium 3 tvoří základ (100 %) a mocné Stádium 4 má 112 % velikosti.",
+          "Přehledné ukazatele: Velikostní poměr je přehledně vyznačen v Bestiáři, v detailním okně bubáka i v živém souboji.",
+        ],
+      },
+    ],
   },
   {
-    version: 'v0.3.5',
-    tag: 'Předchozí verze',
-    date: '17. září',
-    title: 'Hastrmani, dýmkový kouř & komiksové šprýmy',
-    badge: 'Novinka',
-    flavorQuote: '„Když si vodník bafne z dýmky a hodí do tůně hrst stuh, hned je na světě veseleji!“',
-    flavorAuthor: 'hastrman Brčál od Černé tůně',
+    version: "v0.3.7",
+    tag: "Předchozí verze",
+    date: "17. září",
+    title: "Oprava náběhu souboje & plynulý přechod na tah lovce",
+    badge: "Oprava",
+    flavorQuote:
+      "„Jakmile bubák vyskočí a bouchne do stolu, lovec nečeká ani Augenblick a hned tasí karty!“",
+    flavorAuthor: "hrusický kronikář",
     highlights: [
       {
-        category: 'Vizuální šťáva & hravý game feel',
-        icon: '✨',
+        category: "Plynulost začátku souboje",
+        icon: "⚔️",
         items: [
-          'Komiksové citoslovce (Comic Pops): Animované bubliny s autentickými zvuky (Bác!, Sssst!, Puf!, Žuch!, Šplouch!) při zásazích a tricích.',
-          'Interaktivní dýmkový kouř (Pipe Smoke): Jemné líné obláčky stoupající z vodnických i tuláckých dýmek při bafnutí.',
-          'Měkké pružné mikro-pauzy a zhoupnutí karet při líznutí a zahrání.',
-          'Opravena animace ocásku čertíka a raráška: střed otáčení pevně ukotven k trupu, ocásek již neupadává a přirozeně se vrtí.'
-        ]
+          "Okamžité uvolnění tahu po akci bubáků: Pokud měli bubáci vyšší Připravenost a provedli úvodní výpad, zpoždění lovce se okamžitě dokončí a karty i akce se ihned odemknou k reakci.",
+          "Odstranění záseku časovače: Časová smyčka souboje byla stabilizována a spolehlivě odpočítává i při rychlých událostech a animacích.",
+          "Svižný 3× náběh: Prázdné Augenblicky před prvním zásahem probíhají plynule trojnásobnou rychlostí (300 ms/Aug) a při úderu se čas přirozeně zpomalí na zobrazení animace a textu.",
+        ],
       },
-      {
-        category: 'Kronika & folklórní adaptace',
-        icon: '📜',
-        items: [
-          'Přidána tato interaktivní Kronika změn (Changelog) s přehledem všech aktualizací.',
-          'Zapracování motivů z knihy Josefa Lady Bubáci a hastrmani (vodník Brčál, strašidlo Mulisák, krejcary, stuhy a perníčky).',
-          'Rychlý teplý restart s návratem na náves a do venkovského šenku.'
-        ]
-      },
-      {
-        category: 'Taktická rovnováha',
-        icon: '⚖️',
-        items: [
-          'Vyvážení odkladu úderů zraněním: delay = zranění * (1 - odolnost/100).',
-          'Vylepšená odezva při přetížení ruky (Mokré lumpárny a Leknutí).',
-          'Jasnější vizualizace smrtícího zásahu (Lebka 💀 u nepřátel i hrdiny).'
-        ]
-      }
-    ]
+    ],
   },
   {
-    version: 'v0.3.2',
-    tag: 'Stabilní',
-    date: 'Září',
-    title: 'Vesnické šprýmy & Hospoda U Černého kocoura',
-    badge: 'Obsah',
-    flavorQuote: '„Dva džbánky piva, miska soli na stůl a čerti ať si trhnou nohou.“',
-    flavorAuthor: 'starý šenkýř Klapáč',
+    version: "v0.3.6",
+    tag: "Předchozí verze",
+    date: "17. září",
+    title: "Sjednocení Připravenosti & 3× zrychlený rozběh",
+    badge: "Novinka",
+    flavorQuote:
+      "„Kdo dřív přijde, ten dřív mele — a kostelník s kropáčem je u bubáků vždycky o krok napřed!“",
+    flavorAuthor: "kostelník z Hrusic",
     highlights: [
       {
-        category: 'Šenk & obchod',
-        icon: '🍺',
+        category: "Taktická rovnováha & iniciativa",
+        icon: "⚡",
         items: [
-          'Vylepšování základních karet: Hozená sůl ➔ Ostřejší sůl, Kříž ➔ Velký kříž, Odvar ➔ Košík bylin.',
-          'Vyhazování přebytečných a rušivých karet z brašny za krejcary.',
-          'Odpočinek u vyhřátých kachlových kamen snižující Únavu o 5 bodů.'
-        ]
+          "Otočení škály Připravenosti: Vyšší hodnota nyní intuitivně znamená dřívější akci (Kostelník 28, Pobuda 25, Bylinkářka 22).",
+          "Jednotné zpoždění před bojem: Hrdinové i bubáci mají nástupní zpoždění (50 − Připravenost) Aug.",
+          "Předstih Kostelníka: Kostelník (28) nastupuje již za 22 Aug, Pobuda (25) za 25 Aug a rozvážná Bylinkářka (22) za 28 Aug.",
+        ],
       },
       {
-        category: 'Mapové události',
-        icon: '🗺️',
+        category: "Rychlost & dynamika souboje",
+        icon: "⏩",
         items: [
-          'Farářova lipová světnice — bezpečné místo s horkým lipovým čajem.',
-          'Místní nástrahy: Obecní dráb s mýtem a Pytlácké železo v křoví.',
-          'Sousedova pevná záplata pro +4 Blok v příští šarvátce.'
-        ]
-      }
-    ]
+          "3× zrychlený rozběh: Dokud nikdo nejedná (čeká se na první úder či nápřah), čas běží trojnásobnou rychlostí (300 ms na Aug).",
+          "Vizuální indikátor v záhlaví: Zelený pulzující štítek „⚡ 3× zrychlený rozběh“ jasně informuje o zrychleném toku času.",
+          "Plynulý přechod: Jakmile kdokoliv zahájí akci (útok bubáka nebo nápřah karty), čas se automaticky vrátí k běžnému taktu.",
+        ],
+      },
+    ],
   },
   {
-    version: 'v0.3.0',
-    tag: 'Základ',
-    date: 'Srpen',
-    title: 'Putování přes Hrusice & Čas v Augenblicích',
-    badge: 'Milník',
-    flavorQuote: '„Každé mrknutí oka má v boji s rarachem cenu zlata.“',
-    flavorAuthor: 'farář z Hrusic',
+    version: "v0.3.5",
+    tag: "Předchozí verze",
+    date: "17. září",
+    title: "Hastrmani, dýmkový kouř & komiksové šprýmy",
+    badge: "Novinka",
+    flavorQuote:
+      "„Když si vodník bafne z dýmky a hodí do tůně hrst stuh, hned je na světě veseleji!“",
+    flavorAuthor: "hastrman Brčál od Černé tůně",
     highlights: [
       {
-        category: 'Taktický časový systém',
-        icon: '⏳',
+        category: "Vizuální šťáva & hravý game feel",
+        icon: "✨",
         items: [
-          'Čas neměřený na kola, ale na plynulé okamžiky — Augenblicky (Aug).',
-          'Mechanika Nádechu a Únavy — čím víc unavený lovec, tím méně akcí z nádechu.',
-          'Akce Mrknutí umožňující nechat plynout čas o 1 Aug bez vyčerpání akcí.'
-        ]
+          "Komiksové citoslovce (Comic Pops): Animované bubliny s autentickými zvuky (Bác!, Sssst!, Puf!, Žuch!, Šplouch!) při zásazích a tricích.",
+          "Interaktivní dýmkový kouř (Pipe Smoke): Jemné líné obláčky stoupající z vodnických i tuláckých dýmek při bafnutí.",
+          "Měkké pružné mikro-pauzy a zhoupnutí karet při líznutí a zahrání.",
+          "Opravena animace ocásku čertíka a raráška: střed otáčení pevně ukotven k trupu, ocásek již neupadává a přirozeně se vrtí.",
+        ],
       },
       {
-        category: 'Tři venkovští hrdinové',
-        icon: '🚶',
+        category: "Kronika & folklórní adaptace",
+        icon: "📜",
         items: [
-          'Pobuda z Hrusic — vytrvalý krok a vyřezávaná slánka se Solí na kůži.',
-          'Pobožný kostelník — dědův kříž, farní požehnání a vyšší obranný blok.',
-          'Moudrá bylinkářka — zásoba krejcarů, čerstvý bylinkový odvar a lehký dech.'
-        ]
+          "Přidána tato interaktivní Kronika změn (Changelog) s přehledem všech aktualizací.",
+          "Zapracování motivů z knihy Josefa Lady Bubáci a hastrmani (vodník Brčál, strašidlo Mulisák, krejcary, stuhy a perníčky).",
+          "Rychlý teplý restart s návratem na náves a do venkovského šenku.",
+        ],
       },
       {
-        category: 'Výuka & video výcvik',
-        icon: '🎓',
+        category: "Taktická rovnováha",
+        icon: "⚖️",
         items: [
-          'Interaktivní výcvik s cvičným bubákem od stodoly.',
-          'Automatický filmový náhled s vysvětlujícími titulky faráře.'
-        ]
-      }
-    ]
+          "Vyvážení odkladu úderů zraněním: delay = zranění * (1 - odolnost/100).",
+          "Vylepšená odezva při přetížení ruky (Mokré lumpárny a Leknutí).",
+          "Jasnější vizualizace smrtícího zásahu (Lebka 💀 u nepřátel i hrdiny).",
+        ],
+      },
+    ],
   },
   {
-    version: 'v0.2.0',
-    tag: 'Prapůvod',
-    date: 'Červenec',
-    title: 'Založení venkovského karetního řádu',
-    badge: 'Prapůvod',
-    flavorQuote: '„Kde selže domluva, tam pomůže svěcená voda a poctivá dubová hůl.“',
-    flavorAuthor: 'stará kronika hrusická',
+    version: "v0.3.2",
+    tag: "Stabilní",
+    date: "Září",
+    title: "Vesnické šprýmy & Hospoda U Černého kocoura",
+    badge: "Obsah",
+    flavorQuote: "„Dva džbánky piva, miska soli na stůl a čerti ať si trhnou nohou.“",
+    flavorAuthor: "starý šenkýř Klapáč",
     highlights: [
       {
-        category: 'Základní souboje',
-        icon: '🧂',
+        category: "Šenk & obchod",
+        icon: "🍺",
         items: [
-          'Karty Sůl, Kříž a Odvar tvořící jádro balíčku.',
-          'Boj proti raráškům, bubákům od stodoly, mrtvákům a polednici.',
-          'Parchmentový styl inspirovaný kresbami Josefa Lady.'
-        ]
-      }
-    ]
-  }
+          "Vylepšování základních karet: Hozená sůl ➔ Ostřejší sůl, Kříž ➔ Velký kříž, Odvar ➔ Košík bylin.",
+          "Vyhazování přebytečných a rušivých karet z brašny za krejcary.",
+          "Odpočinek u vyhřátých kachlových kamen snižující Únavu o 5 bodů.",
+        ],
+      },
+      {
+        category: "Mapové události",
+        icon: "🗺️",
+        items: [
+          "Farářova lipová světnice — bezpečné místo s horkým lipovým čajem.",
+          "Místní nástrahy: Obecní dráb s mýtem a Pytlácké železo v křoví.",
+          "Sousedova pevná záplata pro +4 Blok v příští šarvátce.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.3.0",
+    tag: "Základ",
+    date: "Srpen",
+    title: "Putování přes Hrusice & Čas v Augenblicích",
+    badge: "Milník",
+    flavorQuote: "„Každé mrknutí oka má v boji s rarachem cenu zlata.“",
+    flavorAuthor: "farář z Hrusic",
+    highlights: [
+      {
+        category: "Taktický časový systém",
+        icon: "⏳",
+        items: [
+          "Čas neměřený na kola, ale na plynulé okamžiky — Augenblicky (Aug).",
+          "Mechanika Nádechu a Únavy — čím víc unavený lovec, tím méně akcí z nádechu.",
+          "Akce Mrknutí umožňující nechat plynout čas o 1 Aug bez vyčerpání akcí.",
+        ],
+      },
+      {
+        category: "Tři venkovští hrdinové",
+        icon: "🚶",
+        items: [
+          "Pobuda z Hrusic — vytrvalý krok a vyřezávaná slánka se Solí na kůži.",
+          "Pobožný kostelník — dědův kříž, farní požehnání a vyšší obranný blok.",
+          "Moudrá bylinkářka — zásoba krejcarů, čerstvý bylinkový odvar a lehký dech.",
+        ],
+      },
+      {
+        category: "Výuka & video výcvik",
+        icon: "🎓",
+        items: [
+          "Interaktivní výcvik s cvičným bubákem od stodoly.",
+          "Automatický filmový náhled s vysvětlujícími titulky faráře.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.2.0",
+    tag: "Prapůvod",
+    date: "Červenec",
+    title: "Založení venkovského karetního řádu",
+    badge: "Prapůvod",
+    flavorQuote: "„Kde selže domluva, tam pomůže svěcená voda a poctivá dubová hůl.“",
+    flavorAuthor: "stará kronika hrusická",
+    highlights: [
+      {
+        category: "Základní souboje",
+        icon: "🧂",
+        items: [
+          "Karty Sůl, Kříž a Odvar tvořící jádro balíčku.",
+          "Boj proti raráškům, bubákům od stodoly, mrtvákům a polednici.",
+          "Parchmentový styl inspirovaný kresbami Josefa Lady.",
+        ],
+      },
+    ],
+  },
 ];
 
 export const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
@@ -318,14 +376,17 @@ export const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
                 onClick={() => setSelectedIdx(idx)}
                 className={`
                   flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black border-2 transition-all whitespace-nowrap cursor-pointer
-                  ${isSel
-                    ? 'bg-[#1c1308] text-[#ffd438] border-[#1c1308] shadow-[0_2px_0_rgba(28,19,8,0.4)] scale-102'
-                    : 'bg-[#fff8e8] text-[#5c3e21] border-[#1c1308] hover:bg-[#f5e5c2]'
+                  ${
+                    isSel
+                      ? "bg-[#1c1308] text-[#ffd438] border-[#1c1308] shadow-[0_2px_0_rgba(28,19,8,0.4)] scale-102"
+                      : "bg-[#fff8e8] text-[#5c3e21] border-[#1c1308] hover:bg-[#f5e5c2]"
                   }
                 `}
               >
                 <span>{entry.version}</span>
-                <span className={`text-[0.65rem] px-1.5 py-0.2 rounded-full border ${isSel ? 'bg-[#ffd438] text-[#1c1308] border-[#ffd438]' : 'bg-[#eedcb0] text-[#70481c] border-[#1c1308]'}`}>
+                <span
+                  className={`text-[0.65rem] px-1.5 py-0.2 rounded-full border ${isSel ? "bg-[#ffd438] text-[#1c1308] border-[#ffd438]" : "bg-[#eedcb0] text-[#70481c] border-[#1c1308]"}`}
+                >
                   {entry.badge}
                 </span>
               </button>
@@ -356,7 +417,9 @@ export const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
               <span className="text-base not-italic">🌿</span>
               <div>
                 <p>{activeEntry.flavorQuote}</p>
-                <p className="text-[0.7rem] font-black text-[#8c5614] not-italic mt-0.5 text-right">— {activeEntry.flavorAuthor}</p>
+                <p className="text-[0.7rem] font-black text-[#8c5614] not-italic mt-0.5 text-right">
+                  — {activeEntry.flavorAuthor}
+                </p>
               </div>
             </div>
           </div>
@@ -374,7 +437,10 @@ export const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
                 </div>
                 <ul className="space-y-1.5 list-none pl-1">
                   {sec.items.map((item, iIdx) => (
-                    <li key={iIdx} className="flex items-start gap-2 text-xs font-semibold text-[#422c15] leading-relaxed">
+                    <li
+                      key={iIdx}
+                      className="flex items-start gap-2 text-xs font-semibold text-[#422c15] leading-relaxed"
+                    >
                       <span className="text-[#8c5614] font-black mt-0.5">●</span>
                       <span>{item}</span>
                     </li>
@@ -392,7 +458,8 @@ export const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
                 Moudrost z Bubákova a Hrusic
               </div>
               <p>
-                Všechny změny jsou pečené s láskou k pohádkám Josefa Lady. Kdyby vám nějaký bubák škádlil balíček příliš, nezapomeňte hodit hrst soli a dát si pohodlný šlofík!
+                Všechny změny jsou pečené s láskou k pohádkám Josefa Lady. Kdyby vám nějaký bubák
+                škádlil balíček příliš, nezapomeňte hodit hrst soli a dát si pohodlný šlofík!
               </p>
             </div>
           </div>
@@ -401,7 +468,8 @@ export const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
         {/* Modal Footer */}
         <div className="border-t-2 border-[#1c1308] pt-3 mt-3 flex items-center justify-between">
           <span className="text-xs font-bold text-[#694825]">
-            Verze hry: <strong>v0.3.5</strong> (Bubáci a hastrmani)
+            Verze hry: <strong>{CHANGELOG_DATA[0]?.version || "v0.5.2"}</strong> (Bubáci a
+            hastrmani)
           </span>
           <button
             type="button"

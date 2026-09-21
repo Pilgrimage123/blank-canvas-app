@@ -1,7 +1,14 @@
-import React from 'react';
-import { GameState } from '../../types';
-import { CARD_DB, SHOP_PRICE, UPGRADE_MAP, UPGRADE_COST, REMOVE_COST, REST_COST } from '../../data/gameData';
-import { CardView } from '../CardView';
+import React from "react";
+import { GameState } from "../../types";
+import {
+  CARD_DB,
+  SHOP_PRICE,
+  UPGRADE_MAP,
+  UPGRADE_COST,
+  REMOVE_COST,
+  REST_COST,
+} from "../../data/gameData";
+import { CardView } from "../CardView";
 
 interface ShopScreenProps {
   state: GameState;
@@ -18,7 +25,7 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
   onUpgradeCard,
   onRemoveCard,
   onRest,
-  onLeaveShop
+  onLeaveShop,
 }) => {
   const offer = state.shopOffer || [];
 
@@ -65,9 +72,7 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-3">
           <span className="text-xl">🎴</span>
-          <h3 className="font-title text-xl font-bold text-[#1c1308]">
-            Nové karty do brašny
-          </h3>
+          <h3 className="font-title text-xl font-bold text-[#1c1308]">Nové karty do brašny</h3>
         </div>
         {offer.length === 0 ? (
           <p className="text-xs italic text-[#705638] bg-[#fffaf0] p-4 rounded-xl border-2 border-[#1c1308]">
@@ -78,11 +83,14 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
             {offer.map((cardId, idx) => {
               const def = CARD_DB[cardId];
               if (!def) return null;
-              const price = SHOP_PRICE[def.shop || 'stred'] || 10;
+              const price = SHOP_PRICE[def.shop || "stred"] || 10;
               const canAfford = state.salt >= price;
 
               return (
-                <div key={cardId + '_' + idx} className="lada-card p-3 flex flex-col items-center justify-between bg-[#fffaf0]">
+                <div
+                  key={cardId + "_" + idx}
+                  className="lada-card p-3 flex flex-col items-center justify-between bg-[#fffaf0]"
+                >
                   <CardView card={cardId} />
                   <button
                     type="button"
@@ -124,7 +132,10 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
               const canAfford = state.salt >= UPGRADE_COST;
 
               return (
-                <div key={fromId} className="lada-card p-3 flex flex-col justify-between bg-[#fffaf0]">
+                <div
+                  key={fromId}
+                  className="lada-card p-3 flex flex-col justify-between bg-[#fffaf0]"
+                >
                   <div className="flex items-center justify-around mb-2">
                     <CardView card={fromId} className="scale-90" />
                     <span className="text-lg font-black text-[#8c5614]">➔</span>
@@ -184,7 +195,8 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
             Teplá lavice & džbánek u kamen
           </h4>
           <p className="text-xs font-semibold text-[#543b24]">
-            Za {REST_COST} krejcarů sundáte 5 Únavy nesené mezi zastávkami (nyní {state.fatigueOut || 0} Únavy).
+            Za {REST_COST} krejcarů sundáte 5 Únavy nesené mezi zastávkami (nyní{" "}
+            {state.fatigueOut || 0} Únavy).
           </p>
         </div>
         <button

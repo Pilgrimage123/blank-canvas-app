@@ -1,7 +1,7 @@
-import React from 'react';
-import { GameState } from '../../types';
-import { EnemySprite } from '../sprites/EnemySprite';
-import { HunterSprite } from '../sprites/HunterSprite';
+import React from "react";
+import { GameState } from "../../types";
+import { EnemySprite } from "../sprites/EnemySprite";
+import { HunterSprite } from "../sprites/HunterSprite";
 
 interface EndScreenProps {
   state: GameState;
@@ -30,12 +30,12 @@ export const EndScreen: React.FC<EndScreenProps> = ({ state, onReturnTitle }) =>
           )}
 
           <h2 className="font-title text-3xl sm:text-4xl font-black text-[#1c1308] text-center">
-            {isVictory ? 'Kraj si zhluboka oddychl!' : 'Došly krejcary i dech'}
+            {isVictory ? "Kraj si zhluboka oddychl!" : "Došly krejcary i dech"}
           </h2>
           <p className="text-sm font-semibold text-[#5c3e21] text-center mt-1 max-w-md">
             {isVictory
-              ? 'Černá tůň je tichá, hastrman se stáhl pod kořeny vrb a v Hrusicích zase bezpečně kokrhá ranní kohout!'
-              : 'Bubáci vás přečíhali a slánka se rozsypala ve strouze. Nic naplat, je třeba sebrat odvahu a zkusit to znovu!'}
+              ? "Černá tůň je tichá, hastrman se stáhl pod kořeny vrb a v Hrusicích zase bezpečně kokrhá ranní kohout!"
+              : "Bubáci vás přečíhali a slánka se rozsypala ve strouze. Nic naplat, je třeba sebrat odvahu a zkusit to znovu!"}
           </p>
         </div>
 

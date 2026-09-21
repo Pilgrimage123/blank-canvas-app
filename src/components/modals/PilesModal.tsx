@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { CardInstance } from '../../types';
-import { CardView } from '../CardView';
+import React, { useState } from "react";
+import { CardInstance } from "../../types";
+import { CardView } from "../CardView";
 
 interface PilesModalProps {
   drawPile: CardInstance[];
   discardPile: CardInstance[];
   handPile?: CardInstance[];
-  initialTab?: 'deck' | 'discard' | 'all';
+  initialTab?: "deck" | "discard" | "all";
   onClose: () => void;
 }
 
@@ -14,14 +14,14 @@ export const PilesModal: React.FC<PilesModalProps> = ({
   drawPile,
   discardPile,
   handPile = [],
-  initialTab = 'deck',
-  onClose
+  initialTab = "deck",
+  onClose,
 }) => {
-  const [activeTab, setActiveTab] = useState<'deck' | 'discard' | 'all'>(initialTab);
+  const [activeTab, setActiveTab] = useState<"deck" | "discard" | "all">(initialTab);
 
   let list: CardInstance[] = [];
-  if (activeTab === 'deck') list = drawPile;
-  else if (activeTab === 'discard') list = discardPile;
+  if (activeTab === "deck") list = drawPile;
+  else if (activeTab === "discard") list = discardPile;
   else list = [...drawPile, ...handPile, ...discardPile];
 
   return (
@@ -44,22 +44,22 @@ export const PilesModal: React.FC<PilesModalProps> = ({
         <div className="flex items-center gap-2 mb-4">
           <button
             type="button"
-            onClick={() => setActiveTab('deck')}
-            className={`lada-button text-xs py-1.5 px-3.5 ${activeTab === 'deck' ? 'lada-button-primary' : ''}`}
+            onClick={() => setActiveTab("deck")}
+            className={`lada-button text-xs py-1.5 px-3.5 ${activeTab === "deck" ? "lada-button-primary" : ""}`}
           >
             Lízací balíček ({drawPile.length})
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab('discard')}
-            className={`lada-button text-xs py-1.5 px-3.5 ${activeTab === 'discard' ? 'lada-button-primary' : ''}`}
+            onClick={() => setActiveTab("discard")}
+            className={`lada-button text-xs py-1.5 px-3.5 ${activeTab === "discard" ? "lada-button-primary" : ""}`}
           >
             Odhozené karty ({discardPile.length})
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab('all')}
-            className={`lada-button text-xs py-1.5 px-3.5 ${activeTab === 'all' ? 'lada-button-primary' : ''}`}
+            onClick={() => setActiveTab("all")}
+            className={`lada-button text-xs py-1.5 px-3.5 ${activeTab === "all" ? "lada-button-primary" : ""}`}
           >
             Všechny karty dohromady ({drawPile.length + handPile.length + discardPile.length})
           </button>
@@ -74,7 +74,7 @@ export const PilesModal: React.FC<PilesModalProps> = ({
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 p-1 justify-items-center">
               {list.map((c, i) => (
-                <CardView key={c.inst + '_' + i} card={c} />
+                <CardView key={c.inst + "_" + i} card={c} />
               ))}
             </div>
           )}

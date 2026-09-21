@@ -22,3 +22,9 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Pravidla vývoje (Changelog Discipline)
+
+- **Zápisy do changelogu**: Všechny změny v projektu se zapisují do `src/components/modals/ChangelogModal.tsx` (`CHANGELOG_DATA`).
+- **Míra detailu záznamů**: Záznamy v changelogu se mají dělat **o něco méně detailní než doposud** — stručně, věcně a přehledně se zaměřením na podstatné novinky a opravy bez zbytečných technických podrobností.
+

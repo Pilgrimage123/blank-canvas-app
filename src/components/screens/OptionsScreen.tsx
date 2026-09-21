@@ -1,5 +1,5 @@
-import React from 'react';
-import { RunOptions } from '../../types';
+import React from "react";
+import { RunOptions } from "../../types";
 
 interface OptionsScreenProps {
   options: RunOptions;
@@ -12,7 +12,7 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
   options,
   onChangeOptions,
   onBack,
-  onOpenChangelog
+  onOpenChangelog,
 }) => {
   const handleScaleChange = (val: number) => {
     onChangeOptions({ ...options, scale: val });
@@ -22,7 +22,7 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
     onChangeOptions({ ...options, strength: val });
   };
 
-  const handleDensityChange = (density: 'adaptive' | 'samota' | 'hlidka' | 'hejno') => {
+  const handleDensityChange = (density: "adaptive" | "samota" | "hlidka" | "hejno") => {
     onChangeOptions({ ...options, density });
   };
 
@@ -44,9 +44,7 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
       {/* Top Bar */}
       <div className="flex items-center justify-between border-b-2 border-[#1c1308] pb-4 mb-6">
         <div>
-          <h2 className="font-title text-3xl font-black text-[#1c1308]">
-            ⚙️ Volby běhu
-          </h2>
+          <h2 className="font-title text-3xl font-black text-[#1c1308]">⚙️ Volby běhu</h2>
           <p className="text-xs sm:text-sm font-bold text-[#694825]">
             Přizpůsobte si obtížnost, chování bubáků a pevný seed putování.
           </p>
@@ -68,7 +66,8 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
             </span>
           </div>
           <p className="text-xs font-semibold text-[#543b24]">
-            Každá další vesnice a zastávka přidává bonus k životům i úderu bubáků. (Výchozí je +12 %, 0 % škálování vypne).
+            Každá další vesnice a zastávka přidává bonus k životům i úderu bubáků. (Výchozí je +12
+            %, 0 % škálování vypne).
           </p>
           <input
             type="range"
@@ -85,14 +84,16 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
         <div className="space-y-2 pt-4 border-t border-[#dfcb9a]">
           <div className="flex items-center justify-between">
             <h3 className="font-title text-lg font-bold text-[#1c1308]">
-              Celková síla bubáků ({options.strength > 0 ? `+${options.strength}` : options.strength} %)
+              Celková síla bubáků (
+              {options.strength > 0 ? `+${options.strength}` : options.strength} %)
             </h3>
             <span className="bg-[#fff8e8] px-3 py-1 rounded-full border border-[#1c1308] font-black text-sm text-[#b8331d]">
               {options.strength > 0 ? `+${options.strength}` : options.strength}%
             </span>
           </div>
           <p className="text-xs font-semibold text-[#543b24]">
-            Samostatný bonus či postih k síle a životům bubáků nezávisle na zastávce (-30 % pro snazší hru, +30 % pro drsnější).
+            Samostatný bonus či postih k síle a životům bubáků nezávisle na zastávce (-30 % pro
+            snazší hru, +30 % pro drsnější).
           </p>
           <input
             type="range"
@@ -107,18 +108,16 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
 
         {/* 3. Density */}
         <div className="space-y-2 pt-4 border-t border-[#dfcb9a]">
-          <h3 className="font-title text-lg font-bold text-[#1c1308]">
-            Hustota encounteru
-          </h3>
+          <h3 className="font-title text-lg font-bold text-[#1c1308]">Hustota encounteru</h3>
           <p className="text-xs font-semibold text-[#543b24]">
             Určuje, kolik nepřátel se najednou postaví na scénu.
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
             {[
-              { id: 'adaptive', label: 'Adaptive (přirozená)' },
-              { id: 'samota', label: 'Samota (1 bubák)' },
-              { id: 'hlidka', label: 'Hlídka (2 bubáci)' },
-              { id: 'hejno', label: 'Hejno (až 3 bubáci)' }
+              { id: "adaptive", label: "Adaptive (přirozená)" },
+              { id: "samota", label: "Samota (1 bubák)" },
+              { id: "hlidka", label: "Hlídka (2 bubáci)" },
+              { id: "hejno", label: "Hejno (až 3 bubáci)" },
             ].map((item) => (
               <button
                 key={item.id}
@@ -126,7 +125,7 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
                 onClick={() => handleDensityChange(item.id as any)}
                 className={`
                   p-2.5 rounded-xl border-2 text-xs font-bold text-center transition-all
-                  ${options.density === item.id ? 'bg-[#ffd438] border-[#1c1308] ring-2 ring-[#e69818] shadow-sm' : 'bg-[#fff8e8] border-[#1c1308] opacity-75 hover:opacity-100'}
+                  ${options.density === item.id ? "bg-[#ffd438] border-[#1c1308] ring-2 ring-[#e69818] shadow-sm" : "bg-[#fff8e8] border-[#1c1308] opacity-75 hover:opacity-100"}
                 `}
               >
                 {item.label}
@@ -145,7 +144,10 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
               onChange={(e) => handleSeedToggle(e.target.checked)}
               className="w-4 h-4 accent-[#d69818] rounded cursor-pointer"
             />
-            <label htmlFor="opt-seed-check" className="font-title text-base font-bold text-[#1c1308] cursor-pointer">
+            <label
+              htmlFor="opt-seed-check"
+              className="font-title text-base font-bold text-[#1c1308] cursor-pointer"
+            >
               Použít pevný seed pro opakovatelné putování
             </label>
           </div>
@@ -161,11 +163,7 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
               placeholder="např. Hrusice1848"
               className="bg-[#fff8e8] border-2 border-[#1c1308] rounded-xl px-3 py-2 text-sm font-bold text-[#1c1308] flex-1 disabled:opacity-50"
             />
-            <button
-              type="button"
-              onClick={rollNewSeed}
-              className="lada-button text-xs py-2 px-3"
-            >
+            <button type="button" onClick={rollNewSeed} className="lada-button text-xs py-2 px-3">
               🎲 Nový
             </button>
           </div>

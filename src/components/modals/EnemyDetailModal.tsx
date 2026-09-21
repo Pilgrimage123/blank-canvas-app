@@ -1,7 +1,8 @@
-import React from 'react';
-import { EnemyInstance } from '../../types';
-import { ENEMY_DB, ENEMY_ACTIONS, TRAITS, LOCATIONS } from '../../data/gameData';
-import { EnemySprite, getStagePercent } from '../sprites/EnemySprite';
+import React from "react";
+import { EnemyInstance } from "../../types";
+import { ENEMY_DB, ENEMY_ACTIONS, TRAITS, LOCATIONS } from "../../data/gameData";
+import { EnemySprite } from "../sprites/EnemySprite";
+import { getStagePercent } from "../../utils/spriteUtils";
 
 interface EnemyDetailModalProps {
   enemy: EnemyInstance;
@@ -9,44 +10,65 @@ interface EnemyDetailModalProps {
 }
 
 export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClose }) => {
-  const actualTplId = enemy.tpl === 'certik' ? 'rarasek' : enemy.tpl;
+  const actualTplId = enemy.tpl === "certik" ? "rarasek" : enemy.tpl;
   const tpl =
     ENEMY_DB.find((x) => x.id === actualTplId) ||
     ENEMY_DB.find((x) => x.id === enemy.tpl || x.type === enemy.type || x.name === enemy.name) ||
     ENEMY_DB[0];
 
-  const pool = Array.from(new Set([...(tpl.pool || []), enemy.nextAction].filter(Boolean))) as string[];
+  const pool = Array.from(
+    new Set([...(tpl.pool || []), enemy.nextAction].filter(Boolean)),
+  ) as string[];
   const stageIdx = enemy.variantIndex ?? 2;
-  const stageSizePct = getStagePercent(stageIdx);
+  const stageSizePct = getStagePercent(stageIdx, tpl.id || tpl.type);
 
-  const hpPct = enemy.maxHp > 0 ? Math.max(0, Math.min(100, Math.round((enemy.hp / enemy.maxHp) * 100))) : 0;
+  const hpPct =
+    enemy.maxHp > 0 ? Math.max(0, Math.min(100, Math.round((enemy.hp / enemy.maxHp) * 100))) : 0;
   const totalAttackPower = enemy.dmg + (enemy.omen || 0);
 
   const getActionIcon = (actId?: string | null) => {
     switch (actId) {
-      case 'uder': return '⚔️';
-      case 'ukryt': return '🛡️';
-      case 'zlovest': return '😤';
-      case 'vabnicka': return '📣';
-      case 'odveta': return '⚡';
-      case 'zatuhnuti': return '🧊';
-      case 'skrek': return '😱';
-      case 'puch': return '🦨';
-      case 'vtipek': return '🃏';
-      case 'bafnuti_z_dymky': return '💨';
-      case 'kouzelna_polivcicka': return '🍲';
-      case 'rybnicni_mlha': return '🌫️';
-      default: return '💨';
+      case "uder":
+        return "⚔️";
+      case "ukryt":
+        return "🛡️";
+      case "zlovest":
+        return "😤";
+      case "vabnicka":
+        return "📣";
+      case "odveta":
+        return "⚡";
+      case "zatuhnuti":
+        return "🧊";
+      case "skrek":
+        return "😱";
+      case "puch":
+        return "🦨";
+      case "vtipek":
+        return "🃏";
+      case "bafnuti_z_dymky":
+        return "💨";
+      case "kouzelna_polivcicka":
+        return "🍲";
+      case "rybnicni_mlha":
+        return "🌫️";
+      default:
+        return "💨";
     }
   };
 
   const getStageTitle = (idx: number) => {
     switch (idx) {
-      case 0: return 'Mládě / Učeň';
-      case 1: return 'Zkušený';
-      case 2: return 'Klasický (Původní)';
-      case 3: return 'Elitní / Pán';
-      default: return `Stádium ${idx + 1}`;
+      case 0:
+        return "Mládě / Učeň";
+      case 1:
+        return "Zkušený";
+      case 2:
+        return "Klasický (Původní)";
+      case 3:
+        return "Elitní / Pán";
+      default:
+        return `Stádium ${idx + 1}`;
     }
   };
 
@@ -98,15 +120,19 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
 
               <div className="text-xs font-bold text-[#694825] flex flex-wrap items-center gap-1.5 mt-1">
                 <span className="bg-[#f0dfb6] text-[#4a2e12] px-1.5 py-0.2 rounded border border-[#d6be96]">
-                  {enemy.role === 'linie' ? '🛡️ Linie' : enemy.role === 'podpora' ? '📣 Podpora' : '🎯 Dělostřelba'}
+                  {enemy.role === "linie"
+                    ? "🛡️ Linie"
+                    : enemy.role === "podpora"
+                      ? "📣 Podpora"
+                      : "🎯 Dělostřelba"}
                 </span>
                 <span>·</span>
                 <span className="text-[#3b2713]">
                   {getStageTitle(stageIdx)} ({stageIdx + 1}/4)
                 </span>
                 <span>·</span>
-                <span className={enemy.alive ? 'text-[#2d6328]' : 'text-[#8c3220]'}>
-                  {enemy.alive ? `${enemy.hp}/${enemy.maxHp} HP` : '💨 Rozplynul se'}
+                <span className={enemy.alive ? "text-[#2d6328]" : "text-[#8c3220]"}>
+                  {enemy.alive ? `${enemy.hp}/${enemy.maxHp} HP` : "💨 Rozplynul se"}
                 </span>
               </div>
             </div>
@@ -139,10 +165,10 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
               <div
                 className={`h-full rounded-full transition-all duration-300 ${
                   hpPct > 50
-                    ? 'bg-gradient-to-r from-[#5ea33c] to-[#7ec953]'
+                    ? "bg-gradient-to-r from-[#5ea33c] to-[#7ec953]"
                     : hpPct > 25
-                    ? 'bg-gradient-to-r from-[#d99429] to-[#f4b638]'
-                    : 'bg-gradient-to-r from-[#b8331d] to-[#e65239]'
+                      ? "bg-gradient-to-r from-[#d99429] to-[#f4b638]"
+                      : "bg-gradient-to-r from-[#b8331d] to-[#e65239]"
                 }`}
                 style={{ width: `${hpPct}%` }}
               />
@@ -160,7 +186,7 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
                       Chystaný tah bubáka:
                     </div>
                     <div className="font-title font-black text-base text-[#1c1308]">
-                      {currentActionDef?.name || enemy.nextAction || 'Úder'}
+                      {currentActionDef?.name || enemy.nextAction || "Úder"}
                     </div>
                   </div>
                 </div>
@@ -170,7 +196,7 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
                 </div>
               </div>
               <p className="text-[0.75rem] font-semibold text-[#4a3420] mt-2 leading-snug">
-                {currentActionDef?.text || 'Připravuje úder na lovce.'}
+                {currentActionDef?.text || "Připravuje úder na lovce."}
               </p>
             </div>
           )}
@@ -181,10 +207,12 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
               <span className="text-[#694825] block text-[0.68rem] uppercase">Útok / Síla</span>
               <span className="font-title text-base font-black text-[#b8331d]">
                 {totalAttackPower}
-                {enemy.omen > 0 && <span className="text-[0.65rem] text-[#c4321d] ml-0.5">(+{enemy.omen})</span>}
+                {enemy.omen > 0 && (
+                  <span className="text-[0.65rem] text-[#c4321d] ml-0.5">(+{enemy.omen})</span>
+                )}
               </span>
               <span className="text-[0.62rem] text-[#694825] block">
-                {enemy.omen > 0 ? `Základ ${enemy.dmg}` : 'přímé zranění'}
+                {enemy.omen > 0 ? `Základ ${enemy.dmg}` : "přímé zranění"}
               </span>
             </div>
 
@@ -196,19 +224,28 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
 
             <div title="Procento zranění pohlcené při odkladu odpočtu (1 zranění = 1 Aug odklad, poníženo o odolnost)">
               <span className="text-[#694825] block text-[0.68rem] uppercase">Odolnost</span>
-              <span className="font-title text-base font-black text-[#1c4b7d]">{enemy.odolnost}%</span>
+              <span className="font-title text-base font-black text-[#1c4b7d]">
+                {enemy.odolnost}%
+              </span>
               <span className="text-[0.62rem] text-[#694825] block">pohlcení odkladu</span>
             </div>
 
             <div title="Jak často bubák provádí své akce">
               <span className="text-[#694825] block text-[0.68rem] uppercase">Interval</span>
-              <span className="font-title text-base font-black text-[#8c5614]">{enemy.interval} Aug</span>
+              <span className="font-title text-base font-black text-[#8c5614]">
+                {enemy.interval} Aug
+              </span>
               <span className="text-[0.62rem] text-[#694825] block">mezi údery</span>
             </div>
           </div>
 
           {/* Active Combat Status Effects (Buffs / Debuffs) */}
-          {(enemy.saltDot > 0 || enemy.omen > 0 || enemy.block > 0 || enemy.revenge || enemy.uskokDodge || enemy.stiffen > 0) && (
+          {(enemy.saltDot > 0 ||
+            enemy.omen > 0 ||
+            enemy.block > 0 ||
+            enemy.revenge ||
+            enemy.uskokDodge ||
+            enemy.stiffen > 0) && (
             <div className="bg-[#fff9ed] p-2.5 rounded-xl border border-[#1c1308]">
               <h4 className="font-title text-xs font-black text-[#1c1308] uppercase tracking-wider mb-1.5 flex items-center gap-1">
                 <span>✨</span> Aktivní bojové stavy:
@@ -285,7 +322,7 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {pool.map((actId) => {
-                const act = ENEMY_ACTIONS[actId] || { name: actId, kind: 'Karta', text: '' };
+                const act = ENEMY_ACTIONS[actId] || { name: actId, kind: "Karta", text: "" };
                 const isCurrent = actId === enemy.nextAction;
 
                 return (
@@ -293,7 +330,7 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
                     key={actId}
                     className={`
                       p-2.5 rounded-xl border-2 flex flex-col justify-between text-xs transition-colors
-                      ${isCurrent ? 'bg-[#ffd438]/45 border-[#b8331d] shadow-sm ring-1 ring-[#b8331d]' : 'bg-[#fffaf0] border-[#1c1308]'}
+                      ${isCurrent ? "bg-[#ffd438]/45 border-[#b8331d] shadow-sm ring-1 ring-[#b8331d]" : "bg-[#fffaf0] border-[#1c1308]"}
                     `}
                   >
                     <div>
@@ -304,10 +341,10 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
                         </span>
                         <span
                           className={`text-[0.62rem] font-black uppercase px-1.5 py-0.5 rounded border border-[#1c1308] ${
-                            isCurrent ? 'bg-[#b8331d] text-white' : 'bg-[#ebd5a0] text-[#1c1308]'
+                            isCurrent ? "bg-[#b8331d] text-white" : "bg-[#ebd5a0] text-[#1c1308]"
                           }`}
                         >
-                          {isCurrent ? '⭐ Chystá teď' : act.kind}
+                          {isCurrent ? "⭐ Chystá teď" : act.kind}
                         </span>
                       </div>
                       <p className="text-[0.72rem] text-[#4a3420] font-semibold leading-tight">
@@ -325,7 +362,9 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
             <div className="bg-[#fcf5e5] p-3 rounded-xl border border-[#1c1308]">
               <h4 className="font-title text-xs font-black text-[#1c1308] uppercase tracking-wider mb-2 flex items-center justify-between">
                 <span>👥 Stádia vývoje rodiny:</span>
-                <span className="text-[0.65rem] text-[#7a5833] font-bold">12 % změna velikosti za stádium</span>
+                <span className="text-[0.65rem] text-[#7a5833] font-bold">
+                  12 % změna velikosti za stádium
+                </span>
               </h4>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                 {tpl.variants.map((v, vidx) => {
@@ -335,8 +374,8 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
                       key={vidx}
                       className={`p-2 rounded-lg border text-center transition-all ${
                         isThisOne
-                          ? 'bg-[#ffd438]/40 border-[#b8331d] shadow-xs font-black'
-                          : 'bg-[#fffdf7] border-[#d8c59f] opacity-80'
+                          ? "bg-[#ffd438]/40 border-[#b8331d] shadow-xs font-black"
+                          : "bg-[#fffdf7] border-[#d8c59f] opacity-80"
                       }`}
                     >
                       <div className="text-[0.6rem] font-bold text-[#7a4816] uppercase">
@@ -365,7 +404,10 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
             <div className="flex items-center gap-1.5 flex-wrap text-[0.72rem] text-[#543b24] font-bold">
               <span>📍 Přirozený výskyt:</span>
               {tpl.loc.map((locId) => (
-                <span key={locId} className="bg-[#ebd9b5] text-[#1c1308] px-2 py-0.5 rounded-full border border-[#1c1308]/60 text-[0.65rem]">
+                <span
+                  key={locId}
+                  className="bg-[#ebd9b5] text-[#1c1308] px-2 py-0.5 rounded-full border border-[#1c1308]/60 text-[0.65rem]"
+                >
                   {getLocationName(locId)}
                 </span>
               ))}
@@ -374,8 +416,10 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
 
           {/* Hunter Tip */}
           <div className="bg-[#f0dfb6] p-2.5 rounded-xl border border-[#1c1308] text-[0.72rem] font-semibold text-[#543b24] leading-relaxed">
-            💡 <b>Rada starého lovce:</b> Každé zranění ze soli nebo hole, které projde skrz Blok, posune odpočet bubáka o Augenblick dál (1 bod = 1 Aug).
-            Jeho <b>Odolnost ({enemy.odolnost} %)</b> z toho však procento sežere. Sledujte bedlivě odpočty a nenechte je dokončit mocné výpady!
+            💡 <b>Rada starého lovce:</b> Každé zranění ze soli nebo hole, které projde skrz Blok,
+            posune odpočet bubáka o Augenblick dál (1 bod = 1 Aug). Jeho{" "}
+            <b>Odolnost ({enemy.odolnost} %)</b> z toho však procento sežere. Sledujte bedlivě
+            odpočty a nenechte je dokončit mocné výpady!
           </div>
         </div>
 

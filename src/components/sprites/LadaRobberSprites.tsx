@@ -1,15 +1,15 @@
-import React from 'react';
+import React from "react";
 
 /**
  * Autentické Ladovské sprity pro loupežníky (Josef Lada: Hrátky s čertem - Sarka Farka).
- * 
+ *
  * Dvě hlavní větve s výrazným paletovým swapem a zbraněmi:
  * 1. Loupežník (Sarka Farka / lesní hejtman):
  *    - Lesní mechově zelený plášť (#284e27)
  *    - Okrové pytlovité nohavice (#a67848) s hrubou záplatou na koleni
  *    - Obrovský sukovitý kyj se železnými hřeby pohupující se v ruce
  *    - Hustý zrzavý vous, baňatý nos a pomačkaný klobouk s bažantím pírkem
- * 
+ *
  * 2. Lupič (Lupič s bambitkami - Palette Swap):
  *    - Půlnoční šedomodrý až uhelný plášť (#1c2433) podšitý sytým karmínovým hedvábím (#801824)
  *    - Tmavé břidlicové kalhoty (#283244)
@@ -19,7 +19,7 @@ import React from 'react';
  */
 
 export function renderLadaRobberSprite(type: string, stage: number = 2): React.ReactNode {
-  const isLupic = type === 'lupic';
+  const isLupic = type === "lupic";
 
   if (isLupic) {
     return renderLupicBambitkas(stage);
@@ -31,16 +31,23 @@ export function renderLadaRobberSprite(type: string, stage: number = 2): React.R
  * LOUPEŽNÍK: Klasický lesní hromotluk s obřím sukovitým kyjem (Sarka Farka)
  */
 function renderLoupeznikClassic(stage: number): React.ReactNode {
-  const capeColor = stage === 3 ? '#1c3d1b' : '#284e27';
-  const beardColor = stage === 0 ? '#b84d1c' : stage === 3 ? '#993008' : '#c8521d';
+  const capeColor = stage === 3 ? "#1c3d1b" : "#284e27";
+  const beardColor = stage === 0 ? "#b84d1c" : stage === 3 ? "#993008" : "#c8521d";
 
   return (
-    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md" aria-label="Loupežník Sarka Farka">
+    <svg
+      viewBox="0 0 120 120"
+      className="w-full h-full drop-shadow-md"
+      aria-label="Loupežník Sarka Farka"
+    >
       {/* Stín na lesní pěšině */}
       <ellipse cx="60" cy="112" rx="40" ry="7" fill="#1c1308" opacity="0.35" />
 
       {/* OBŘÍ SUKOVITÝ DŘEVĚNÝ KYJ za zády se železnými hřeby (animované pohupování) */}
-      <g className="anim-weapon-sway" style={{ transformOrigin: '76px 75px', transformBox: 'view-box' }}>
+      <g
+        className="anim-weapon-sway"
+        style={{ transformOrigin: "76px 75px", transformBox: "view-box" }}
+      >
         <path
           d="M74 100 L76 75 L86 26 C87 18 96 14 105 20 C112 25 112 36 106 44 C100 52 90 62 86 75 L80 102 Z"
           fill="#5a3818"
@@ -53,11 +60,31 @@ function renderLoupeznikClassic(stage: number): React.ReactNode {
         <circle cx="107" cy="27" r="8" fill="#7a4d22" stroke="#1c1308" strokeWidth="3" />
         <circle cx="103" cy="39" r="7.5" fill="#6d441e" stroke="#1c1308" strokeWidth="3" />
         <circle cx="90" cy="34" r="6" fill="#875626" stroke="#1c1308" strokeWidth="2.5" />
-        
+
         {/* Letokruhy a praskliny dřeva */}
-        <ellipse cx="99" cy="29" rx="3.5" ry="2.5" fill="#3b220e" stroke="#1c1308" strokeWidth="1.5" />
-        <path d="M84 56 Q88 64 82 72" fill="none" stroke="#3b220e" strokeWidth="2" strokeLinecap="round" />
-        <path d="M80 78 Q83 88 78 95" fill="none" stroke="#3b220e" strokeWidth="2" strokeLinecap="round" />
+        <ellipse
+          cx="99"
+          cy="29"
+          rx="3.5"
+          ry="2.5"
+          fill="#3b220e"
+          stroke="#1c1308"
+          strokeWidth="1.5"
+        />
+        <path
+          d="M84 56 Q88 64 82 72"
+          fill="none"
+          stroke="#3b220e"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+        <path
+          d="M80 78 Q83 88 78 95"
+          fill="none"
+          stroke="#3b220e"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
 
         {/* Kované železné hřeby a páska */}
         <circle cx="108" cy="22" r="2.2" fill="#d9d2c5" stroke="#1c1308" strokeWidth="1.2" />
@@ -73,12 +100,42 @@ function renderLoupeznikClassic(stage: number): React.ReactNode {
         strokeWidth="3.5"
         strokeLinejoin="round"
       />
-      <path d="M30 68 Q36 86 38 100" fill="none" stroke="#1a351b" strokeWidth="2.5" strokeLinecap="round" />
-      <path d="M90 68 Q84 86 82 100" fill="none" stroke="#1a351b" strokeWidth="2.5" strokeLinecap="round" />
+      <path
+        d="M30 68 Q36 86 38 100"
+        fill="none"
+        stroke="#1a351b"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M90 68 Q84 86 82 100"
+        fill="none"
+        stroke="#1a351b"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
 
       {/* Masivní kožené boty loupežníka */}
-      <rect x="36" y="96" width="16" height="15" rx="5" fill="#3a2517" stroke="#1c1308" strokeWidth="3" />
-      <rect x="68" y="96" width="16" height="15" rx="5" fill="#3a2517" stroke="#1c1308" strokeWidth="3" />
+      <rect
+        x="36"
+        y="96"
+        width="16"
+        height="15"
+        rx="5"
+        fill="#3a2517"
+        stroke="#1c1308"
+        strokeWidth="3"
+      />
+      <rect
+        x="68"
+        y="96"
+        width="16"
+        height="15"
+        rx="5"
+        fill="#3a2517"
+        stroke="#1c1308"
+        strokeWidth="3"
+      />
 
       {/* Široké okrové pytlovité kalhoty */}
       <path
@@ -89,7 +146,17 @@ function renderLoupeznikClassic(stage: number): React.ReactNode {
         strokeLinejoin="round"
       />
       {/* Záplata na koleni s křížkovými stehy */}
-      <rect x="37" y="83" width="10" height="9" rx="1.5" fill="#f0ebd8" stroke="#1c1308" strokeWidth="2" transform="rotate(-6 42 87)" />
+      <rect
+        x="37"
+        y="83"
+        width="10"
+        height="9"
+        rx="1.5"
+        fill="#f0ebd8"
+        stroke="#1c1308"
+        strokeWidth="2"
+        transform="rotate(-6 42 87)"
+      />
       <line x1="39" y1="81" x2="39" y2="94" stroke="#1c1308" strokeWidth="1.2" />
       <line x1="45" y1="81" x2="45" y2="94" stroke="#1c1308" strokeWidth="1.2" />
 
@@ -102,19 +169,53 @@ function renderLoupeznikClassic(stage: number): React.ReactNode {
         strokeLinejoin="round"
       />
       {/* Červená vestička vykukující v rozhalence */}
-      <path d="M52 46 L60 62 L68 46 Z" fill="#c4321d" stroke="#1c1308" strokeWidth="2.5" strokeLinejoin="round" />
+      <path
+        d="M52 46 L60 62 L68 46 Z"
+        fill="#c4321d"
+        stroke="#1c1308"
+        strokeWidth="2.5"
+        strokeLinejoin="round"
+      />
 
       {/* Široký kožený pás loupežníka s mosaznou přezkou a váčkem */}
-      <rect x="34" y="70" width="52" height="10" rx="2" fill="#24170e" stroke="#1c1308" strokeWidth="3" />
-      <rect x="54" y="68" width="12" height="14" rx="2.5" fill="#d49b38" stroke="#1c1308" strokeWidth="2" />
+      <rect
+        x="34"
+        y="70"
+        width="52"
+        height="10"
+        rx="2"
+        fill="#24170e"
+        stroke="#1c1308"
+        strokeWidth="3"
+      />
+      <rect
+        x="54"
+        y="68"
+        width="12"
+        height="14"
+        rx="2.5"
+        fill="#d49b38"
+        stroke="#1c1308"
+        strokeWidth="2"
+      />
       <rect x="57" y="71" width="6" height="8" rx="1" fill="#24170e" />
       <ellipse cx="40" cy="78" rx="4.5" ry="5" fill="#4d301b" stroke="#1c1308" strokeWidth="2" />
 
       {/* Silné paže - levá v bok, pravá drží kyj */}
-      <path d="M30 48 Q20 58 24 72 Q30 76 35 68 L36 52 Z" fill="#ede2cb" stroke="#1c1308" strokeWidth="3" />
+      <path
+        d="M30 48 Q20 58 24 72 Q30 76 35 68 L36 52 Z"
+        fill="#ede2cb"
+        stroke="#1c1308"
+        strokeWidth="3"
+      />
       <circle cx="25" cy="74" r="5.5" fill="#d9aa7e" stroke="#1c1308" strokeWidth="2.5" />
 
-      <path d="M88 48 Q94 60 86 72 Q80 74 76 66 L82 50 Z" fill="#ede2cb" stroke="#1c1308" strokeWidth="3" />
+      <path
+        d="M88 48 Q94 60 86 72 Q80 74 76 66 L82 50 Z"
+        fill="#ede2cb"
+        stroke="#1c1308"
+        strokeWidth="3"
+      />
       <circle cx="83" cy="73" r="5.5" fill="#d9aa7e" stroke="#1c1308" strokeWidth="2.5" />
 
       {/* Břichatá hlava a huňatý zrzavý plnovous */}
@@ -128,9 +229,27 @@ function renderLoupeznikClassic(stage: number): React.ReactNode {
         strokeWidth="3"
         strokeLinejoin="round"
       />
-      <path d="M46 52 Q44 62 50 63" fill="none" stroke="#9e3a10" strokeWidth="2" strokeLinecap="round" />
-      <path d="M60 54 Q60 66 58 68" fill="none" stroke="#9e3a10" strokeWidth="2.5" strokeLinecap="round" />
-      <path d="M74 52 Q76 62 70 63" fill="none" stroke="#9e3a10" strokeWidth="2" strokeLinecap="round" />
+      <path
+        d="M46 52 Q44 62 50 63"
+        fill="none"
+        stroke="#9e3a10"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M60 54 Q60 66 58 68"
+        fill="none"
+        stroke="#9e3a10"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M74 52 Q76 62 70 63"
+        fill="none"
+        stroke="#9e3a10"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
 
       {/* Mohutný knír */}
       <path
@@ -142,8 +261,20 @@ function renderLoupeznikClassic(stage: number): React.ReactNode {
       />
 
       {/* Očka s divokým zrzavým obočím */}
-      <path d="M48 31 Q53 28 57 32" fill="none" stroke="#8c2f0a" strokeWidth="3" strokeLinecap="round" />
-      <path d="M63 32 Q67 28 72 31" fill="none" stroke="#8c2f0a" strokeWidth="3" strokeLinecap="round" />
+      <path
+        d="M48 31 Q53 28 57 32"
+        fill="none"
+        stroke="#8c2f0a"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M63 32 Q67 28 72 31"
+        fill="none"
+        stroke="#8c2f0a"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
 
       <circle cx="53" cy="35" r="3.5" fill="#fcf6ea" stroke="#1c1308" strokeWidth="2" />
       <circle cx="67" cy="35" r="3.5" fill="#fcf6ea" stroke="#1c1308" strokeWidth="2" />
@@ -157,7 +288,15 @@ function renderLoupeznikClassic(stage: number): React.ReactNode {
       {/* Červený bambulovitý nos a ruměné tváře */}
       <circle cx="46" cy="38" r="4.5" fill="#d95b43" opacity="0.6" />
       <circle cx="74" cy="38" r="4.5" fill="#d95b43" opacity="0.6" />
-      <ellipse cx="60" cy="39" rx="4.5" ry="3.8" fill="#c4432c" stroke="#1c1308" strokeWidth="2.2" />
+      <ellipse
+        cx="60"
+        cy="39"
+        rx="4.5"
+        ry="3.8"
+        fill="#c4432c"
+        stroke="#1c1308"
+        strokeWidth="2.2"
+      />
 
       {/* Pomačkaný loupežnický klobouk s bažantím perem */}
       <path
@@ -185,11 +324,15 @@ function renderLoupeznikClassic(stage: number): React.ReactNode {
  * LUPIČ: Noční přepadávač s karmínově podšitým pláštěm a DVĚMA MOSAZNÝMI BAMBITKAMI (Palette Swap)
  */
 function renderLupicBambitkas(stage: number): React.ReactNode {
-  const cloakColor = stage === 3 ? '#0f172a' : '#1c2433';
-  const liningColor = '#801824';
+  const cloakColor = stage === 3 ? "#0f172a" : "#1c2433";
+  const liningColor = "#801824";
 
   return (
-    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md" aria-label="Lupič s bambitkami">
+    <svg
+      viewBox="0 0 120 120"
+      className="w-full h-full drop-shadow-md"
+      aria-label="Lupič s bambitkami"
+    >
       {/* Noční stín */}
       <ellipse cx="60" cy="112" rx="36" ry="6.5" fill="#1c1308" opacity="0.4" />
 
@@ -202,12 +345,40 @@ function renderLupicBambitkas(stage: number): React.ReactNode {
         strokeLinejoin="round"
       />
       {/* Vlající karmínová podšívka na okrajích */}
-      <path d="M38 102 Q34 88 32 74 Q30 92 38 102 Z" fill={liningColor} stroke="#1c1308" strokeWidth="1.8" />
-      <path d="M82 102 Q86 88 88 74 Q90 92 82 102 Z" fill={liningColor} stroke="#1c1308" strokeWidth="1.8" />
+      <path
+        d="M38 102 Q34 88 32 74 Q30 92 38 102 Z"
+        fill={liningColor}
+        stroke="#1c1308"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M82 102 Q86 88 88 74 Q90 92 82 102 Z"
+        fill={liningColor}
+        stroke="#1c1308"
+        strokeWidth="1.8"
+      />
 
       {/* Šedé břidlicové nohavice s botami */}
-      <rect x="42" y="98" width="13" height="13" rx="4" fill="#1c1308" stroke="#1c1308" strokeWidth="2.8" />
-      <rect x="65" y="98" width="13" height="13" rx="4" fill="#1c1308" stroke="#1c1308" strokeWidth="2.8" />
+      <rect
+        x="42"
+        y="98"
+        width="13"
+        height="13"
+        rx="4"
+        fill="#1c1308"
+        stroke="#1c1308"
+        strokeWidth="2.8"
+      />
+      <rect
+        x="65"
+        y="98"
+        width="13"
+        height="13"
+        rx="4"
+        fill="#1c1308"
+        stroke="#1c1308"
+        strokeWidth="2.8"
+      />
       {/* Stříbrné přezky na botách */}
       <rect x="45" y="103" width="5" height="3" fill="#cbd5e1" stroke="#1c1308" strokeWidth="1" />
       <rect x="68" y="103" width="5" height="3" fill="#cbd5e1" stroke="#1c1308" strokeWidth="1" />
@@ -220,7 +391,17 @@ function renderLupicBambitkas(stage: number): React.ReactNode {
         strokeWidth="3.5"
         strokeLinejoin="round"
       />
-      <rect x="41" y="85" width="8" height="7" rx="1" fill="#64748b" stroke="#1c1308" strokeWidth="1.8" transform="rotate(-5 45 88)" />
+      <rect
+        x="41"
+        y="85"
+        width="8"
+        height="7"
+        rx="1"
+        fill="#64748b"
+        stroke="#1c1308"
+        strokeWidth="1.8"
+        transform="rotate(-5 45 88)"
+      />
 
       {/* Tmavá košile a černá kožená vesta */}
       <path
@@ -262,11 +443,39 @@ function renderLupicBambitkas(stage: number): React.ReactNode {
       />
 
       {/* Přimhouřené vychytralé oči */}
-      <path d="M50 32 Q54 30 58 33" fill="none" stroke="#8c2f0a" strokeWidth="2.5" strokeLinecap="round" />
-      <path d="M62 33 Q66 30 70 32" fill="none" stroke="#8c2f0a" strokeWidth="2.5" strokeLinecap="round" />
+      <path
+        d="M50 32 Q54 30 58 33"
+        fill="none"
+        stroke="#8c2f0a"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M62 33 Q66 30 70 32"
+        fill="none"
+        stroke="#8c2f0a"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
 
-      <ellipse cx="54" cy="35" rx="3.2" ry="2.8" fill="#fcf6ea" stroke="#1c1308" strokeWidth="1.8" />
-      <ellipse cx="66" cy="35" rx="3.2" ry="2.8" fill="#fcf6ea" stroke="#1c1308" strokeWidth="1.8" />
+      <ellipse
+        cx="54"
+        cy="35"
+        rx="3.2"
+        ry="2.8"
+        fill="#fcf6ea"
+        stroke="#1c1308"
+        strokeWidth="1.8"
+      />
+      <ellipse
+        cx="66"
+        cy="35"
+        rx="3.2"
+        ry="2.8"
+        fill="#fcf6ea"
+        stroke="#1c1308"
+        strokeWidth="1.8"
+      />
       <g className="anim-lada-blink">
         <circle cx="55" cy="35" r="1.9" fill="#1c1308" />
         <circle cx="65" cy="35" r="1.9" fill="#1c1308" />
@@ -295,7 +504,13 @@ function renderLupicBambitkas(stage: number): React.ReactNode {
         strokeLinejoin="round"
       />
       {/* Černé lesklé pero */}
-      <path d="M58 8 Q65 14 70 24" fill="none" stroke="#0f172a" strokeWidth="3" strokeLinecap="round" />
+      <path
+        d="M58 8 Q65 14 70 24"
+        fill="none"
+        stroke="#0f172a"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
       <line x1="58" y1="8" x2="63" y2="18" stroke="#38bdf8" strokeWidth="1" />
 
       {/* =========================================================================
@@ -303,18 +518,55 @@ function renderLupicBambitkas(stage: number): React.ReactNode {
        * ========================================================================= */}
 
       {/* LEVÁ BAMBITKA */}
-      <g style={{ transformOrigin: '42px 64px' }}>
+      <g style={{ transformOrigin: "42px 64px" }}>
         <path d="M40 50 Q32 58 38 66 L44 64" fill="#e2e8f0" stroke="#1c1308" strokeWidth="2.8" />
         <circle cx="41" cy="65" r="4" fill="#e3b588" stroke="#1c1308" strokeWidth="2" />
 
         {/* Dřevěná pažba pistole */}
-        <path d="M42 66 L30 62 L20 61 L16 63" fill="none" stroke="#6d3f18" strokeWidth="4.5" strokeLinecap="round" />
+        <path
+          d="M42 66 L30 62 L20 61 L16 63"
+          fill="none"
+          stroke="#6d3f18"
+          strokeWidth="4.5"
+          strokeLinecap="round"
+        />
         {/* Mosazný křesadlový zámek */}
-        <rect x="31" y="58" width="6" height="5" rx="1" fill="#f59e0b" stroke="#1c1308" strokeWidth="1.5" />
+        <rect
+          x="31"
+          y="58"
+          width="6"
+          height="5"
+          rx="1"
+          fill="#f59e0b"
+          stroke="#1c1308"
+          strokeWidth="1.5"
+        />
         {/* Mosazná hlaveň rozšiřující se do trychtýře */}
-        <line x1="32" y1="61" x2="16" y2="59" stroke="#b45309" strokeWidth="4" strokeLinecap="square" />
-        <polygon points="16,55 5,49 5,69 16,63" fill="#f59e0b" stroke="#1c1308" strokeWidth="2.2" strokeLinejoin="round" />
-        <ellipse cx="5" cy="59" rx="2.5" ry="9.5" fill="#1c1308" stroke="#ffd438" strokeWidth="1.8" />
+        <line
+          x1="32"
+          y1="61"
+          x2="16"
+          y2="59"
+          stroke="#b45309"
+          strokeWidth="4"
+          strokeLinecap="square"
+        />
+        <polygon
+          points="16,55 5,49 5,69 16,63"
+          fill="#f59e0b"
+          stroke="#1c1308"
+          strokeWidth="2.2"
+          strokeLinejoin="round"
+        />
+        <ellipse
+          cx="5"
+          cy="59"
+          rx="2.5"
+          ry="9.5"
+          fill="#1c1308"
+          stroke="#ffd438"
+          strokeWidth="1.8"
+        />
 
         {/* Jiskry šlehající z levé hlavně */}
         <circle cx="0" cy="57" r="1.8" fill="#ffd438" className="anim-spark-1" />
@@ -322,25 +574,86 @@ function renderLupicBambitkas(stage: number): React.ReactNode {
 
         {/* Šedobílý kouř stoupající z ústí */}
         <g className="anim-pipe-smoke">
-          <circle cx="3" cy="54" r="2.5" fill="#ffffff" opacity="0.8" stroke="#1c1308" strokeWidth="0.8" />
-          <circle cx="-1" cy="48" r="3.5" fill="#e2e8f0" opacity="0.65" stroke="#1c1308" strokeWidth="0.8" />
-          <circle cx="-5" cy="40" r="5" fill="#cbd5e1" opacity="0.4" stroke="#1c1308" strokeWidth="0.8" />
+          <circle
+            cx="3"
+            cy="54"
+            r="2.5"
+            fill="#ffffff"
+            opacity="0.8"
+            stroke="#1c1308"
+            strokeWidth="0.8"
+          />
+          <circle
+            cx="-1"
+            cy="48"
+            r="3.5"
+            fill="#e2e8f0"
+            opacity="0.65"
+            stroke="#1c1308"
+            strokeWidth="0.8"
+          />
+          <circle
+            cx="-5"
+            cy="40"
+            r="5"
+            fill="#cbd5e1"
+            opacity="0.4"
+            stroke="#1c1308"
+            strokeWidth="0.8"
+          />
         </g>
       </g>
 
       {/* PRAVÁ BAMBITKA */}
-      <g style={{ transformOrigin: '78px 64px' }}>
+      <g style={{ transformOrigin: "78px 64px" }}>
         <path d="M80 50 Q88 58 82 66 L76 64" fill="#e2e8f0" stroke="#1c1308" strokeWidth="2.8" />
         <circle cx="79" cy="65" r="4" fill="#e3b588" stroke="#1c1308" strokeWidth="2" />
 
         {/* Dřevěná pažba pistole */}
-        <path d="M78 66 L90 62 L100 61 L104 63" fill="none" stroke="#6d3f18" strokeWidth="4.5" strokeLinecap="round" />
+        <path
+          d="M78 66 L90 62 L100 61 L104 63"
+          fill="none"
+          stroke="#6d3f18"
+          strokeWidth="4.5"
+          strokeLinecap="round"
+        />
         {/* Mosazný křesadlový zámek */}
-        <rect x="83" y="58" width="6" height="5" rx="1" fill="#f59e0b" stroke="#1c1308" strokeWidth="1.5" />
+        <rect
+          x="83"
+          y="58"
+          width="6"
+          height="5"
+          rx="1"
+          fill="#f59e0b"
+          stroke="#1c1308"
+          strokeWidth="1.5"
+        />
         {/* Mosazná hlaveň rozšiřující se do trychtýře */}
-        <line x1="88" y1="61" x2="104" y2="59" stroke="#b45309" strokeWidth="4" strokeLinecap="square" />
-        <polygon points="104,55 115,49 115,69 104,63" fill="#f59e0b" stroke="#1c1308" strokeWidth="2.2" strokeLinejoin="round" />
-        <ellipse cx="115" cy="59" rx="2.5" ry="9.5" fill="#1c1308" stroke="#ffd438" strokeWidth="1.8" />
+        <line
+          x1="88"
+          y1="61"
+          x2="104"
+          y2="59"
+          stroke="#b45309"
+          strokeWidth="4"
+          strokeLinecap="square"
+        />
+        <polygon
+          points="104,55 115,49 115,69 104,63"
+          fill="#f59e0b"
+          stroke="#1c1308"
+          strokeWidth="2.2"
+          strokeLinejoin="round"
+        />
+        <ellipse
+          cx="115"
+          cy="59"
+          rx="2.5"
+          ry="9.5"
+          fill="#1c1308"
+          stroke="#ffd438"
+          strokeWidth="1.8"
+        />
 
         {/* Jiskry šlehající z pravé hlavně */}
         <circle cx="120" cy="57" r="1.8" fill="#ffd438" className="anim-spark-2" />
@@ -348,9 +661,33 @@ function renderLupicBambitkas(stage: number): React.ReactNode {
 
         {/* Šedobílý kouř stoupající z ústí */}
         <g className="anim-pipe-smoke">
-          <circle cx="117" cy="54" r="2.5" fill="#ffffff" opacity="0.8" stroke="#1c1308" strokeWidth="0.8" />
-          <circle cx="121" cy="48" r="3.5" fill="#e2e8f0" opacity="0.65" stroke="#1c1308" strokeWidth="0.8" />
-          <circle cx="125" cy="40" r="5" fill="#cbd5e1" opacity="0.4" stroke="#1c1308" strokeWidth="0.8" />
+          <circle
+            cx="117"
+            cy="54"
+            r="2.5"
+            fill="#ffffff"
+            opacity="0.8"
+            stroke="#1c1308"
+            strokeWidth="0.8"
+          />
+          <circle
+            cx="121"
+            cy="48"
+            r="3.5"
+            fill="#e2e8f0"
+            opacity="0.65"
+            stroke="#1c1308"
+            strokeWidth="0.8"
+          />
+          <circle
+            cx="125"
+            cy="40"
+            r="5"
+            fill="#cbd5e1"
+            opacity="0.4"
+            stroke="#1c1308"
+            strokeWidth="0.8"
+          />
         </g>
       </g>
     </svg>

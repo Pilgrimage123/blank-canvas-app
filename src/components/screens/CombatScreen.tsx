@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { GameState, CardDef, EnemyInstance } from '../../types';
-import { HEROES, CARD_DB, ENEMY_ACTIONS, TRAITS, LOCATIONS } from '../../data/gameData';
-import { cardDamageCalc } from '../../utils/gameEngine';
-import { HunterSprite } from '../sprites/HunterSprite';
-import { EnemySprite } from '../sprites/EnemySprite';
-import { CombatLandscapeArena } from '../sprites/CombatLandscapeArena';
-import { CardView } from '../CardView';
+import React, { useState } from "react";
+import { GameState, CardDef, EnemyInstance } from "../../types";
+import { HEROES, CARD_DB, ENEMY_ACTIONS, TRAITS, LOCATIONS } from "../../data/gameData";
+import { cardDamageCalc } from "../../utils/gameEngine";
+import { HunterSprite } from "../sprites/HunterSprite";
+import { EnemySprite } from "../sprites/EnemySprite";
+import { CombatLandscapeArena } from "../sprites/CombatLandscapeArena";
+import { CardView } from "../CardView";
 
 interface CombatScreenProps {
   state: GameState;
@@ -19,7 +19,7 @@ interface CombatScreenProps {
   onSetFocus: (uid: string) => void;
   onOpenEnemyDetail: (uid: string) => void;
   onOpenHeroDetail?: () => void;
-  onOpenPiles: (which: 'deck' | 'discard' | 'all') => void;
+  onOpenPiles: (which: "deck" | "discard" | "all") => void;
   onOpenLog: () => void;
   onBackToMenu?: () => void;
   onOpenBestiary?: () => void;
@@ -40,7 +40,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   onOpenPiles,
   onOpenLog,
   onBackToMenu,
-  onOpenBestiary
+  onOpenBestiary,
 }) => {
   const [hoveredCardDef, setHoveredCardDef] = useState<CardDef | null>(null);
   const [selectedHandIdx, setSelectedHandIdx] = useState<number | null>(null);
@@ -51,29 +51,39 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   if (!combat) return null;
 
   const hero = HEROES[state.hero] || HEROES.pobuda;
-  const curLoc = LOCATIONS.find((l) => l.id === combat.locId) || LOCATIONS[state.locIndex] || LOCATIONS[0];
+  const curLoc =
+    LOCATIONS.find((l) => l.id === combat.locId) || LOCATIONS[state.locIndex] || LOCATIONS[0];
   const livingEnemies = combat.enemies.filter((e) => e.alive && e.hp > 0);
-  const focusEnemy = livingEnemies.find((e) => e.uid === combat.focus) || livingEnemies[0] || combat.enemies[0];
+  const focusEnemy =
+    livingEnemies.find((e) => e.uid === combat.focus) || livingEnemies[0] || combat.enemies[0];
 
   // Breath gain calculation
   const baseBreath = hero.breath || 6;
-  const breathGain = Math.max(1, Math.round(baseBreath * (1 - 0.05 * combat.fatigue)) - combat.breathPen);
+  const breathGain = Math.max(
+    1,
+    Math.round(baseBreath * (1 - 0.05 * combat.fatigue)) - combat.breathPen,
+  );
 
   // Sleep reduction calculation
   const sleepDrop = hero.sleepFat || 7;
 
   // Can player spend time / take actions?
-  const isPlayerTurn = combat.playerTimer <= 0 && !combat.pendingCard && !combat.pauseTime && state.hp > 0;
+  const isPlayerTurn =
+    combat.playerTimer <= 0 && !combat.pendingCard && !combat.pauseTime && state.hp > 0;
 
   // Incoming strike damage on player preview
   let incomingDamage = 0;
-  if (focusEnemy && focusEnemy.nextAction === 'uder' && focusEnemy.alive) {
+  if (focusEnemy && focusEnemy.nextAction === "uder" && focusEnemy.alive) {
     incomingDamage = focusEnemy.dmg + (focusEnemy.omen || 0);
   }
   const incomingThroughBlock = combat.dodge > 0 ? 0 : Math.max(0, incomingDamage - combat.block);
 
   // Active previewed card: either hovered in hand or selected
-  const activePreviewCardDef = hoveredCardDef || (selectedHandIdx !== null && combat.hand[selectedHandIdx] ? CARD_DB[combat.hand[selectedHandIdx].id] : null);
+  const activePreviewCardDef =
+    hoveredCardDef ||
+    (selectedHandIdx !== null && combat.hand[selectedHandIdx]
+      ? CARD_DB[combat.hand[selectedHandIdx].id]
+      : null);
 
   // First playable attack card index in hand (for quick attack action directly on enemy)
   const firstPlayableAttackIdx = combat.hand.findIndex((c) => {
@@ -126,16 +136,19 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
     if (!activePreviewCardDef || !activePreviewCardDef.dmg || !enemy.alive) return 0;
 
     const isMainTarget = enemy.uid === focusEnemy?.uid;
-    if (activePreviewCardDef.intent === 'row') {
-      const targetRow = focusEnemy?.row || (combat.enemies.indexOf(focusEnemy!) < 4 ? 'front' : 'back');
-      const enemyRow = enemy.row || (combat.enemies.indexOf(enemy) < 4 ? 'front' : 'back');
-      const hasBackRow = combat.enemies.some((e) => (e.row === 'back' || (!e.row && combat.enemies.indexOf(e) >= 4)) && e.alive);
+    if (activePreviewCardDef.intent === "row") {
+      const targetRow =
+        focusEnemy?.row || (combat.enemies.indexOf(focusEnemy!) < 4 ? "front" : "back");
+      const enemyRow = enemy.row || (combat.enemies.indexOf(enemy) < 4 ? "front" : "back");
+      const hasBackRow = combat.enemies.some(
+        (e) => (e.row === "back" || (!e.row && combat.enemies.indexOf(e) >= 4)) && e.alive,
+      );
       if (hasBackRow) {
         return enemyRow === targetRow ? cardDamageCalc(activePreviewCardDef, enemy) : 0;
       }
       return cardDamageCalc(activePreviewCardDef, enemy);
     }
-    if (activePreviewCardDef.intent === 'splash') {
+    if (activePreviewCardDef.intent === "splash") {
       return isMainTarget
         ? cardDamageCalc(activePreviewCardDef, enemy)
         : Math.round(cardDamageCalc(activePreviewCardDef, enemy) * 0.4);
@@ -149,21 +162,22 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   // Two-row battle formation: front row (up to 4 on dirt road) and back row (up to 4 on upper ridge)
   const hasExplicitRows = combat.enemies.some((e) => e.row !== undefined);
   const frontRowEnemies = hasExplicitRows
-    ? combat.enemies.filter((e) => e.row === 'front' || !e.row)
+    ? combat.enemies.filter((e) => e.row === "front" || !e.row)
     : combat.enemies.slice(0, Math.min(4, combat.enemies.length));
   const backRowEnemies = hasExplicitRows
-    ? combat.enemies.filter((e) => e.row === 'back')
+    ? combat.enemies.filter((e) => e.row === "back")
     : combat.enemies.slice(4, 8);
 
-  const renderEnemyItem = (enemy: EnemyInstance, rowIdx: number, rowType: 'front' | 'back') => {
+  const renderEnemyItem = (enemy: EnemyInstance, rowIdx: number, rowType: "front" | "back") => {
     const isFocused = enemy.uid === focusEnemy?.uid;
     const previewDmg = getPreviewDamageForEnemy(enemy);
     const hpAfterPreview = Math.max(0, enemy.hp - Math.max(0, previewDmg - enemy.block));
     const isLethal = previewDmg > 0 && hpAfterPreview <= 0;
 
-    const depthScale = rowType === 'front' ? 'scale-100' : 'scale-90 sm:scale-95';
-    const zIndexClass = isFocused ? 'z-30' : rowType === 'front' ? 'z-25' : 'z-15';
-    const verticalOffset = rowType === 'front' ? 'translate-y-0' : '-translate-y-1 sm:-translate-y-2';
+    const depthScale = rowType === "front" ? "scale-100" : "scale-90 sm:scale-95";
+    const zIndexClass = isFocused ? "z-30" : rowType === "front" ? "z-25" : "z-15";
+    const verticalOffset =
+      rowType === "front" ? "translate-y-0" : "-translate-y-1 sm:-translate-y-2";
 
     return (
       <div
@@ -172,11 +186,11 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
         className={`
           relative flex flex-col items-center transition-all duration-200 cursor-pointer select-none
           ${depthScale} ${zIndexClass} ${verticalOffset}
-          ${!enemy.alive ? 'opacity-40 grayscale-[0.5]' : 'hover:-translate-y-1'}
+          ${!enemy.alive ? "opacity-40 grayscale-[0.5]" : "hover:-translate-y-1"}
         `}
         style={{
-          minWidth: rowType === 'front' ? '98px' : '90px',
-          maxWidth: rowType === 'front' ? '145px' : '135px'
+          minWidth: rowType === "front" ? "98px" : "90px",
+          maxWidth: rowType === "front" ? "145px" : "135px",
         }}
       >
         {/* 1. TARGET RETICLE & FOCUS FRAME */}
@@ -195,12 +209,16 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
             {/* Comic reaction pops */}
             {enemy.isHit && (
               <div className="absolute -top-5 right-0 z-30 anim-comic-pop bg-[#ffd438] text-[#1c1308] border-2 border-[#1c1308] font-black text-[0.65rem] px-1.5 py-0.2 rounded-full shadow-md">
-                {enemy.saltDot > 0 ? 'Sssst! 🧂' : 'Bác! 💥'}
+                {enemy.saltDot > 0 ? "Sssst! 🧂" : "Bác! 💥"}
               </div>
             )}
             {enemy.isAttacking && (
               <div className="absolute -top-5 left-0 z-30 anim-comic-pop bg-[#f06e56] text-white border-2 border-[#1c1308] font-black text-[0.65rem] px-1.5 py-0.2 rounded-full shadow-md">
-                {enemy.nextAction === 'bafnuti_z_dymky' ? 'Puf! ☁️' : enemy.type === 'vodnik' ? 'Šplouch! 💦' : 'Žuch! 👊'}
+                {enemy.nextAction === "bafnuti_z_dymky"
+                  ? "Puf! ☁️"
+                  : enemy.type === "vodnik"
+                    ? "Šplouch! 💦"
+                    : "Žuch! 👊"}
               </div>
             )}
 
@@ -208,31 +226,44 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
             <div
               className={`
                 px-1.5 py-0.5 rounded-xl border-1.5 border-[#1c1308] shadow-xs flex items-center gap-1 text-[0.62rem] font-bold transition-all
-                ${isFocused ? 'bg-[#fff4cf] ring-2 ring-[#e69818]' : 'bg-[#fffaf0]/95'}
+                ${isFocused ? "bg-[#fff4cf] ring-2 ring-[#e69818]" : "bg-[#fffaf0]/95"}
               `}
-              title={`Záměr: ${ENEMY_ACTIONS[enemy.nextAction || 'uder']?.name || enemy.nextAction} za ${Math.max(0, enemy.timer)} Aug`}
+              title={`Záměr: ${ENEMY_ACTIONS[enemy.nextAction || "uder"]?.name || enemy.nextAction} za ${Math.max(0, enemy.timer)} Aug`}
             >
               <span className="text-[0.65rem]">
                 {(() => {
                   switch (enemy.nextAction) {
-                    case 'uder': return '⚔️';
-                    case 'ukryt': return '🛡️';
-                    case 'zlovest': return '😤';
-                    case 'vabnicka': return '📣';
-                    case 'odveta': return '⚡';
-                    case 'zatuhnuti': return '🧊';
-                    case 'skrek': return '😱';
-                    case 'puch': return '🦨';
-                    case 'vtipek': return '🃏';
-                    case 'bafnuti_z_dymky': return '💨';
-                    case 'kouzelna_polivcicka': return '🍲';
-                    case 'rybnicni_mlha': return '🌫️';
-                    default: return '💨';
+                    case "uder":
+                      return "⚔️";
+                    case "ukryt":
+                      return "🛡️";
+                    case "zlovest":
+                      return "😤";
+                    case "vabnicka":
+                      return "📣";
+                    case "odveta":
+                      return "⚡";
+                    case "zatuhnuti":
+                      return "🧊";
+                    case "skrek":
+                      return "😱";
+                    case "puch":
+                      return "🦨";
+                    case "vtipek":
+                      return "🃏";
+                    case "bafnuti_z_dymky":
+                      return "💨";
+                    case "kouzelna_polivcicka":
+                      return "🍲";
+                    case "rybnicni_mlha":
+                      return "🌫️";
+                    default:
+                      return "💨";
                   }
                 })()}
               </span>
               <span className="font-black text-[#1c1308] truncate max-w-[55px] sm:max-w-[70px]">
-                {ENEMY_ACTIONS[enemy.nextAction || 'uder']?.name || enemy.nextAction}
+                {ENEMY_ACTIONS[enemy.nextAction || "uder"]?.name || enemy.nextAction}
               </span>
               <span className="bg-[#1c1308] text-[#ffd438] px-1 rounded-full text-[0.55rem] font-black ml-0.5">
                 {Math.max(0, enemy.timer)}
@@ -268,7 +299,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
             variantIndex={enemy.variantIndex}
             variantName={enemy.name}
             variantLevel={enemy.level}
-            size={rowType === 'front' ? 108 : 92}
+            size={rowType === "front" ? 108 : 92}
             isHit={enemy.isHit}
             isAttacking={enemy.isAttacking}
           />
@@ -310,7 +341,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
         <div
           className={`
             w-full mt-0.5 p-1 rounded-xl border-1.5 border-[#1c1308] text-center shadow-[0_2px_0_rgba(28,19,8,0.25)] transition-colors
-            ${isFocused ? 'bg-[#fffcf2] ring-2 ring-[#d69818]' : 'bg-[#fff8e8]/95'}
+            ${isFocused ? "bg-[#fffcf2] ring-2 ring-[#d69818]" : "bg-[#fff8e8]/95"}
           `}
         >
           <div className="font-title font-black text-[0.68rem] text-[#1c1308] truncate">
@@ -324,9 +355,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                 ❤️ {enemy.hp}/{enemy.maxHp}
               </span>
               {enemy.block > 0 && (
-                <span className="text-[#1c4b7d] font-black">
-                  🛡️ +{enemy.block}
-                </span>
+                <span className="text-[#1c4b7d] font-black">🛡️ +{enemy.block}</span>
               )}
             </div>
             <div className="w-full h-1.5 bg-[#fce0d8] rounded-full border border-[#1c1308] overflow-hidden relative mt-0.5">
@@ -340,9 +369,12 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
           {/* Role and Traits chips */}
           <div className="flex flex-wrap items-center justify-center gap-0.5 mt-0.5">
             <span className="bg-[#ebdcb9] px-1 py-0.2 rounded border border-[#1c1308] text-[0.55rem] font-black text-[#422915]">
-              {enemy.role === 'linie' ? 'Linie' : enemy.role === 'podpora' ? 'Podpora' : 'Dělostř.'}
+              {enemy.role === "linie" ? "Linie" : enemy.role === "podpora" ? "Podpora" : "Dělostř."}
             </span>
-            <span className="bg-[#edd8b0] px-1 py-0.2 rounded border border-[#1c1308] text-[0.55rem] font-bold text-[#422915]" title="Odolnost zkracuje odklad zranění">
+            <span
+              className="bg-[#edd8b0] px-1 py-0.2 rounded border border-[#1c1308] text-[0.55rem] font-bold text-[#422915]"
+              title="Odolnost zkracuje odklad zranění"
+            >
               {enemy.odolnost}%
             </span>
           </div>
@@ -353,7 +385,13 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
               type="button"
               onClick={(e) => handleQuickAttackOnEnemy(e, enemy.uid)}
               className="mt-1 w-full bg-gradient-to-r from-[#ffd438] to-[#f09a24] hover:from-[#ffe066] hover:to-[#ffa834] text-[#1c1308] border-1.5 border-[#1c1308] rounded-md py-0.5 text-[0.62rem] font-black shadow-xs cursor-pointer transition-transform active:scale-95 flex items-center justify-center gap-0.5"
-              title={selectedHandIdx !== null ? 'Zahrát vybranou kartu na tohoto bubáka' : firstPlayableAttackIdx !== -1 ? `Zahrát ${CARD_DB[combat.hand[firstPlayableAttackIdx].id]?.name || 'útok'} na tohoto bubáka` : 'Vyberte útočnou kartu níže'}
+              title={
+                selectedHandIdx !== null
+                  ? "Zahrát vybranou kartu na tohoto bubáka"
+                  : firstPlayableAttackIdx !== -1
+                    ? `Zahrát ${CARD_DB[combat.hand[firstPlayableAttackIdx].id]?.name || "útok"} na tohoto bubáka`
+                    : "Vyberte útočnou kartu níže"
+              }
             >
               <span>⚔️</span>
               <span className="truncate max-w-[85px]">
@@ -361,7 +399,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                   ? `Zahrát (${CARD_DB[combat.hand[selectedHandIdx].id]?.name})`
                   : firstPlayableAttackIdx !== -1
                     ? `Útok (${CARD_DB[combat.hand[firstPlayableAttackIdx].id]?.name})`
-                    : 'Zacílit'}
+                    : "Zacílit"}
               </span>
             </button>
           )}
@@ -417,7 +455,10 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
               </button>
             )}
             {combat.playerTimer > 0 && !combat.pendingCard && (
-              <span className="bg-[#eaf5e1] px-2.5 py-0.5 rounded-full border border-[#2d6328] text-xs font-black text-[#1a4016] animate-pulse" title="Čas do prvního tahu obou stran běží 3× rychleji">
+              <span
+                className="bg-[#eaf5e1] px-2.5 py-0.5 rounded-full border border-[#2d6328] text-xs font-black text-[#1a4016] animate-pulse"
+                title="Čas do prvního tahu obou stran běží 3× rychleji"
+              >
                 ⚡ 3× zrychlený rozběh
               </span>
             )}
@@ -445,7 +486,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
             <div className="flex flex-col items-center relative z-20 max-w-[160px] sm:max-w-[210px] flex-none">
               {/* Hunter State Bubble (Nápřah, Připraven, Au!) */}
               <div className="mb-1 flex flex-col items-center">
-                {combat.playerBusy === 'hit' && (
+                {combat.playerBusy === "hit" && (
                   <div className="anim-comic-pop bg-[#f06e56] text-white border-2 border-[#1c1308] font-black text-xs px-2.5 py-0.5 rounded-full shadow-md -mb-2 z-30">
                     Au! 💥
                   </div>
@@ -453,14 +494,14 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                 <div
                   className={`
                     text-[0.68rem] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border-2 border-[#1c1308] shadow-xs
-                    ${combat.pendingCard ? 'bg-[#ffd438] text-[#1c1308] animate-pulse' : combat.playerTimer > 0 ? 'bg-[#ffd29e] text-[#703b0c]' : 'bg-[#a3e082] text-[#0e3b05]'}
+                    ${combat.pendingCard ? "bg-[#ffd438] text-[#1c1308] animate-pulse" : combat.playerTimer > 0 ? "bg-[#ffd29e] text-[#703b0c]" : "bg-[#a3e082] text-[#0e3b05]"}
                   `}
                 >
                   {combat.pendingCard
                     ? `Nápřah (${combat.playerTimer} Aug)`
                     : combat.playerTimer > 0
                       ? `Příprava (${combat.playerTimer} Aug)`
-                      : 'Připraven k akci'}
+                      : "Připraven k akci"}
                 </div>
               </div>
 
@@ -476,8 +517,8 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                 <HunterSprite
                   heroId={state.hero}
                   size={125}
-                  isHit={combat.playerBusy === 'hit'}
-                  isAttacking={combat.playerBusy === 'prep' || !!combat.pendingCard}
+                  isHit={combat.playerBusy === "hit"}
+                  isAttacking={combat.playerBusy === "prep" || !!combat.pendingCard}
                 />
 
                 {/* Hero Info Inspect Pill */}
@@ -494,12 +535,18 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                   </span>
                   <div className="flex items-center gap-1">
                     {combat.dodge > 0 && (
-                      <span className="bg-[#dfcb9a] px-1.5 py-0.2 rounded border border-[#1c1308] text-[0.65rem] font-black text-[#5c3e21]" title="Úhyb: vyhne se příštímu zásahu">
+                      <span
+                        className="bg-[#dfcb9a] px-1.5 py-0.2 rounded border border-[#1c1308] text-[0.65rem] font-black text-[#5c3e21]"
+                        title="Úhyb: vyhne se příštímu zásahu"
+                      >
                         💨 {combat.dodge}
                       </span>
                     )}
                     {combat.block > 0 && (
-                      <span className="bg-[#c9e1f7] px-1.5 py-0.2 rounded border border-[#1c4b7d] text-[0.65rem] font-black text-[#1c4b7d]" title="Blok zachytí poškození">
+                      <span
+                        className="bg-[#c9e1f7] px-1.5 py-0.2 rounded border border-[#1c4b7d] text-[0.65rem] font-black text-[#1c4b7d]"
+                        title="Blok zachytí poškození"
+                      >
                         🛡️ {combat.block}
                       </span>
                     )}
@@ -510,12 +557,16 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                 <div>
                   <div className="flex items-center justify-between text-[0.68rem] font-bold text-[#b8331d] mb-0.5">
                     <span>❤️ Životy</span>
-                    <span className="font-black">{state.hp}/{state.maxHp}</span>
+                    <span className="font-black">
+                      {state.hp}/{state.maxHp}
+                    </span>
                   </div>
                   <div className="w-full h-2.5 bg-[#fce0d8] rounded-full border border-[#1c1308] overflow-hidden relative">
                     <div
                       className="h-full bg-gradient-to-r from-[#f06e56] to-[#b8331d] transition-all duration-300"
-                      style={{ width: `${Math.max(0, Math.min(100, (state.hp / state.maxHp) * 100))}%` }}
+                      style={{
+                        width: `${Math.max(0, Math.min(100, (state.hp / state.maxHp) * 100))}%`,
+                      }}
                     />
                   </div>
                 </div>
@@ -537,7 +588,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                   <div className="hidden md:flex items-center text-[0.6rem] font-black text-[#523e2a] bg-[#ebdcb9]/85 border border-[#1c1308] px-1.5 py-0.5 rounded-full select-none shadow-xs whitespace-nowrap self-center mb-4">
                     🌾 Zadní řada ({backRowEnemies.filter((e) => e.alive).length})
                   </div>
-                  {backRowEnemies.map((enemy, rowIdx) => renderEnemyItem(enemy, rowIdx, 'back'))}
+                  {backRowEnemies.map((enemy, rowIdx) => renderEnemyItem(enemy, rowIdx, "back"))}
                 </div>
               )}
 
@@ -548,7 +599,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                     🛤️ Přední řada ({frontRowEnemies.filter((e) => e.alive).length})
                   </div>
                 )}
-                {frontRowEnemies.map((enemy, rowIdx) => renderEnemyItem(enemy, rowIdx, 'front'))}
+                {frontRowEnemies.map((enemy, rowIdx) => renderEnemyItem(enemy, rowIdx, "front"))}
               </div>
             </div>
           </div>
@@ -649,7 +700,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
               onClick={onSpecial}
               disabled={!isPlayerTurn || combat.cdSpecial > 0}
               className="lada-button lada-button-primary text-xs py-1.5 px-3 relative"
-              title={`${hero.special.name}: ${hero.special.draw ? `lízne ${hero.special.draw} karty, ` : ''}${hero.special.fat ? `Únava ${hero.special.fat}, ` : ''}${hero.special.dmg ? `zásah za ${hero.special.dmg} HP, ` : ''}${hero.special.block ? `+${hero.special.block} Blok, ` : ''}ochlazení ${hero.special.cd} Aug.`}
+              title={`${hero.special.name}: ${hero.special.draw ? `lízne ${hero.special.draw} karty, ` : ""}${hero.special.fat ? `Únava ${hero.special.fat}, ` : ""}${hero.special.dmg ? `zásah za ${hero.special.dmg} HP, ` : ""}${hero.special.block ? `+${hero.special.block} Blok, ` : ""}ochlazení ${hero.special.cd} Aug.`}
             >
               {combat.cdSpecial > 0 && (
                 <span className="absolute -top-2 -right-1 bg-[#b8331d] text-white border border-[#1c1308] rounded-full text-[0.62rem] font-black px-1.5">
@@ -668,11 +719,11 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
               className="lada-button text-xs py-1.5 px-2.5"
               title="Přepnout zobrazení karet mezi čipy a plným textem"
             >
-              {handFullText ? 'ℹ️ Čipy' : 'ℹ️ Text'}
+              {handFullText ? "ℹ️ Čipy" : "ℹ️ Text"}
             </button>
             <button
               type="button"
-              onClick={() => onOpenPiles('all')}
+              onClick={() => onOpenPiles("all")}
               className="lada-button text-xs py-1.5 px-2.5"
               title="Zobrazit lízací balíček a odhozené karty"
             >
@@ -682,9 +733,9 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
               type="button"
               onClick={() => setHandHidden(!handHidden)}
               className="lada-button text-xs py-1.5 px-2"
-              title={handHidden ? 'Ukázat ruku karet' : 'Schovat ruku karet'}
+              title={handHidden ? "Ukázat ruku karet" : "Schovat ruku karet"}
             >
-              {handHidden ? '🖐️' : '✋'}
+              {handHidden ? "🖐️" : "✋"}
             </button>
           </div>
         </div>
@@ -705,7 +756,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                 return (
                   <div
                     key={card.inst}
-                    className={`transition-transform relative ${isSelected ? 'ring-3 ring-[#1c1308] -translate-y-2 rounded-xl shadow-lg' : ''}`}
+                    className={`transition-transform relative ${isSelected ? "ring-3 ring-[#1c1308] -translate-y-2 rounded-xl shadow-lg" : ""}`}
                     onClick={() => {
                       if (!isPlayerTurn || !canAfford) return;
                       // Clicking a card toggles selection or immediately plays if already selected

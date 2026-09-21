@@ -1,6 +1,6 @@
-import React from 'react';
-import { CardInstance } from '../../types';
-import { CardView } from '../CardView';
+import React from "react";
+import { CardInstance } from "../../types";
+import { CardView } from "../CardView";
 
 interface DiscardOverflowModalProps {
   hand: CardInstance[];
@@ -11,7 +11,7 @@ interface DiscardOverflowModalProps {
 export const DiscardOverflowModal: React.FC<DiscardOverflowModalProps> = ({
   hand,
   handCap,
-  onDiscardCard
+  onDiscardCard,
 }) => {
   const excess = hand.length - handCap;
 
@@ -24,12 +24,13 @@ export const DiscardOverflowModal: React.FC<DiscardOverflowModalProps> = ({
         </h3>
         <p className="text-sm font-semibold text-[#5c3e21] mb-4">
           Strop vaší ruky je <span className="font-black text-[#b8331d]">{handCap}</span> karet.
-          Odhoďte ještě <span className="font-black text-[#b8331d]">{excess}</span> {excess === 1 ? 'kartu' : 'karty'}. Čas během výběru stojí.
+          Odhoďte ještě <span className="font-black text-[#b8331d]">{excess}</span>{" "}
+          {excess === 1 ? "kartu" : "karty"}. Čas během výběru stojí.
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-3 overflow-y-auto max-h-[50vh] p-2 bg-[#f4ebd0] rounded-2xl border border-[#1c1308] w-full mb-4">
           {hand.map((card, idx) => (
-            <div key={card.inst + '_' + idx} className="flex flex-col items-center">
+            <div key={card.inst + "_" + idx} className="flex flex-col items-center">
               <CardView card={card} />
               <button
                 type="button"

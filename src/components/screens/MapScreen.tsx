@@ -1,7 +1,7 @@
-import React from 'react';
-import { GameState } from '../../types';
-import { LOCATIONS, NODE_DB, FLAVOR_BY_LOC, NODE_EFFECTS } from '../../data/gameData';
-import { LadaLandscape } from '../sprites/LadaLandscape';
+import React from "react";
+import { GameState } from "../../types";
+import { LOCATIONS, NODE_DB, FLAVOR_BY_LOC, NODE_EFFECTS } from "../../data/gameData";
+import { LadaLandscape } from "../sprites/LadaLandscape";
 
 interface MapScreenProps {
   state: GameState;
@@ -14,7 +14,7 @@ export const MapScreen: React.FC<MapScreenProps> = ({
   state,
   onSelectNode,
   onOpenDeck,
-  onAbandon
+  onAbandon,
 }) => {
   const curLoc = LOCATIONS[state.locIndex] || LOCATIONS[0];
   const step = state.path[state.locIndex] || { before: [], after: [], cleared: false };
@@ -29,9 +29,13 @@ export const MapScreen: React.FC<MapScreenProps> = ({
             {curLoc.name}
           </h2>
           <div className="text-xs sm:text-sm font-bold text-[#5c3e21] flex flex-wrap gap-2 items-center mt-0.5">
-            <span>Zastávka {state.locIndex + 1} z {LOCATIONS.length}</span>
+            <span>
+              Zastávka {state.locIndex + 1} z {LOCATIONS.length}
+            </span>
             <span>·</span>
-            <span className="text-[#b8331d]">❤️ {state.hp}/{state.maxHp} HP</span>
+            <span className="text-[#b8331d]">
+              ❤️ {state.hp}/{state.maxHp} HP
+            </span>
             <span>·</span>
             <span className="text-[#8c5614]">😴 Únava {state.fatigueOut || 0}</span>
             <span>·</span>
@@ -73,13 +77,13 @@ export const MapScreen: React.FC<MapScreenProps> = ({
               key={loc.id}
               className={`
                 flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-[#1c1308] text-xs font-bold whitespace-nowrap shadow-[0_2px_0_rgba(28,19,8,0.2)]
-                ${isCurrent ? 'bg-[#ffd438] text-[#1c1308] scale-105 ring-2 ring-[#e69818]' : ''}
-                ${isPast ? 'bg-[#c2dcb5] text-[#2d5225] opacity-75' : ''}
-                ${!isCurrent && !isPast ? 'bg-[#f4ebd0] text-[#705638]' : ''}
+                ${isCurrent ? "bg-[#ffd438] text-[#1c1308] scale-105 ring-2 ring-[#e69818]" : ""}
+                ${isPast ? "bg-[#c2dcb5] text-[#2d5225] opacity-75" : ""}
+                ${!isCurrent && !isPast ? "bg-[#f4ebd0] text-[#705638]" : ""}
               `}
             >
-              <span>{isPast ? '✓' : isCurrent ? '📍' : `${i + 1}.`}</span>
-              <span>{loc.name.split(' ')[0]}</span>
+              <span>{isPast ? "✓" : isCurrent ? "📍" : `${i + 1}.`}</span>
+              <span>{loc.name.split(" ")[0]}</span>
             </div>
           );
         })}
@@ -88,12 +92,14 @@ export const MapScreen: React.FC<MapScreenProps> = ({
       {/* Crossroad Prompt Header */}
       <div className="mb-3">
         <h3 className="font-title text-lg font-bold text-[#1c1308]">
-          {state.awaitingAfter ? '🌟 Odbočka po vítězném souboji:' : '🧭 Křižovatka před vámi — zvolte cestu:'}
+          {state.awaitingAfter
+            ? "🌟 Odbočka po vítězném souboji:"
+            : "🧭 Křižovatka před vámi — zvolte cestu:"}
         </h3>
         <p className="text-xs font-semibold text-[#664929]">
           {state.awaitingAfter
-            ? 'Po rozprášení bubáků můžete využít jednu z místních událostí.'
-            : 'Vyberte uzel, který ovlivní nadcházející souboj nebo vám nabídne zastávku.'}
+            ? "Po rozprášení bubáků můžete využít jednu z místních událostí."
+            : "Vyberte uzel, který ovlivní nadcházející souboj nebo vám nabídne zastávku."}
         </p>
       </div>
 
@@ -103,8 +109,8 @@ export const MapScreen: React.FC<MapScreenProps> = ({
           const node = NODE_DB[nodeId];
           if (!node) return null;
           const flav = (FLAVOR_BY_LOC[nodeId] && FLAVOR_BY_LOC[nodeId][curLoc.id]) || node.flavor;
-          const isPositive = node.polarity === 'kladny';
-          const effectDesc = NODE_EFFECTS[nodeId] || '';
+          const isPositive = node.polarity === "kladny";
+          const effectDesc = NODE_EFFECTS[nodeId] || "";
 
           return (
             <div
@@ -112,27 +118,27 @@ export const MapScreen: React.FC<MapScreenProps> = ({
               onClick={() => onSelectNode(nodeId)}
               className={`
                 lada-card p-4 flex flex-col justify-between cursor-pointer border-3 hover:-translate-y-1.5 transition-all
-                ${isPositive ? 'bg-[#f2faea] border-[#2c6126]' : 'bg-[#fff2ee] border-[#9c2b18]'}
+                ${isPositive ? "bg-[#f2faea] border-[#2c6126]" : "bg-[#fff2ee] border-[#9c2b18]"}
               `}
             >
               <div>
                 <div className="flex items-center justify-between border-b border-[#1c1308] pb-1.5 mb-2">
-                  <h4 className="font-title text-base font-bold text-[#1c1308]">
-                    {node.name}
-                  </h4>
+                  <h4 className="font-title text-base font-bold text-[#1c1308]">{node.name}</h4>
                   <span
                     className={`
                       text-[0.68rem] font-black uppercase px-2 py-0.5 rounded-full border border-[#1c1308]
-                      ${isPositive ? 'bg-[#98d487] text-[#0f290a]' : 'bg-[#f08a73] text-[#240c06]'}
+                      ${isPositive ? "bg-[#98d487] text-[#0f290a]" : "bg-[#f08a73] text-[#240c06]"}
                     `}
                   >
-                    {node.timing === 'misto' ? 'Místo boje' : node.timing === 'pred' ? 'Před bojem' : 'Po boji'}
+                    {node.timing === "misto"
+                      ? "Místo boje"
+                      : node.timing === "pred"
+                        ? "Před bojem"
+                        : "Po boji"}
                   </span>
                 </div>
 
-                <p className="text-xs italic text-[#4a3420] mb-2 leading-relaxed">
-                  "{flav}"
-                </p>
+                <p className="text-xs italic text-[#4a3420] mb-2 leading-relaxed">"{flav}"</p>
 
                 <div className="text-xs font-bold text-[#1c1308] bg-[#ffffff] p-2 rounded-lg border border-[#1c1308] mb-3">
                   {effectDesc}
@@ -141,9 +147,9 @@ export const MapScreen: React.FC<MapScreenProps> = ({
 
               <button
                 type="button"
-                className={`lada-button w-full text-xs py-2 ${isPositive ? 'lada-button-good' : 'lada-button-primary'}`}
+                className={`lada-button w-full text-xs py-2 ${isPositive ? "lada-button-good" : "lada-button-primary"}`}
               >
-                {node.timing === 'misto' ? 'Vydat se sem' : 'Vybrat tuto cestu'} ➔
+                {node.timing === "misto" ? "Vydat se sem" : "Vybrat tuto cestu"} ➔
               </button>
             </div>
           );

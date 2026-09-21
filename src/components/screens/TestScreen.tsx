@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { HeroId, LocationId } from '../../types';
-import { HEROES, LOCATIONS } from '../../data/gameData';
-import { HunterSprite } from '../sprites/HunterSprite';
-import { EnemySprite } from '../sprites/EnemySprite';
+import React, { useState } from "react";
+import { HeroId, LocationId } from "../../types";
+import { HEROES, LOCATIONS } from "../../data/gameData";
+import { HunterSprite } from "../sprites/HunterSprite";
+import { EnemySprite } from "../sprites/EnemySprite";
 
 interface TestScreenProps {
   onStartFullFight: (heroId: HeroId, locId: LocationId) => void;
@@ -15,20 +15,20 @@ export const TestScreen: React.FC<TestScreenProps> = ({
   onStartFullFight,
   onStartPresetFight,
   onBack,
-  onOpenBestiary
+  onOpenBestiary,
 }) => {
-  const [selectedHero, setSelectedHero] = useState<HeroId>('pobuda');
-  const [selectedLoc, setSelectedLoc] = useState<LocationId>('vesnice');
+  const [selectedHero, setSelectedHero] = useState<HeroId>("pobuda");
+  const [selectedLoc, setSelectedLoc] = useState<LocationId>("vesnice");
 
   const eightEnemiesPreview = [
-    { name: 'Bubák od stodoly', type: 'bubak', role: 'Linie (Přední řada)' },
-    { name: 'Rarášek z pece', type: 'rarasek', role: 'Linie (Přední řada)' },
-    { name: 'Starý kostlivec', type: 'kostlivec', role: 'Linie (Přední řada)' },
-    { name: 'Divoch helkal', type: 'helkal', role: 'Linie (Přední řada)' },
-    { name: 'Hastrman od stoky', type: 'vodnik', role: 'Dělostřelba (Zadní řada)' },
-    { name: 'Polednice', type: 'polednice', role: 'Podpora (Zadní řada)' },
-    { name: 'Mrtvák ze škarpy', type: 'mrtvak', role: 'Podpora (Zadní řada)' },
-    { name: 'Klekánice z šera', type: 'klekanice', role: 'Podpora (Zadní řada)' }
+    { name: "Bubák od stodoly", type: "bubak", role: "Linie (Přední řada)" },
+    { name: "Rarášek z pece", type: "rarasek", role: "Linie (Přední řada)" },
+    { name: "Starý kostlivec", type: "kostlivec", role: "Linie (Přední řada)" },
+    { name: "Divoch helkal", type: "helkal", role: "Linie (Přední řada)" },
+    { name: "Hastrman od stoky", type: "vodnik", role: "Dělostřelba (Zadní řada)" },
+    { name: "Polednice", type: "polednice", role: "Podpora (Zadní řada)" },
+    { name: "Mrtvák ze škarpy", type: "mrtvak", role: "Podpora (Zadní řada)" },
+    { name: "Klekánice z šera", type: "klekanice", role: "Podpora (Zadní řada)" },
   ];
 
   return (
@@ -85,9 +85,9 @@ export const TestScreen: React.FC<TestScreenProps> = ({
                 Souboj: Plný počet bubáků
               </h2>
               <p className="text-xs sm:text-sm text-[#4a3520] font-medium leading-relaxed max-w-xl">
-                Rozpočet střetu je navýšen, aby pokryl <strong>všech 8 bubáků</strong>, 
-                kde je <strong>každý jiného typu</strong>. Bubáci se rozestaví ve dvou řadách 
-                po čtyřech (4 v přední řadě na cestě a 4 v zadní řadě na vyvýšeném travnatém břehu).
+                Rozpočet střetu je navýšen, aby pokryl <strong>všech 8 bubáků</strong>, kde je{" "}
+                <strong>každý jiného typu</strong>. Bubáci se rozestaví ve dvou řadách po čtyřech (4
+                v přední řadě na cestě a 4 v zadní řadě na vyvýšeném travnatém břehu).
               </p>
             </div>
 
@@ -121,10 +121,10 @@ export const TestScreen: React.FC<TestScreenProps> = ({
                     <EnemySprite type={b.type} size={42} />
                   </div>
                   <div className="font-title font-black text-[0.65rem] text-[#1c1308] truncate w-full mt-0.5">
-                    {b.name.split(' ')[0]}
+                    {b.name.split(" ")[0]}
                   </div>
                   <div className="text-[0.55rem] font-bold text-[#7a4f1d] leading-tight">
-                    {idx < 4 ? '1. řada' : '2. řada'}
+                    {idx < 4 ? "1. řada" : "2. řada"}
                   </div>
                 </div>
               ))}
@@ -150,9 +150,10 @@ export const TestScreen: React.FC<TestScreenProps> = ({
                     onClick={() => setSelectedHero(h.id)}
                     className={`
                       p-2 rounded-xl border-2 text-center transition-all cursor-pointer flex flex-col items-center
-                      ${isSelected
-                        ? 'bg-[#ffd438] border-[#1c1308] ring-2 ring-[#e69818] shadow-sm'
-                        : 'bg-[#fffaf0] border-[#d4be94] hover:bg-[#fff2cc]'
+                      ${
+                        isSelected
+                          ? "bg-[#ffd438] border-[#1c1308] ring-2 ring-[#e69818] shadow-sm"
+                          : "bg-[#fffaf0] border-[#d4be94] hover:bg-[#fff2cc]"
                       }
                     `}
                   >
@@ -192,14 +193,29 @@ export const TestScreen: React.FC<TestScreenProps> = ({
                     onClick={() => setSelectedLoc(loc.id)}
                     className={`
                       px-2.5 py-2 rounded-xl border-2 text-xs font-black transition-all cursor-pointer text-left flex items-center justify-between gap-1
-                      ${isSelected
-                        ? 'bg-[#ffd438] border-[#1c1308] ring-2 ring-[#e69818] text-[#1c1308] shadow-sm'
-                        : 'bg-[#fffaf0] border-[#d4be94] text-[#4a3520] hover:bg-[#fff2cc]'
+                      ${
+                        isSelected
+                          ? "bg-[#ffd438] border-[#1c1308] ring-2 ring-[#e69818] text-[#1c1308] shadow-sm"
+                          : "bg-[#fffaf0] border-[#d4be94] text-[#4a3520] hover:bg-[#fff2cc]"
                       }
                     `}
                   >
                     <div className="flex items-center gap-1.5 truncate">
-                      <span className="text-base">{loc.id === 'vesnice' ? '🏡' : loc.id === 'mlyn' ? '🌾' : loc.id === 'les' ? '🌲' : loc.id === 'rybnik' ? '🌊' : loc.id === 'zricenina' ? '🏰' : loc.id === 'hrbitov' ? '🪦' : '🌕'}</span>
+                      <span className="text-base">
+                        {loc.id === "vesnice"
+                          ? "🏡"
+                          : loc.id === "mlyn"
+                            ? "🌾"
+                            : loc.id === "les"
+                              ? "🌲"
+                              : loc.id === "rybnik"
+                                ? "🌊"
+                                : loc.id === "zricenina"
+                                  ? "🏰"
+                                  : loc.id === "hrbitov"
+                                    ? "🪦"
+                                    : "🌕"}
+                      </span>
                       <span className="truncate">{loc.name}</span>
                     </div>
                   </button>
@@ -307,7 +323,9 @@ export const TestScreen: React.FC<TestScreenProps> = ({
           <span>Zpět do menu</span>
         </button>
         <div className="text-xs text-[#5c3e21] font-bold text-right">
-          💡 Ve střetu můžete testovat zásahy jednotlivců i plošné karty (<span className="text-[#1c1308] underline">řada</span>), které zraní všechny bubáky v cílové řadě.
+          💡 Ve střetu můžete testovat zásahy jednotlivců i plošné karty (
+          <span className="text-[#1c1308] underline">řada</span>), které zraní všechny bubáky v
+          cílové řadě.
         </div>
       </div>
     </div>

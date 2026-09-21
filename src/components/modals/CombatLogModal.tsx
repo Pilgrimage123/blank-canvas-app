@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface CombatLogModalProps {
   logs: string[];
@@ -12,9 +12,7 @@ export const CombatLogModal: React.FC<CombatLogModalProps> = ({ logs, onClose })
         <div className="flex items-center justify-between border-b-2 border-[#1c1308] pb-3 mb-3">
           <div className="flex items-center gap-2">
             <span className="text-2xl">📜</span>
-            <h3 className="font-title text-2xl font-black text-[#1c1308]">
-              Bojový deník
-            </h3>
+            <h3 className="font-title text-2xl font-black text-[#1c1308]">Bojový deník</h3>
           </div>
           <button type="button" onClick={onClose} className="lada-button text-xs py-1.5 px-3">
             Zavřít ✕

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { HEROES } from '../../data/gameData';
-import { HunterSprite } from '../sprites/HunterSprite';
-import { HeroDetailModal } from '../modals/HeroDetailModal';
+import React, { useState } from "react";
+import { HEROES } from "../../data/gameData";
+import { HunterSprite } from "../sprites/HunterSprite";
+import { HeroDetailModal } from "../modals/HeroDetailModal";
 
 interface HeroScreenProps {
   onSelectHero: (heroId: string) => void;
@@ -16,9 +16,7 @@ export const HeroScreen: React.FC<HeroScreenProps> = ({ onSelectHero, onBack }) 
       {/* Top Header */}
       <div className="flex items-center justify-between max-w-5xl mx-auto w-full mb-6">
         <div>
-          <h2 className="font-title text-3xl font-black text-[#1c1308]">
-            Kdo jde na bubáky
-          </h2>
+          <h2 className="font-title text-3xl font-black text-[#1c1308]">Kdo jde na bubáky</h2>
           <p className="text-sm font-bold text-[#694825]">
             Klikněte na libovolnou kartu pro kompletní informace, rozpis balíčku a taktické rady.
           </p>
@@ -63,10 +61,16 @@ export const HeroScreen: React.FC<HeroScreenProps> = ({ onSelectHero, onBack }) 
                     <span>❤️ Životy:</span>
                     <span className="font-black text-[#b8331d]">{h.hp} HP</span>
                   </div>
-                  <div className="flex justify-between" title="Nástup před bojem: 50 − Připravenost (vyšší = dřívější tah!)">
+                  <div
+                    className="flex justify-between"
+                    title="Nástup před bojem: 50 − Připravenost (vyšší = dřívější tah!)"
+                  >
                     <span>⚡ Připravenost:</span>
                     <span className="font-black text-[#1c4b7d]">
-                      {h.ready} <span className="text-[0.68rem] text-[#4d3621] font-normal">({50 - h.ready} Aug)</span>
+                      {h.ready}{" "}
+                      <span className="text-[0.68rem] text-[#4d3621] font-normal">
+                        ({50 - h.ready} Aug)
+                      </span>
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -75,7 +79,9 @@ export const HeroScreen: React.FC<HeroScreenProps> = ({ onSelectHero, onBack }) 
                   </div>
                   <div className="flex justify-between">
                     <span>😮‍💨 Nádech / Spánek:</span>
-                    <span>+{h.breath} Akcí / −{h.sleepFat} Únavy</span>
+                    <span>
+                      +{h.breath} Akcí / −{h.sleepFat} Únavy
+                    </span>
                   </div>
                   {h.krizBonus && (
                     <div className="flex justify-between text-[#1c4b7d]">
@@ -92,10 +98,12 @@ export const HeroScreen: React.FC<HeroScreenProps> = ({ onSelectHero, onBack }) 
                   </div>
                   <div className="text-[#1c1308] font-black">{h.special.name}</div>
                   <div className="text-[0.7rem] text-[#543b24] font-semibold mt-0.5">
-                    {h.special.dmg ? `Zásah ${h.special.dmg} HP ${h.special.dot ? `+ Sůl na kůži ${h.special.dot}` : ''} · ` : ''}
-                    {h.special.block ? `Získá +${h.special.block} Blok · ` : ''}
-                    {h.special.draw ? `Lízne ${h.special.draw} karty · ` : ''}
-                    {h.special.fat ? `Únava ${h.special.fat} · ` : ''}
+                    {h.special.dmg
+                      ? `Zásah ${h.special.dmg} HP ${h.special.dot ? `+ Sůl na kůži ${h.special.dot}` : ""} · `
+                      : ""}
+                    {h.special.block ? `Získá +${h.special.block} Blok · ` : ""}
+                    {h.special.draw ? `Lízne ${h.special.draw} karty · ` : ""}
+                    {h.special.fat ? `Únava ${h.special.fat} · ` : ""}
                     Ochlazení {h.special.cd} Aug.
                   </div>
                 </div>

@@ -1,5 +1,5 @@
-import React from 'react';
-import { renderLadaPermonikSprite } from './LadaPermonikSprites';
+import React from "react";
+import { renderLadaPermonikSprite } from "./LadaPermonikSprites";
 
 /**
  * Autentické Ladovské sprity pro novou družinu pohádkových bytostí:
@@ -19,23 +19,23 @@ import { renderLadaPermonikSprite } from './LadaPermonikSprites';
 
 export function renderLadaFolkloreNewSprite(type: string, stage: number = 2): React.ReactNode {
   switch (type) {
-    case 'ropucha':
+    case "ropucha":
       return renderRopucha(stage);
-    case 'ohnivy_kohout':
+    case "ohnivy_kohout":
       return renderOhnivyKohout(stage);
-    case 'cerny_pes':
+    case "cerny_pes":
       return renderCernyPes(stage);
-    case 'divozenka':
+    case "divozenka":
       return renderDivozenka(stage);
-    case 'jeskynka':
+    case "jeskynka":
       return renderJeskynka(stage);
-    case 'letajici_rarach':
+    case "letajici_rarach":
       return renderLetajiciRarach(stage);
-    case 'lesni_muz':
+    case "lesni_muz":
       return renderLesniMuz(stage);
-    case 'rusalka':
+    case "rusalka":
       return renderRusalka(stage);
-    case 'permonik':
+    case "permonik":
       return renderPermonik(stage);
     default:
       return null;
@@ -46,9 +46,9 @@ export function renderLadaFolkloreNewSprite(type: string, stage: number = 2): Re
  * 1. ROPUCHA (Level 1) - Zavalitá, bradavičnatá, leknínové listy, bubliny
  * ========================================================================= */
 function renderRopucha(stage: number): React.ReactNode {
-  const bodyColor = stage === 0 ? '#6e8f48' : stage === 3 ? '#2d4d25' : '#4f7336';
-  const bellyColor = stage === 3 ? '#d8e69e' : '#e4eda8';
-  const wartColor = stage === 3 ? '#b08a28' : '#335222';
+  const bodyColor = stage === 0 ? "#6e8f48" : stage === 3 ? "#2d4d25" : "#4f7336";
+  const bellyColor = stage === 3 ? "#d8e69e" : "#e4eda8";
+  const wartColor = stage === 3 ? "#b08a28" : "#335222";
 
   return (
     <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md" aria-label="Ropucha">
@@ -152,7 +152,13 @@ function renderRopucha(stage: number): React.ReactNode {
       {stage === 0 && (
         <g>
           {/* Malý zelený pulčí ocásek co ještě neodpadl */}
-          <path d="M58 104 Q50 112 44 108" fill="none" stroke="#4f7336" strokeWidth="3" strokeLinecap="round" />
+          <path
+            d="M58 104 Q50 112 44 108"
+            fill="none"
+            stroke="#4f7336"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
         </g>
       )}
 
@@ -188,8 +194,8 @@ function renderRopucha(stage: number): React.ReactNode {
  * 2. OHNIVÝ KOHOUT (Level 1) - Pyšný hřebínek, plamenná pera, jiskry
  * ========================================================================= */
 function renderOhnivyKohout(stage: number): React.ReactNode {
-  const bodyColor = stage === 0 ? '#f59e0b' : stage === 3 ? '#b91c1c' : '#dc2626';
-  const flameTail = stage === 3 ? '#ea580c' : '#f97316';
+  const bodyColor = stage === 0 ? "#f59e0b" : stage === 3 ? "#b91c1c" : "#dc2626";
+  const flameTail = stage === 3 ? "#ea580c" : "#f97316";
 
   return (
     <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md" aria-label="Ohnivý kohout">
@@ -197,7 +203,15 @@ function renderOhnivyKohout(stage: number): React.ReactNode {
       <ellipse cx="60" cy="112" rx="32" ry="6" fill="#1c1308" opacity="0.35" />
 
       {/* Dřevěný plaňkový plotek / hřeben střechy */}
-      <line x1="25" y1="110" x2="95" y2="110" stroke="#78350f" strokeWidth="4" strokeLinecap="round" />
+      <line
+        x1="25"
+        y1="110"
+        x2="95"
+        y2="110"
+        stroke="#78350f"
+        strokeWidth="4"
+        strokeLinecap="round"
+      />
 
       {/* Plamenný ocas kohouta – mocná vlnící se pera */}
       <g className="anim-straw-twitch">
@@ -264,7 +278,13 @@ function renderOhnivyKohout(stage: number): React.ReactNode {
       />
 
       {/* Žlutý ostrý zobák */}
-      <polygon points="88,36 104,41 88,46" fill="#ffd438" stroke="#1c1308" strokeWidth="3" strokeLinejoin="round" />
+      <polygon
+        points="88,36 104,41 88,46"
+        fill="#ffd438"
+        stroke="#1c1308"
+        strokeWidth="3"
+        strokeLinejoin="round"
+      />
 
       {/* Jiskřivé zvědavé očko */}
       <circle cx="82" cy="36" r="4.5" fill="#facc15" stroke="#1c1308" strokeWidth="2" />
@@ -295,10 +315,28 @@ function renderOhnivyKohout(stage: number): React.ReactNode {
       {stage === 3 && (
         <g>
           {/* Zlaté pekelné ostruhy */}
-          <polygon points="56,104 68,100 58,106" fill="#ffd438" stroke="#1c1308" strokeWidth="1.5" />
-          <polygon points="74,104 86,100 76,106" fill="#ffd438" stroke="#1c1308" strokeWidth="1.5" />
+          <polygon
+            points="56,104 68,100 58,106"
+            fill="#ffd438"
+            stroke="#1c1308"
+            strokeWidth="1.5"
+          />
+          <polygon
+            points="74,104 86,100 76,106"
+            fill="#ffd438"
+            stroke="#1c1308"
+            strokeWidth="1.5"
+          />
           {/* Kouřové kroužky ze zobáku */}
-          <circle cx="106" cy="38" r="3" fill="#ffffff" opacity="0.6" stroke="#1c1308" strokeWidth="1" />
+          <circle
+            cx="106"
+            cy="38"
+            r="3"
+            fill="#ffffff"
+            opacity="0.6"
+            stroke="#1c1308"
+            strokeWidth="1"
+          />
         </g>
       )}
     </svg>
@@ -309,10 +347,14 @@ function renderOhnivyKohout(stage: number): React.ReactNode {
  * 3. ČERNÝ PES / BARGHEST (Level 1) - Huňatý, černé rouno, rudě žhnoucí oči, řetěz
  * ========================================================================= */
 function renderCernyPes(stage: number): React.ReactNode {
-  const eyeGlow = stage === 3 ? '#ff2200' : '#ff9900';
+  const eyeGlow = stage === 3 ? "#ff2200" : "#ff9900";
 
   return (
-    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md" aria-label="Černý pes barghest">
+    <svg
+      viewBox="0 0 120 120"
+      className="w-full h-full drop-shadow-md"
+      aria-label="Černý pes barghest"
+    >
       {/* Olověná mlha / stín pod tlapami */}
       <ellipse cx="60" cy="112" rx="42" ry="7" fill="#1c1308" opacity="0.45" />
 
@@ -340,9 +382,27 @@ function renderCernyPes(stage: number): React.ReactNode {
       <path d="M30 68 L22 72 L32 78" fill="#1f1813" stroke="#1c1308" strokeWidth="3" />
 
       {/* Zadní a přední svalnaté tlapy */}
-      <path d="M38 88 L34 108 L44 110 L46 96" fill="#181310" stroke="#1c1308" strokeWidth="3.5" strokeLinejoin="round" />
-      <path d="M52 92 L50 108 L58 110 L60 94" fill="#181310" stroke="#1c1308" strokeWidth="3.5" strokeLinejoin="round" />
-      <path d="M74 90 L76 109 L86 110 L84 92" fill="#1f1813" stroke="#1c1308" strokeWidth="3.5" strokeLinejoin="round" />
+      <path
+        d="M38 88 L34 108 L44 110 L46 96"
+        fill="#181310"
+        stroke="#1c1308"
+        strokeWidth="3.5"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M52 92 L50 108 L58 110 L60 94"
+        fill="#181310"
+        stroke="#1c1308"
+        strokeWidth="3.5"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M74 90 L76 109 L86 110 L84 92"
+        fill="#1f1813"
+        stroke="#1c1308"
+        strokeWidth="3.5"
+        strokeLinejoin="round"
+      />
 
       {/* Psí hlava – široká čenichová partie, zlověstný profil */}
       <path
@@ -354,8 +414,20 @@ function renderCernyPes(stage: number): React.ReactNode {
       />
 
       {/* Špičatá naježená ouška */}
-      <polygon points="72,42 66,24 80,35" fill="#181310" stroke="#1c1308" strokeWidth="3" strokeLinejoin="round" />
-      <polygon points="84,36 88,22 95,35" fill="#181310" stroke="#1c1308" strokeWidth="3" strokeLinejoin="round" />
+      <polygon
+        points="72,42 66,24 80,35"
+        fill="#181310"
+        stroke="#1c1308"
+        strokeWidth="3"
+        strokeLinejoin="round"
+      />
+      <polygon
+        points="84,36 88,22 95,35"
+        fill="#181310"
+        stroke="#1c1308"
+        strokeWidth="3"
+        strokeLinejoin="round"
+      />
 
       {/* Tlama s vyceněnými bílými zuby */}
       <path d="M88 64 Q98 62 108 58" stroke="#1c1308" strokeWidth="3" fill="none" />
@@ -374,7 +446,13 @@ function renderCernyPes(stage: number): React.ReactNode {
       </g>
 
       {/* Obojek – kovaný s hřeby nebo přetržený řetěz */}
-      <path d="M68 64 Q76 72 84 66" stroke="#8d99ae" strokeWidth="5" strokeLinecap="round" fill="none" />
+      <path
+        d="M68 64 Q76 72 84 66"
+        stroke="#8d99ae"
+        strokeWidth="5"
+        strokeLinecap="round"
+        fill="none"
+      />
       <polygon points="72,67 71,73 75,69" fill="#edf2f4" stroke="#1c1308" strokeWidth="1" />
       <polygon points="78,69 78,76 82,70" fill="#edf2f4" stroke="#1c1308" strokeWidth="1" />
 
@@ -387,8 +465,22 @@ function renderCernyPes(stage: number): React.ReactNode {
       {stage === 3 && (
         <g>
           {/* Pekelná rudá aura kolem očí a hřbetu */}
-          <circle cx="88" cy="46" r="9" fill="none" stroke="#ff2200" strokeWidth="1.5" strokeDasharray="2,2" opacity="0.8" />
-          <path d="M46 44 Q50 34 56 46 M62 44 Q66 32 72 46" stroke="#ff4400" strokeWidth="2" strokeLinecap="round" />
+          <circle
+            cx="88"
+            cy="46"
+            r="9"
+            fill="none"
+            stroke="#ff2200"
+            strokeWidth="1.5"
+            strokeDasharray="2,2"
+            opacity="0.8"
+          />
+          <path
+            d="M46 44 Q50 34 56 46 M62 44 Q66 32 72 46"
+            stroke="#ff4400"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
         </g>
       )}
     </svg>
@@ -399,8 +491,8 @@ function renderCernyPes(stage: number): React.ReactNode {
  * 4. DIVOŽENKA (Level 2) - Lesní žínka, vlasy s jeřabinami, tančící krok
  * ========================================================================= */
 function renderDivozenka(stage: number): React.ReactNode {
-  const dressColor = stage === 0 ? '#86a873' : stage === 3 ? '#2d5a27' : '#588157';
-  const hairColor = stage === 3 ? '#5c2c16' : '#8c4824';
+  const dressColor = stage === 0 ? "#86a873" : stage === 3 ? "#2d5a27" : "#588157";
+  const hairColor = stage === 3 ? "#5c2c16" : "#8c4824";
 
   return (
     <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md" aria-label="Divoženka">
@@ -424,8 +516,20 @@ function renderDivozenka(stage: number): React.ReactNode {
       />
 
       {/* Bosé tančící nožky */}
-      <path d="M52 96 L48 110 L42 110" stroke="#1c1308" strokeWidth="3" fill="#ffd8be" strokeLinecap="round" />
-      <path d="M68 96 L74 108 L80 106" stroke="#1c1308" strokeWidth="3" fill="#ffd8be" strokeLinecap="round" />
+      <path
+        d="M52 96 L48 110 L42 110"
+        stroke="#1c1308"
+        strokeWidth="3"
+        fill="#ffd8be"
+        strokeLinecap="round"
+      />
+      <path
+        d="M68 96 L74 108 L80 106"
+        stroke="#1c1308"
+        strokeWidth="3"
+        fill="#ffd8be"
+        strokeLinecap="round"
+      />
 
       {/* Jednoduché plátěné lesní šaty z lnu a mechu */}
       <path
@@ -443,7 +547,12 @@ function renderDivozenka(stage: number): React.ReactNode {
       <circle cx="60" cy="38" r="16" fill="#ffe3cf" stroke="#1c1308" strokeWidth="3.5" />
 
       {/* Rozpustilá ofina */}
-      <path d="M46 32 Q60 25 74 32 Q60 36 46 32 Z" fill={hairColor} stroke="#1c1308" strokeWidth="2.5" />
+      <path
+        d="M46 32 Q60 25 74 32 Q60 36 46 32 Z"
+        fill={hairColor}
+        stroke="#1c1308"
+        strokeWidth="2.5"
+      />
 
       {/* Věneček z lesního kvítí a jeřabin ve vlasech */}
       <g>
@@ -460,20 +569,56 @@ function renderDivozenka(stage: number): React.ReactNode {
       <circle cx="72" cy="43" r="3" fill="#f43f5e" opacity="0.45" />
 
       {/* Šibalský úsměv */}
-      <path d="M55 45 Q60 49 65 45" fill="none" stroke="#1c1308" strokeWidth="2.5" strokeLinecap="round" />
+      <path
+        d="M55 45 Q60 49 65 45"
+        fill="none"
+        stroke="#1c1308"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
 
       {/* Ruce v tančícím gestu */}
-      <path d="M48 56 Q36 62 30 52" fill="none" stroke="#1c1308" strokeWidth="3" strokeLinecap="round" />
-      <path d="M72 56 Q84 62 90 52" fill="none" stroke="#1c1308" strokeWidth="3" strokeLinecap="round" />
+      <path
+        d="M48 56 Q36 62 30 52"
+        fill="none"
+        stroke="#1c1308"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M72 56 Q84 62 90 52"
+        fill="none"
+        stroke="#1c1308"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
       {/* Větvička v ruce */}
-      <line x1="28" y1="54" x2="22" y2="44" stroke="#78350f" strokeWidth="2.5" strokeLinecap="round" />
+      <line
+        x1="28"
+        y1="54"
+        x2="22"
+        y2="44"
+        stroke="#78350f"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
       <circle cx="21" cy="43" r="2" fill="#588157" />
 
       {stage === 3 && (
         <g>
           {/* Parůžky z březových větviček ve vlasech */}
-          <path d="M46 22 L40 10 M40 10 L34 12 M40 10 L42 4" stroke="#78350f" strokeWidth="2.5" strokeLinecap="round" />
-          <path d="M74 22 L80 10 M80 10 L86 12 M80 10 L78 4" stroke="#78350f" strokeWidth="2.5" strokeLinecap="round" />
+          <path
+            d="M46 22 L40 10 M40 10 L34 12 M40 10 L42 4"
+            stroke="#78350f"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M74 22 L80 10 M80 10 L86 12 M80 10 L78 4"
+            stroke="#78350f"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
         </g>
       )}
     </svg>
@@ -484,8 +629,8 @@ function renderDivozenka(stage: number): React.ReactNode {
  * 5. JESKYŇKA (Level 2) - Krásná modravá skalní elfka, špičaté uši, rampouchy
  * ========================================================================= */
 function renderJeskynka(stage: number): React.ReactNode {
-  const skinTone = stage === 0 ? '#a5c4d4' : stage === 3 ? '#5089a8' : '#7baec7';
-  const dressTone = stage === 3 ? '#1e293b' : '#334155';
+  const skinTone = stage === 0 ? "#a5c4d4" : stage === 3 ? "#5089a8" : "#7baec7";
+  const dressTone = stage === 3 ? "#1e293b" : "#334155";
 
   return (
     <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md" aria-label="Jeskyňka">
@@ -524,11 +669,28 @@ function renderJeskynka(stage: number): React.ReactNode {
       <ellipse cx="60" cy="38" rx="14" ry="17" fill={skinTone} stroke="#1c1308" strokeWidth="3.5" />
 
       {/* Dlouhé špičaté elfí uši */}
-      <path d="M47 38 L30 30 L45 44 Z" fill={skinTone} stroke="#1c1308" strokeWidth="3" strokeLinejoin="round" />
-      <path d="M73 38 L90 30 L75 44 Z" fill={skinTone} stroke="#1c1308" strokeWidth="3" strokeLinejoin="round" />
+      <path
+        d="M47 38 L30 30 L45 44 Z"
+        fill={skinTone}
+        stroke="#1c1308"
+        strokeWidth="3"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M73 38 L90 30 L75 44 Z"
+        fill={skinTone}
+        stroke="#1c1308"
+        strokeWidth="3"
+        strokeLinejoin="round"
+      />
 
       {/* Stříbrná ofinka kryjící čelo */}
-      <path d="M48 28 Q60 36 72 28 Q60 22 48 28 Z" fill="#cbd5e1" stroke="#1c1308" strokeWidth="2.5" />
+      <path
+        d="M48 28 Q60 36 72 28 Q60 22 48 28 Z"
+        fill="#cbd5e1"
+        stroke="#1c1308"
+        strokeWidth="2.5"
+      />
 
       {/* Pronikavé chladné tyrkysové oči a tenké temné obočí */}
       <ellipse cx="53" cy="36" rx="4" ry="3" fill="#0284c7" stroke="#1c1308" strokeWidth="1.5" />
@@ -537,11 +699,29 @@ function renderJeskynka(stage: number): React.ReactNode {
       <circle cx="68" cy="35" r="1" fill="#ffffff" />
 
       {/* Záludný, zlomyslně přitažlivý úsměv */}
-      <path d="M54 46 Q62 51 68 45" fill="none" stroke="#1c1308" strokeWidth="2.5" strokeLinecap="round" />
+      <path
+        d="M54 46 Q62 51 68 45"
+        fill="none"
+        stroke="#1c1308"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
 
       {/* Ruce natažené dopředu: "dva prstíčky strčíme..." */}
-      <path d="M48 56 Q36 64 34 76" stroke="#1c1308" strokeWidth="3" fill="none" strokeLinecap="round" />
-      <path d="M72 56 Q84 64 86 76" stroke="#1c1308" strokeWidth="3" fill="none" strokeLinecap="round" />
+      <path
+        d="M48 56 Q36 64 34 76"
+        stroke="#1c1308"
+        strokeWidth="3"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        d="M72 56 Q84 64 86 76"
+        stroke="#1c1308"
+        strokeWidth="3"
+        fill="none"
+        strokeLinecap="round"
+      />
       {/* Ostré krystalové nehty / dýka z obsidiánu */}
       <polygon points="86,76 96,80 88,83" fill="#0284c7" stroke="#1c1308" strokeWidth="1.5" />
 
@@ -561,10 +741,14 @@ function renderJeskynka(stage: number): React.ReactNode {
  * 6. LÉTAJÍCÍ RARACH (Level 2) - Poletující šotek, netopýří křídla, vidle, saze
  * ========================================================================= */
 function renderLetajiciRarach(stage: number): React.ReactNode {
-  const impColor = stage === 0 ? '#42281d' : stage === 3 ? '#881337' : '#2b1b17';
+  const impColor = stage === 0 ? "#42281d" : stage === 3 ? "#881337" : "#2b1b17";
 
   return (
-    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md anim-lada-float" aria-label="Létající rarach">
+    <svg
+      viewBox="0 0 120 120"
+      className="w-full h-full drop-shadow-md anim-lada-float"
+      aria-label="Létající rarach"
+    >
       {/* Rotující stín na zemi pod letícím rarachem */}
       <ellipse cx="60" cy="112" rx="24" ry="4" fill="#1c1308" opacity="0.25" />
 
@@ -603,10 +787,38 @@ function renderLetajiciRarach(stage: number): React.ReactNode {
       <circle cx="60" cy="42" r="18" fill={impColor} stroke="#1c1308" strokeWidth="3.5" />
 
       {/* Svislé špičaté pekelné růžky */}
-      <path d="M49 31 C46 19 41 9 43 4 C48 9 52 19 54 28 Z" fill="#facc15" stroke="#1c1308" strokeWidth="2.5" strokeLinejoin="round" />
-      <path d="M71 31 C74 19 79 9 77 4 C72 9 68 19 66 28 Z" fill="#facc15" stroke="#1c1308" strokeWidth="2.5" strokeLinejoin="round" />
-      <line x1="47" y1="20" x2="51" y2="21" stroke="#ca8a04" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="73" y1="20" x2="69" y2="21" stroke="#ca8a04" strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M49 31 C46 19 41 9 43 4 C48 9 52 19 54 28 Z"
+        fill="#facc15"
+        stroke="#1c1308"
+        strokeWidth="2.5"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M71 31 C74 19 79 9 77 4 C72 9 68 19 66 28 Z"
+        fill="#facc15"
+        stroke="#1c1308"
+        strokeWidth="2.5"
+        strokeLinejoin="round"
+      />
+      <line
+        x1="47"
+        y1="20"
+        x2="51"
+        y2="21"
+        stroke="#ca8a04"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <line
+        x1="73"
+        y1="20"
+        x2="69"
+        y2="21"
+        stroke="#ca8a04"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
 
       {/* Rozcuchané zrzavé či černé peří/vlasy */}
       <path d="M54 26 L60 18 L66 26" fill="#e11d48" stroke="#1c1308" strokeWidth="2" />
@@ -622,7 +834,13 @@ function renderLetajiciRarach(stage: number): React.ReactNode {
       </g>
 
       {/* Zubatý škleb od ucha k uchu */}
-      <path d="M50 52 Q60 60 70 52" fill="#e11d48" stroke="#1c1308" strokeWidth="2.5" strokeLinecap="round" />
+      <path
+        d="M50 52 Q60 60 70 52"
+        fill="#e11d48"
+        stroke="#1c1308"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
       <polygon points="56,53 58,56 60,53" fill="#ffffff" />
       <polygon points="62,53 64,56 66,53" fill="#ffffff" />
 
@@ -631,8 +849,21 @@ function renderLetajiciRarach(stage: number): React.ReactNode {
       <ellipse cx="68" cy="84" rx="4" ry="6" fill="#1c1308" />
 
       {/* Malé mosazné vidličky v pařátku */}
-      <line x1="72" y1="62" x2="88" y2="48" stroke="#78350f" strokeWidth="3" strokeLinecap="round" />
-      <path d="M88 48 L94 42 M88 48 L96 46 M88 48 L92 52" stroke="#facc15" strokeWidth="2.5" strokeLinecap="round" />
+      <line
+        x1="72"
+        y1="62"
+        x2="88"
+        y2="48"
+        stroke="#78350f"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M88 48 L94 42 M88 48 L96 46 M88 48 L92 52"
+        stroke="#facc15"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
 
       {/* Oblačka dýmu a sazí ze komína */}
       <circle cx="34" cy="74" r="4" fill="#64748b" opacity="0.6" stroke="#1c1308" strokeWidth="1" />
@@ -645,8 +876,8 @@ function renderLetajiciRarach(stage: number): React.ReactNode {
  * 7. LESNÍ MUŽ (Level 2) - Mechový divoch, kůra, plnovous z jehličí, kláda
  * ========================================================================= */
 function renderLesniMuz(stage: number): React.ReactNode {
-  const mossColor = stage === 0 ? '#65a30d' : stage === 3 ? '#14532d' : '#3f6212';
-  const barkColor = stage === 3 ? '#451a03' : '#713f12';
+  const mossColor = stage === 0 ? "#65a30d" : stage === 3 ? "#14532d" : "#3f6212";
+  const barkColor = stage === 3 ? "#451a03" : "#713f12";
 
   return (
     <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md" aria-label="Lesní muž">
@@ -654,8 +885,20 @@ function renderLesniMuz(stage: number): React.ReactNode {
       <ellipse cx="60" cy="112" rx="42" ry="7" fill="#1c1308" opacity="0.4" />
 
       {/* Obrovité nohy s kůrou a mechem jako staré pařezy */}
-      <path d="M40 88 L34 110 L48 111 L52 88" fill={barkColor} stroke="#1c1308" strokeWidth="3.5" strokeLinejoin="round" />
-      <path d="M68 88 L72 110 L86 111 L80 88" fill={barkColor} stroke="#1c1308" strokeWidth="3.5" strokeLinejoin="round" />
+      <path
+        d="M40 88 L34 110 L48 111 L52 88"
+        fill={barkColor}
+        stroke="#1c1308"
+        strokeWidth="3.5"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M68 88 L72 110 L86 111 L80 88"
+        fill={barkColor}
+        stroke="#1c1308"
+        strokeWidth="3.5"
+        strokeLinejoin="round"
+      />
 
       {/* Mohutné trupové tělo obrostlé mechem a lišejníkem */}
       <path
@@ -702,8 +945,24 @@ function renderLesniMuz(stage: number): React.ReactNode {
 
       {/* Masivní sukovitý kmen v ruce */}
       <g>
-        <line x1="86" y1="30" x2="94" y2="108" stroke="#78350f" strokeWidth="7" strokeLinecap="round" />
-        <line x1="86" y1="30" x2="94" y2="108" stroke="#a16207" strokeWidth="3" strokeLinecap="round" />
+        <line
+          x1="86"
+          y1="30"
+          x2="94"
+          y2="108"
+          stroke="#78350f"
+          strokeWidth="7"
+          strokeLinecap="round"
+        />
+        <line
+          x1="86"
+          y1="30"
+          x2="94"
+          y2="108"
+          stroke="#a16207"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
         {/* Zelené lístečky rašící z kyje */}
         <circle cx="88" cy="45" r="3" fill="#65a30d" />
         <circle cx="92" cy="65" r="3" fill="#65a30d" />
@@ -715,7 +974,13 @@ function renderLesniMuz(stage: number): React.ReactNode {
       {stage === 3 && (
         <g>
           {/* Koruna z živého dubového větvoví a žaludů */}
-          <path d="M46 22 Q40 8 46 4 Q54 12 56 6 Q64 12 66 4 Q72 8 74 22" stroke="#78350f" strokeWidth="3" fill="#3f6212" strokeLinejoin="round" />
+          <path
+            d="M46 22 Q40 8 46 4 Q54 12 56 6 Q64 12 66 4 Q72 8 74 22"
+            stroke="#78350f"
+            strokeWidth="3"
+            fill="#3f6212"
+            strokeLinejoin="round"
+          />
           <circle cx="50" cy="14" r="2" fill="#f59e0b" />
           <circle cx="70" cy="14" r="2" fill="#f59e0b" />
         </g>
@@ -728,14 +993,36 @@ function renderLesniMuz(stage: number): React.ReactNode {
  * 8. RUSALKA (Level 3) - Vodní víla, smaragdové vlasy, vodní závoj, lekníny
  * ========================================================================= */
 function renderRusalka(stage: number): React.ReactNode {
-  const hairTone = stage === 0 ? '#34d399' : stage === 3 ? '#065f46' : '#059669';
-  const gownTone = stage === 3 ? '#0284c7' : '#38bdf8';
+  const hairTone = stage === 0 ? "#34d399" : stage === 3 ? "#065f46" : "#059669";
+  const gownTone = stage === 3 ? "#0284c7" : "#38bdf8";
 
   return (
-    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md anim-lada-float" aria-label="Rusalka">
+    <svg
+      viewBox="0 0 120 120"
+      className="w-full h-full drop-shadow-md anim-lada-float"
+      aria-label="Rusalka"
+    >
       {/* Vodní kruhy na hladině */}
-      <ellipse cx="60" cy="108" rx="36" ry="6" fill="none" stroke="#38bdf8" strokeWidth="2.5" opacity="0.6" />
-      <ellipse cx="60" cy="112" rx="22" ry="4" fill="none" stroke="#38bdf8" strokeWidth="2" opacity="0.4" />
+      <ellipse
+        cx="60"
+        cy="108"
+        rx="36"
+        ry="6"
+        fill="none"
+        stroke="#38bdf8"
+        strokeWidth="2.5"
+        opacity="0.6"
+      />
+      <ellipse
+        cx="60"
+        cy="112"
+        rx="22"
+        ry="4"
+        fill="none"
+        stroke="#38bdf8"
+        strokeWidth="2"
+        opacity="0.4"
+      />
 
       {/* Dlouhé vlnité smaragdové vlasy sahající až do vody */}
       <path
@@ -779,11 +1066,29 @@ function renderRusalka(stage: number): React.ReactNode {
       <circle cx="68" cy="36" r="1.2" fill="#ffffff" />
 
       {/* Jemný lákavý úsměv vodní víly */}
-      <path d="M56 46 Q60 49 64 46" fill="none" stroke="#1c1308" strokeWidth="2" strokeLinecap="round" />
+      <path
+        d="M56 46 Q60 49 64 46"
+        fill="none"
+        stroke="#1c1308"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
 
       {/* Ruce zvoucí pocestného do hlubiny */}
-      <path d="M48 56 Q34 62 26 56" fill="none" stroke="#1c1308" strokeWidth="3" strokeLinecap="round" />
-      <path d="M72 56 Q86 62 94 56" fill="none" stroke="#1c1308" strokeWidth="3" strokeLinecap="round" />
+      <path
+        d="M48 56 Q34 62 26 56"
+        fill="none"
+        stroke="#1c1308"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M72 56 Q86 62 94 56"
+        fill="none"
+        stroke="#1c1308"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
 
       {/* Kapky vody kapající z prstů */}
       <circle cx="25" cy="62" r="2" fill="#38bdf8" />
@@ -792,7 +1097,12 @@ function renderRusalka(stage: number): React.ReactNode {
       {stage === 3 && (
         <g>
           {/* Zlatá leknínová čelenka královen tůní */}
-          <path d="M52 24 L56 12 L60 18 L64 12 L68 24 Z" fill="#ffd438" stroke="#1c1308" strokeWidth="2" />
+          <path
+            d="M52 24 L56 12 L60 18 L64 12 L68 24 Z"
+            fill="#ffd438"
+            stroke="#1c1308"
+            strokeWidth="2"
+          />
           {/* Zářící vodní kapky kolem celé postavy */}
           <circle cx="36" cy="34" r="2.5" fill="#67e8f9" opacity="0.9" />
           <circle cx="84" cy="34" r="2.5" fill="#67e8f9" opacity="0.9" />

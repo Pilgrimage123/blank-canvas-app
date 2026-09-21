@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface TutorialGuideModalProps {
   onClose: () => void;
@@ -26,9 +26,9 @@ export const TutorialGuideModal: React.FC<TutorialGuideModalProps> = ({ onClose 
               ⚡ Akce a Nádech
             </h4>
             <p>
-              Akce spotřebováváte zahráním karet. Samy od sebe se po kole nedobíjejí!
-              Dobíjíte je tlačítkem <b>Nádech</b>. Nádech vám sice doplní Akce, ale přidá <b>Únavu</b>.
-              Čím vyšší Únavu máte, tím slabší jsou další nádechy.
+              Akce spotřebováváte zahráním karet. Samy od sebe se po kole nedobíjejí! Dobíjíte je
+              tlačítkem <b>Nádech</b>. Nádech vám sice doplní Akce, ale přidá <b>Únavu</b>. Čím
+              vyšší Únavu máte, tím slabší jsou další nádechy.
             </p>
           </div>
 
@@ -37,9 +37,10 @@ export const TutorialGuideModal: React.FC<TutorialGuideModalProps> = ({ onClose 
               ⏳ Augenblicky (čas)
             </h4>
             <p>
-              Čas ve hře měříme v <b>Augenblicích</b> (Aug). Vy i každý bubák máte svůj vlastní odpočet „kdy jednám příště“.
-              Většina karet lovce má nápřah 2 Aug (např. hodit sůl trvá chvilku), bylinkový odvar působí hned.
-              Tlačítko <b>Mrknutí</b> posune čas o 1 Aug vpřed bez Akcí, když vyčkáváte.
+              Čas ve hře měříme v <b>Augenblicích</b> (Aug). Vy i každý bubák máte svůj vlastní
+              odpočet „kdy jednám příště“. Většina karet lovce má nápřah 2 Aug (např. hodit sůl trvá
+              chvilku), bylinkový odvar působí hned. Tlačítko <b>Mrknutí</b> posune čas o 1 Aug
+              vpřed bez Akcí, když vyčkáváte.
             </p>
           </div>
 
@@ -48,9 +49,10 @@ export const TutorialGuideModal: React.FC<TutorialGuideModalProps> = ({ onClose 
               ⚡ Připravenost a 3× zrychlený rozběh
             </h4>
             <p>
-              Před zahájením souboje mají lovec i bubáci zpoždění rovné <b>(50 − Připravenost) Aug</b>.
-              Kdo má vyšší Připravenost (Kostelník 28, Pobuda 25, Bylinkářka 22), začíná dříve!
-              Dokud nikdo nejedná, <b>běží čas trojnásobnou rychlostí (3×)</b>, takže rozběh střetu je svižný a plynulý.
+              Před zahájením souboje mají lovec i bubáci zpoždění rovné{" "}
+              <b>(50 − Připravenost) Aug</b>. Kdo má vyšší Připravenost (Kostelník 28, Pobuda 25,
+              Bylinkářka 22), začíná dříve! Dokud nikdo nejedná,{" "}
+              <b>běží čas trojnásobnou rychlostí (3×)</b>, takže rozběh střetu je svižný a plynulý.
             </p>
           </div>
 
@@ -60,7 +62,8 @@ export const TutorialGuideModal: React.FC<TutorialGuideModalProps> = ({ onClose 
             </h4>
             <p>
               <b>Spánek</b> vás zbaví velké porce Únavy, ale zabere 3 Aug.
-              <b>Kochání se krásou krajiny</b> vám umožní ulevit si od 1 Únavy, když je bubák ještě daleko od úderu.
+              <b>Kochání se krásou krajiny</b> vám umožní ulevit si od 1 Únavy, když je bubák ještě
+              daleko od úderu.
             </p>
           </div>
 
@@ -69,9 +72,9 @@ export const TutorialGuideModal: React.FC<TutorialGuideModalProps> = ({ onClose 
               🧂 Zranění a Odolnost
             </h4>
             <p>
-              Každý bod zranění, který projde skrz Blok bubáka, mu přidá +1 Aug do jeho odpočtu a oddálí jeho útok!
-              Jeho <b>Odolnost</b> však část tohoto zpoždění pohltí.
-              Solné karty navíc nakládají <b>Sůl na kůži</b>, která bubáka pálí každé 3 Augenblicky.
+              Každý bod zranění, který projde skrz Blok bubáka, mu přidá +1 Aug do jeho odpočtu a
+              oddálí jeho útok! Jeho <b>Odolnost</b> však část tohoto zpoždění pohltí. Solné karty
+              navíc nakládají <b>Sůl na kůži</b>, která bubáka pálí každé 3 Augenblicky.
             </p>
           </div>
 
@@ -80,8 +83,8 @@ export const TutorialGuideModal: React.FC<TutorialGuideModalProps> = ({ onClose 
               🧭 Putování krajem a Krejcary
             </h4>
             <p>
-              Na mapě volíte cesty a uzly (hospoda, farář, poklad, zkratka).
-              V hospodě můžete za <b>krejcary</b> nakupovat nové karty, vylepšovat staré či vyhazovat slabé.
+              Na mapě volíte cesty a uzly (hospoda, farář, poklad, zkratka). V hospodě můžete za{" "}
+              <b>krejcary</b> nakupovat nové karty, vylepšovat staré či vyhazovat slabé.
             </p>
           </div>
         </div>

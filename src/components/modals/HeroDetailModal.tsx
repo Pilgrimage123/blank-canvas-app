@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { HeroDef, CardDef } from '../../types';
-import { CARD_DB } from '../../data/gameData';
-import { HunterSprite } from '../sprites/HunterSprite';
-import { CardView } from '../CardView';
+import React, { useState } from "react";
+import { HeroDef, CardDef } from "../../types";
+import { CARD_DB } from "../../data/gameData";
+import { HunterSprite } from "../sprites/HunterSprite";
+import { CardView } from "../CardView";
 
 interface HeroDetailModalProps {
   hero: HeroDef;
@@ -21,70 +21,71 @@ interface HeroLoreInfo {
 
 const HERO_LORE: Record<string, HeroLoreInfo> = {
   pobuda: {
-    epithet: 'Hrusický rodák zpod Šibeničního vrchu',
-    quote: '„Na bubáky se nesmí zhurta. Pěkně vyklepat dýmku, nasypat sůl a počkat, až jim dojde dech.“',
+    epithet: "Hrusický rodák zpod Šibeničního vrchu",
+    quote:
+      "„Na bubáky se nesmí zhurta. Pěkně vyklepat dýmku, nasypat sůl a počkat, až jim dojde dech.“",
     lore: [
-      'Celé léto i zimu se toulá podél potoků a remízků kolem Hrusic, pije studené podmáslí a zná každého hastrmana i bludičku křestním jménem.',
-      'Má léty vytrénovaný krok a plíce zvyklé na podzimní mlhy. Do brašny si balí jen to nejnutnější: vyřezávanou slánku z lipového dřeva, pořádný kus posvěceného provazu a krabičku zápalek.',
-      'Před žádným raráškem ani hejkalem neuteče — raději se rozkročí, vezme do ruky dubovou hůl a s klidem vymete strašidlo zpátky do močálu.'
+      "Celé léto i zimu se toulá podél potoků a remízků kolem Hrusic, pije studené podmáslí a zná každého hastrmana i bludičku křestním jménem.",
+      "Má léty vytrénovaný krok a plíce zvyklé na podzimní mlhy. Do brašny si balí jen to nejnutnější: vyřezávanou slánku z lipového dřeva, pořádný kus posvěceného provazu a krabičku zápalek.",
+      "Před žádným raráškem ani hejkalem neuteče — raději se rozkročí, vezme do ruky dubovou hůl a s klidem vymete strašidlo zpátky do močálu.",
     ],
     strengths: [
-      'Nejvyšší zásoba životů (40 HP) zaručuje přežití i nečekaných úderů od silných bossů.',
-      'Vyřezávaná slánka mimo ruku udělí okamžitých 5 HP a naloží 2 vrstvy Soli na kůži, která pálí každé 3 Aug.',
-      'Skvělý proti vodníkům a hastrmanům, na které sůl působí se zvýšenou účinností (+50 % poškození).'
+      "Nejvyšší zásoba životů (40 HP) zaručuje přežití i nečekaných úderů od silných bossů.",
+      "Vyřezávaná slánka mimo ruku udělí okamžitých 5 HP a naloží 2 vrstvy Soli na kůži, která pálí každé 3 Aug.",
+      "Skvělý proti vodníkům a hastrmanům, na které sůl působí se zvýšenou účinností (+50 % poškození).",
     ],
     weaknesses: [
-      'Základní balíček má méně bylinkových odvarů (pouze 2×), takže nové karty nelíže tak bleskově.',
-      'Při delších soubojích musí hlídat Únavu a včas využívat Spánek nebo odpočinek u kamen.'
+      "Základní balíček má méně bylinkových odvarů (pouze 2×), takže nové karty nelíže tak bleskově.",
+      "Při delších soubojích musí hlídat Únavu a včas využívat Spánek nebo odpočinek u kamen.",
     ],
     tactics:
-      'Využívejte vysoký počet životů k bezpečnému nápřahu silnějších útoků. Hned v prvním Augenblicku aktivujte Vyřezávanou slánku na nejnebezpečnějšího nepřítele. V hospodě U Černého kocoura se vyplatí dokoupit Ostřejší sůl a Sůl do větru.'
+      "Využívejte vysoký počet životů k bezpečnému nápřahu silnějších útoků. Hned v prvním Augenblicku aktivujte Vyřezávanou slánku na nejnebezpečnějšího nepřítele. V hospodě U Černého kocoura se vyplatí dokoupit Ostřejší sůl a Sůl do větru.",
   },
   kostelnik: {
-    epithet: 'Pobožný strážce svatovítského zvonu',
-    quote: '„Kříž na prsou a svěcená voda v kropáči zaženou i toho nejvzpurnějšího pekelníka.“',
+    epithet: "Pobožný strážce svatovítského zvonu",
+    quote: "„Kříž na prsou a svěcená voda v kropáči zaženou i toho nejvzpurnějšího pekelníka.“",
     lore: [
-      'Už od chlapeckých let tahá za provaz hrusického zvonu a večer s klíčem v ruce obchází hřbitovní zeď.',
-      'O nečistých silách si léta četl ve starých pergamenových kronikách na faře. Ví přesně, kdy klekánice vylézá z křovin a kam se schovává kostlivec, když vyjde ranní slunce.',
-      'S sebou nosí starobylý dubový kříž po pradědovi a mosazný kropáč naplněný vodou z posvátného pramene. V jeho přítomnosti každé posvěcené dřevo září ještě silněji.'
+      "Už od chlapeckých let tahá za provaz hrusického zvonu a večer s klíčem v ruce obchází hřbitovní zeď.",
+      "O nečistých silách si léta četl ve starých pergamenových kronikách na faře. Ví přesně, kdy klekánice vylézá z křovin a kam se schovává kostlivec, když vyjde ranní slunce.",
+      "S sebou nosí starobylý dubový kříž po pradědovi a mosazný kropáč naplněný vodou z posvátného pramene. V jeho přítomnosti každé posvěcené dřevo září ještě silněji.",
     ],
     strengths: [
-      'Vynikající Připravenost 28 — začíná souboj s nejmenším zpožděním (nástup již za 22 Aug oproti 28 Aug u Bylinkářky).',
-      'Pasivní dar: +1 Blok ke všem křížovým kartám (Kříž na hruď dává 5 Bloku, Velký kříž 8 Bloku).',
-      'Farní požehnání mimo ruku poskytne okamžitý štít +6 Bloku přesně ve chvíli, kdy hrozí drtivý úder.'
+      "Vynikající Připravenost 28 — začíná souboj s nejmenším zpožděním (nástup již za 22 Aug oproti 28 Aug u Bylinkářky).",
+      "Pasivní dar: +1 Blok ke všem křížovým kartám (Kříž na hruď dává 5 Bloku, Velký kříž 8 Bloku).",
+      "Farní požehnání mimo ruku poskytne okamžitý štít +6 Bloku přesně ve chvíli, kdy hrozí drtivý úder.",
     ],
     weaknesses: [
-      'Začíná pouze s 8 krejcary v měšci, takže si v první hospodě může dovolit méně nákupů.',
-      'Někteří bubáci (např. Rarášek nebo Hospodský čert) mají trait Svatokrádežný a křížové karty na ně platí méně.'
+      "Začíná pouze s 8 krejcary v měšci, takže si v první hospodě může dovolit méně nákupů.",
+      "Někteří bubáci (např. Rarášek nebo Hospodský čert) mají trait Svatokrádežný a křížové karty na ně platí méně.",
     ],
     tactics:
-      'Díky nejvyšší Připravenosti 28 (nástup za 22 Aug) můžete okamžitě zahrát obranu ještě předtím, než nepřítel dokončí první útok. Šetřete si Farní požehnání na chvíli, kdy nepřítel chystá zesílený úder (Nadechnutí), a v hospodě sáhněte po Kropáči svěcenky a Holi na čerta.'
+      "Díky nejvyšší Připravenosti 28 (nástup za 22 Aug) můžete okamžitě zahrát obranu ještě předtím, než nepřítel dokončí první útok. Šetřete si Farní požehnání na chvíli, kdy nepřítel chystá zesílený úder (Nadechnutí), a v hospodě sáhněte po Kropáči svěcenky a Holi na čerta.",
   },
   bylinkarka: {
-    epithet: 'Moudrá kořenářka z podlesní chaloupky',
-    quote: '„Na každou neduhu a každého bubáka roste v české zemi ta pravá bylinka.“',
+    epithet: "Moudrá kořenářka z podlesní chaloupky",
+    quote: "„Na každou neduhu a každého bubáka roste v české zemi ta pravá bylinka.“",
     lore: [
-      'Její roubená chaloupka na pokraji hlubokého boru voní mateřídouškou, sušeným heřmánkem a kozlíkem.',
-      'S hastrmany od Olšového rybníka vychází v dobrém — peče jim kynuté buchty a oni jí na oplátku nosí leknínové kořeny. Čertům zase vaří odvar z třezalky, když je bolí zuby.',
-      'Když se ale strašidla začnou chovat neuctivě a děsit děti v Hrusicích, vezme svůj plný košík a dokáže bubáky zmást a zahnat rychleji než leckterý silák.'
+      "Její roubená chaloupka na pokraji hlubokého boru voní mateřídouškou, sušeným heřmánkem a kozlíkem.",
+      "S hastrmany od Olšového rybníka vychází v dobrém — peče jim kynuté buchty a oni jí na oplátku nosí leknínové kořeny. Čertům zase vaří odvar z třezalky, když je bolí zuby.",
+      "Když se ale strašidla začnou chovat neuctivě a děsit děti v Hrusicích, vezme svůj plný košík a dokáže bubáky zmást a zahnat rychleji než leckterý silák.",
     ],
     strengths: [
-      'Nejbohatší hrdina na startu (12 krejcarů) — v prvním šenku může okamžitě vylepšovat nebo kupovat.',
-      'Plný košík bylin: v počátečním balíčku má rovnou 4× Bylinkový odvar pro neustálé dobírání karet.',
-      'Hluboké dýchání (Nádech dává +7 Akcí) a vydatný Spánek (odstraní rovnou −9 Únavy).',
-      'Čerstvý odvar mimo ruku má bleskové ochlazení pouhých 6 Aug a lízne 2 karty s úlevou od Únavy (−2).'
+      "Nejbohatší hrdina na startu (12 krejcarů) — v prvním šenku může okamžitě vylepšovat nebo kupovat.",
+      "Plný košík bylin: v počátečním balíčku má rovnou 4× Bylinkový odvar pro neustálé dobírání karet.",
+      "Hluboké dýchání (Nádech dává +7 Akcí) a vydatný Spánek (odstraní rovnou −9 Únavy).",
+      "Čerstvý odvar mimo ruku má bleskové ochlazení pouhých 6 Aug a lízne 2 karty s úlevou od Únavy (−2).",
     ],
     weaknesses: [
-      'Nejnižší základní životy (36 HP) vyžadují opatrnost a včasné vyklízení ruky od škodlivých karet.',
-      'Připravenost 22 znamená rozvážnější start (nástup za 28 Aug) — rychlejší nepřátelé mohou v úvodu jednat o chvilku dřív.'
+      "Nejnižší základní životy (36 HP) vyžadují opatrnost a včasné vyklízení ruky od škodlivých karet.",
+      "Připravenost 22 znamená rozvážnější start (nástup za 28 Aug) — rychlejší nepřátelé mohou v úvodu jednat o chvilku dřív.",
     ],
     tactics:
-      'Hrajte na neustálý koloběh karet v ruce. Propojujte Bylinkové odvary a Nápad s útočnými kartami. Čerstvý odvar používejte pokaždé, když se ochladí, abyste drželi Únavu na nule. V šenku prioritně shánějte Košík bylin a Úkrok za stodolu.'
-  }
+      "Hrajte na neustálý koloběh karet v ruce. Propojujte Bylinkové odvary a Nápad s útočnými kartami. Čerstvý odvar používejte pokaždé, když se ochladí, abyste drželi Únavu na nule. V šenku prioritně shánějte Košík bylin a Úkrok za stodolu.",
+  },
 };
 
 export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'info' | 'deck' | 'tactics'>('info');
+  const [activeTab, setActiveTab] = useState<"info" | "deck" | "tactics">("info");
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
 
   const lore = HERO_LORE[hero.id] || HERO_LORE.pobuda;
@@ -95,11 +96,14 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
     return {
       cardId,
       count,
-      def
+      def,
     };
   });
 
-  const totalCardsInDeck = Object.values(hero.deck).reduce((sum: number, n) => sum + (Number(n) || 0), 0);
+  const totalCardsInDeck = Object.values(hero.deck).reduce(
+    (sum: number, n) => sum + (Number(n) || 0),
+    0,
+  );
 
   return (
     <div
@@ -142,33 +146,33 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
         <div className="flex items-center gap-2 border-b-2 border-[#dfcb9a] pb-3 mb-4">
           <button
             type="button"
-            onClick={() => setActiveTab('info')}
+            onClick={() => setActiveTab("info")}
             className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all border-2 ${
-              activeTab === 'info'
-                ? 'bg-[#ffd438] text-[#1c1308] border-[#1c1308] shadow-[2px_3px_0_#1c1308]'
-                : 'bg-[#f4ebd0] text-[#593d25] border-transparent hover:bg-[#eedcae]'
+              activeTab === "info"
+                ? "bg-[#ffd438] text-[#1c1308] border-[#1c1308] shadow-[2px_3px_0_#1c1308]"
+                : "bg-[#f4ebd0] text-[#593d25] border-transparent hover:bg-[#eedcae]"
             }`}
           >
             📜 Příběh a statistiky
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab('deck')}
+            onClick={() => setActiveTab("deck")}
             className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all border-2 ${
-              activeTab === 'deck'
-                ? 'bg-[#ffd438] text-[#1c1308] border-[#1c1308] shadow-[2px_3px_0_#1c1308]'
-                : 'bg-[#f4ebd0] text-[#593d25] border-transparent hover:bg-[#eedcae]'
+              activeTab === "deck"
+                ? "bg-[#ffd438] text-[#1c1308] border-[#1c1308] shadow-[2px_3px_0_#1c1308]"
+                : "bg-[#f4ebd0] text-[#593d25] border-transparent hover:bg-[#eedcae]"
             }`}
           >
             🃏 Počáteční balíček ({totalCardsInDeck} karet)
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab('tactics')}
+            onClick={() => setActiveTab("tactics")}
             className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all border-2 ${
-              activeTab === 'tactics'
-                ? 'bg-[#ffd438] text-[#1c1308] border-[#1c1308] shadow-[2px_3px_0_#1c1308]'
-                : 'bg-[#f4ebd0] text-[#593d25] border-transparent hover:bg-[#eedcae]'
+              activeTab === "tactics"
+                ? "bg-[#ffd438] text-[#1c1308] border-[#1c1308] shadow-[2px_3px_0_#1c1308]"
+                : "bg-[#f4ebd0] text-[#593d25] border-transparent hover:bg-[#eedcae]"
             }`}
           >
             ⚔️ Taktika a rady
@@ -178,7 +182,7 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
         {/* Scrollable Content Body */}
         <div className="flex-1 overflow-y-auto space-y-5 pr-1.5 custom-scrollbar">
           {/* TAB 1: INFO & STATS */}
-          {activeTab === 'info' && (
+          {activeTab === "info" && (
             <div className="space-y-4">
               {/* Folk Quote Banner */}
               <div className="bg-[#fcf3dc] p-3.5 rounded-xl border-2 border-[#1c1308] shadow-[3px_3px_0_#dfcb9a]">
@@ -194,27 +198,51 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
                 </h4>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                   <div className="bg-[#fff3ec] p-3 rounded-xl border-2 border-[#942718] shadow-xs">
-                    <span className="text-[0.68rem] uppercase font-bold text-[#8c2d1b] block">Životy (HP)</span>
-                    <span className="font-title text-xl font-black text-[#942718]">{hero.hp} HP</span>
-                    <span className="text-[0.68rem] text-[#633327] block mt-0.5">Celková odolnost v boji</span>
+                    <span className="text-[0.68rem] uppercase font-bold text-[#8c2d1b] block">
+                      Životy (HP)
+                    </span>
+                    <span className="font-title text-xl font-black text-[#942718]">
+                      {hero.hp} HP
+                    </span>
+                    <span className="text-[0.68rem] text-[#633327] block mt-0.5">
+                      Celková odolnost v boji
+                    </span>
                   </div>
 
                   <div className="bg-[#eef5fc] p-3 rounded-xl border-2 border-[#1b4372] shadow-xs">
-                    <span className="text-[0.68rem] uppercase font-bold text-[#1b4372] block">Připravenost</span>
-                    <span className="font-title text-xl font-black text-[#1b4372]">{hero.ready}</span>
-                    <span className="text-[0.68rem] text-[#334e6d] block mt-0.5">Nástup za {50 - hero.ready} Aug (vyšší = dřív)</span>
+                    <span className="text-[0.68rem] uppercase font-bold text-[#1b4372] block">
+                      Připravenost
+                    </span>
+                    <span className="font-title text-xl font-black text-[#1b4372]">
+                      {hero.ready}
+                    </span>
+                    <span className="text-[0.68rem] text-[#334e6d] block mt-0.5">
+                      Nástup za {50 - hero.ready} Aug (vyšší = dřív)
+                    </span>
                   </div>
 
                   <div className="bg-[#fff9e6] p-3 rounded-xl border-2 border-[#c2850e] shadow-xs">
-                    <span className="text-[0.68rem] uppercase font-bold text-[#875508] block">Měšec s mincemi</span>
-                    <span className="font-title text-xl font-black text-[#a66e07]">{hero.salt} k.</span>
-                    <span className="text-[0.68rem] text-[#593d17] block mt-0.5">Počáteční krejcary do hospody</span>
+                    <span className="text-[0.68rem] uppercase font-bold text-[#875508] block">
+                      Měšec s mincemi
+                    </span>
+                    <span className="font-title text-xl font-black text-[#a66e07]">
+                      {hero.salt} k.
+                    </span>
+                    <span className="text-[0.68rem] text-[#593d17] block mt-0.5">
+                      Počáteční krejcary do hospody
+                    </span>
                   </div>
 
                   <div className="bg-[#f0f8ec] p-3 rounded-xl border-2 border-[#2d6328] shadow-xs">
-                    <span className="text-[0.68rem] uppercase font-bold text-[#204e1c] block">Nádech / Spánek</span>
-                    <span className="font-title text-base font-black text-[#204e1c]">+{hero.breath} / −{hero.sleepFat}</span>
-                    <span className="text-[0.68rem] text-[#33592f] block mt-0.5">Akce za nádech / úbytek Únavy</span>
+                    <span className="text-[0.68rem] uppercase font-bold text-[#204e1c] block">
+                      Nádech / Spánek
+                    </span>
+                    <span className="font-title text-base font-black text-[#204e1c]">
+                      +{hero.breath} / −{hero.sleepFat}
+                    </span>
+                    <span className="text-[0.68rem] text-[#33592f] block mt-0.5">
+                      Akce za nádech / úbytek Únavy
+                    </span>
                   </div>
                 </div>
               </div>
@@ -239,7 +267,8 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
                 </div>
 
                 <p className="text-xs sm:text-sm font-semibold text-[#3b2a1a] mb-2 leading-relaxed">
-                  Tento speciál neleží v balíčku — je vám k dispozici neustále na bojišti jako zvláštní akce s vlastním časovačem ochlazení. Nezabírá místo v ruce!
+                  Tento speciál neleží v balíčku — je vám k dispozici neustále na bojišti jako
+                  zvláštní akce s vlastním časovačem ochlazení. Nezabírá místo v ruce!
                 </p>
 
                 <div className="flex flex-wrap gap-2 text-xs font-bold">
@@ -286,11 +315,12 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
           )}
 
           {/* TAB 2: STARTER DECK */}
-          {activeTab === 'deck' && (
+          {activeTab === "deck" && (
             <div className="space-y-4">
               <div className="bg-[#fcf3dc] p-3 rounded-xl border-2 border-[#1c1308] flex items-center justify-between">
                 <div className="text-xs sm:text-sm font-bold text-[#3b2a1a]">
-                  Počáteční brašna obsahuje celkem <b>{totalCardsInDeck} karet</b>. Každou z nich můžete v hostinci vylepšit za krejcary na mocnější variantu.
+                  Počáteční brašna obsahuje celkem <b>{totalCardsInDeck} karet</b>. Každou z nich
+                  můžete v hostinci vylepšit za krejcary na mocnější variantu.
                 </div>
               </div>
 
@@ -309,7 +339,7 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
                           {count}× v balíčku
                         </span>
                         <span className="text-[0.65rem] font-bold text-[#694825]">
-                          {def.cost} Akce · {def.pre > 0 ? `${def.pre} Aug` : 'hned'}
+                          {def.cost} Akce · {def.pre > 0 ? `${def.pre} Aug` : "hned"}
                         </span>
                       </div>
 
@@ -334,7 +364,7 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
           )}
 
           {/* TAB 3: TACTICS & ADVICE */}
-          {activeTab === 'tactics' && (
+          {activeTab === "tactics" && (
             <div className="space-y-4">
               {/* Strengths & Weaknesses */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -398,7 +428,7 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
               onClick={() => onSelect(hero.id)}
               className="lada-button lada-button-primary py-2.5 px-6 text-sm font-black shadow-[0_4px_0_#1c1308] flex-1 sm:flex-none"
             >
-              ⚔️ Vyrazit na cestu za {hero.name.split(' ')[0]}
+              ⚔️ Vyrazit na cestu za {hero.name.split(" ")[0]}
             </button>
           </div>
         </div>

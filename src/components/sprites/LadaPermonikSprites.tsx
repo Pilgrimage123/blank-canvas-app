@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 /**
  * Autentické Ladovské sprity pro rodinu PERMONÍKŮ (Josef Lada: Bubáci a hastrmani, České pohádky).
@@ -28,19 +28,19 @@ export function renderLadaPermonikSprite(
   stage: number = 2,
   isHit: boolean = false,
   isAttacking: boolean = false,
-  variantName?: string
+  variantName?: string,
 ): React.ReactNode {
   let resolvedStage = Math.max(0, Math.min(3, stage));
 
   if (variantName) {
     const vn = variantName.toLowerCase();
-    if (vn.includes('ze štoly') || vn.includes('permoníček') || vn.includes('permonicek')) {
+    if (vn.includes("ze štoly") || vn.includes("permoníček") || vn.includes("permonicek")) {
       resolvedStage = 0;
-    } else if (vn.includes('s kladívkem') || vn.includes('kladivk')) {
+    } else if (vn.includes("s kladívkem") || vn.includes("kladivk")) {
       resolvedStage = 1;
-    } else if (vn.includes('s kahancem') || vn.includes('skalní')) {
+    } else if (vn.includes("s kahancem") || vn.includes("skalní")) {
       resolvedStage = 2;
-    } else if (vn.includes('mistr') || vn.includes('starohorský') || vn.includes('starohorsky')) {
+    } else if (vn.includes("mistr") || vn.includes("starohorský") || vn.includes("starohorsky")) {
       resolvedStage = 3;
     }
   }
@@ -67,7 +67,11 @@ export function renderLadaPermonikSprite(
  * ========================================================================= */
 function renderDulniPermonicek(isHit: boolean, isAttacking: boolean): React.ReactNode {
   return (
-    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md" aria-label="Důlní permoníček ze štoly">
+    <svg
+      viewBox="0 0 120 120"
+      className="w-full h-full drop-shadow-md"
+      aria-label="Důlní permoníček ze štoly"
+    >
       <defs>
         <radialGradient id="permo0-glow" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor="#bae6fd" stopOpacity="0.4" />
@@ -85,11 +89,39 @@ function renderDulniPermonicek(isHit: boolean, isAttacking: boolean): React.Reac
       {/* Krátké zavalité nožky v učeňských kožených botkách */}
       <g>
         {/* Levá botka */}
-        <path d="M46 92 L42 108 L52 109 L53 92" fill="#5c3e21" stroke="#1c1308" strokeWidth="3" strokeLinejoin="round" />
-        <ellipse cx="46" cy="108" rx="6.5" ry="3" fill="#3e2714" stroke="#1c1308" strokeWidth="2.5" />
+        <path
+          d="M46 92 L42 108 L52 109 L53 92"
+          fill="#5c3e21"
+          stroke="#1c1308"
+          strokeWidth="3"
+          strokeLinejoin="round"
+        />
+        <ellipse
+          cx="46"
+          cy="108"
+          rx="6.5"
+          ry="3"
+          fill="#3e2714"
+          stroke="#1c1308"
+          strokeWidth="2.5"
+        />
         {/* Pravá botka */}
-        <path d="M66 92 L67 108 L78 109 L74 92" fill="#5c3e21" stroke="#1c1308" strokeWidth="3" strokeLinejoin="round" />
-        <ellipse cx="73" cy="108" rx="6.5" ry="3" fill="#3e2714" stroke="#1c1308" strokeWidth="2.5" />
+        <path
+          d="M66 92 L67 108 L78 109 L74 92"
+          fill="#5c3e21"
+          stroke="#1c1308"
+          strokeWidth="3"
+          strokeLinejoin="round"
+        />
+        <ellipse
+          cx="73"
+          cy="108"
+          rx="6.5"
+          ry="3"
+          fill="#3e2714"
+          stroke="#1c1308"
+          strokeWidth="2.5"
+        />
       </g>
 
       {/* Malé buclaté tělíčko ve světlé lněné kazajce */}
@@ -109,22 +141,57 @@ function renderDulniPermonicek(isHit: boolean, isAttacking: boolean): React.Reac
         strokeLinejoin="round"
       />
       {/* Kapsička s kouskem bílé křídy na značení štoly */}
-      <rect x="56" y="74" width="8" height="8" rx="2" fill="#a16207" stroke="#1c1308" strokeWidth="2" />
-      <rect x="58" y="71" width="3" height="5" rx="1" fill="#ffffff" stroke="#1c1308" strokeWidth="1.2" />
+      <rect
+        x="56"
+        y="74"
+        width="8"
+        height="8"
+        rx="2"
+        fill="#a16207"
+        stroke="#1c1308"
+        strokeWidth="2"
+      />
+      <rect
+        x="58"
+        y="71"
+        width="3"
+        height="5"
+        rx="1"
+        fill="#ffffff"
+        stroke="#1c1308"
+        strokeWidth="1.2"
+      />
 
       {/* DROBNÝ UČEŇSKÝ KRUMPÁČEK (světlé jasanové topůrko, kované železo - ŽÁDNÉ VÝBUŠNINY) */}
       <g
         transform={
           isAttacking
-            ? 'rotate(-25 80 75) translate(4 -6)'
+            ? "rotate(-25 80 75) translate(4 -6)"
             : isHit
-            ? 'rotate(20 80 75) translate(-4 3)'
-            : 'rotate(0 80 75)'
+              ? "rotate(20 80 75) translate(-4 3)"
+              : "rotate(0 80 75)"
         }
       >
         {/* Dřevěná násada krumpáčku */}
-        <line x1="72" y1="58" x2="94" y2="104" stroke="#ca8a04" strokeWidth="4" strokeLinecap="round" />
-        <line x1="72" y1="58" x2="94" y2="104" stroke="#1c1308" strokeWidth="4.5" strokeLinecap="round" className="opacity-40" />
+        <line
+          x1="72"
+          y1="58"
+          x2="94"
+          y2="104"
+          stroke="#ca8a04"
+          strokeWidth="4"
+          strokeLinecap="round"
+        />
+        <line
+          x1="72"
+          y1="58"
+          x2="94"
+          y2="104"
+          stroke="#1c1308"
+          strokeWidth="4.5"
+          strokeLinecap="round"
+          className="opacity-40"
+        />
         {/* Železná kovaná oboustranná hlavice krumpáče (zahnutá špička a plochý sekáček) */}
         <path
           d="M62 52 Q72 58 84 66 L83 62 Q72 55 64 49 Z"
@@ -134,7 +201,16 @@ function renderDulniPermonicek(isHit: boolean, isAttacking: boolean): React.Reac
           strokeLinejoin="round"
         />
         {/* Kovová objímka se zpevňujícím nýtem */}
-        <rect x="71" y="57" width="5" height="4" rx="1" fill="#cbd5e1" stroke="#1c1308" strokeWidth="1.8" />
+        <rect
+          x="71"
+          y="57"
+          width="5"
+          height="4"
+          rx="1"
+          fill="#cbd5e1"
+          stroke="#1c1308"
+          strokeWidth="1.8"
+        />
         <circle cx="73.5" cy="59" r="0.8" fill="#1c1308" />
       </g>
 
@@ -143,7 +219,13 @@ function renderDulniPermonicek(isHit: boolean, isAttacking: boolean): React.Reac
       <circle cx="77" cy="74" r="4" fill="#fed7aa" stroke="#1c1308" strokeWidth="2" />
 
       {/* Levá zvědavě zdvižená ručka */}
-      <path d="M43 65 Q33 66 31 72" stroke="#1c1308" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+      <path
+        d="M43 65 Q33 66 31 72"
+        stroke="#1c1308"
+        strokeWidth="3.5"
+        strokeLinecap="round"
+        fill="none"
+      />
       <circle cx="31" cy="72" r="4" fill="#fed7aa" stroke="#1c1308" strokeWidth="2.2" />
 
       {/* Hlava permoníčka - mladá, buclatá, bez vousů */}
@@ -165,7 +247,13 @@ function renderDulniPermonicek(isHit: boolean, isAttacking: boolean): React.Reac
       <circle cx="68" cy="41" r="1.2" fill="#ffffff" />
 
       {/* Veselý zvědavý úsměv permoníčka */}
-      <path d="M55 54 Q60 58 65 54" fill="none" stroke="#1c1308" strokeWidth="2.5" strokeLinecap="round" />
+      <path
+        d="M55 54 Q60 58 65 54"
+        fill="none"
+        stroke="#1c1308"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
 
       {/* DLOUHÁ ŠPIČATÁ ČAPKA: PASTELOVÁ POMNĚNKOVĚ MODRÁ (#93c5fd / #bae6fd) */}
       {/* Ozdobný ohrnutý lem čapky */}
@@ -180,7 +268,13 @@ function renderDulniPermonicek(isHit: boolean, isAttacking: boolean): React.Reac
         strokeLinejoin="round"
       />
       {/* Měkký pastelový záhyb látky */}
-      <path d="M60 14 Q74 13 80 24" fill="none" stroke="#60a5fa" strokeWidth="2.5" strokeLinecap="round" />
+      <path
+        d="M60 14 Q74 13 80 24"
+        fill="none"
+        stroke="#60a5fa"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
 
       {/* Dřevěná rolnička / bambulka na samém špičatém konci čapky */}
       <circle cx="95" cy="40" r="4" fill="#facc15" stroke="#1c1308" strokeWidth="2" />
@@ -198,7 +292,11 @@ function renderDulniPermonicek(isHit: boolean, isAttacking: boolean): React.Reac
  * ========================================================================= */
 function renderHavirskyPermonik(isHit: boolean, isAttacking: boolean): React.ReactNode {
   return (
-    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md" aria-label="Havířský permoník">
+    <svg
+      viewBox="0 0 120 120"
+      className="w-full h-full drop-shadow-md"
+      aria-label="Havířský permoník"
+    >
       {/* Stín a kamenná hromádka */}
       <ellipse cx="60" cy="112" rx="34" ry="6" fill="#1c1308" opacity="0.4" />
       <circle cx="28" cy="111" r="2.5" fill="#78716c" stroke="#1c1308" strokeWidth="1.5" />
@@ -206,10 +304,38 @@ function renderHavirskyPermonik(isHit: boolean, isAttacking: boolean): React.Rea
 
       {/* Pevné havířské kožené škorně */}
       <g>
-        <path d="M42 90 L37 109 L50 110 L52 90" fill="#44403c" stroke="#1c1308" strokeWidth="3.5" strokeLinejoin="round" />
-        <ellipse cx="43" cy="109" rx="8" ry="3.5" fill="#292524" stroke="#1c1308" strokeWidth="2.5" />
-        <path d="M68 90 L70 109 L83 110 L78 90" fill="#44403c" stroke="#1c1308" strokeWidth="3.5" strokeLinejoin="round" />
-        <ellipse cx="77" cy="109" rx="8" ry="3.5" fill="#292524" stroke="#1c1308" strokeWidth="2.5" />
+        <path
+          d="M42 90 L37 109 L50 110 L52 90"
+          fill="#44403c"
+          stroke="#1c1308"
+          strokeWidth="3.5"
+          strokeLinejoin="round"
+        />
+        <ellipse
+          cx="43"
+          cy="109"
+          rx="8"
+          ry="3.5"
+          fill="#292524"
+          stroke="#1c1308"
+          strokeWidth="2.5"
+        />
+        <path
+          d="M68 90 L70 109 L83 110 L78 90"
+          fill="#44403c"
+          stroke="#1c1308"
+          strokeWidth="3.5"
+          strokeLinejoin="round"
+        />
+        <ellipse
+          cx="77"
+          cy="109"
+          rx="8"
+          ry="3.5"
+          fill="#292524"
+          stroke="#1c1308"
+          strokeWidth="2.5"
+        />
       </g>
 
       {/* Havířský kabátec v petrolejově šedé */}
@@ -231,8 +357,26 @@ function renderHavirskyPermonik(isHit: boolean, isAttacking: boolean): React.Rea
       />
 
       {/* Široký kožený řemen s mosaznou přezkou */}
-      <rect x="42" y="66" width="36" height="6" rx="1.5" fill="#451a03" stroke="#1c1308" strokeWidth="2.2" />
-      <rect x="56" y="65" width="8" height="8" rx="1.5" fill="#facc15" stroke="#1c1308" strokeWidth="2" />
+      <rect
+        x="42"
+        y="66"
+        width="36"
+        height="6"
+        rx="1.5"
+        fill="#451a03"
+        stroke="#1c1308"
+        strokeWidth="2.2"
+      />
+      <rect
+        x="56"
+        y="65"
+        width="8"
+        height="8"
+        rx="1.5"
+        fill="#facc15"
+        stroke="#1c1308"
+        strokeWidth="2"
+      />
       {/* Železné havířské klínky (želízka) visící u boku */}
       <polygon points="46,72 48,82 45,82" fill="#94a3b8" stroke="#1c1308" strokeWidth="1.5" />
       <polygon points="50,72 52,80 49,80" fill="#cbd5e1" stroke="#1c1308" strokeWidth="1.5" />
@@ -241,14 +385,22 @@ function renderHavirskyPermonik(isHit: boolean, isAttacking: boolean): React.Rea
       <g
         transform={
           isAttacking
-            ? 'rotate(35 88 65) translate(8 -10)'
+            ? "rotate(35 88 65) translate(8 -10)"
             : isHit
-            ? 'rotate(-25 88 65) translate(-6 4)'
-            : 'rotate(8 88 65)'
+              ? "rotate(-25 88 65) translate(-6 4)"
+              : "rotate(8 88 65)"
         }
       >
         {/* Masivní topůrko z tmavého jasanu */}
-        <line x1="84" y1="36" x2="100" y2="108" stroke="#b45309" strokeWidth="4.5" strokeLinecap="round" />
+        <line
+          x1="84"
+          y1="36"
+          x2="100"
+          y2="108"
+          stroke="#b45309"
+          strokeWidth="4.5"
+          strokeLinecap="round"
+        />
         {/* Oboustranná ocelová kovaná hlavice krumpáče (obloukový hrot vlevo, plochý klín vpravo) */}
         <path
           d="M68 34 Q84 37 98 44 L96 40 Q84 33 70 30 Z"
@@ -265,7 +417,16 @@ function renderHavirskyPermonik(isHit: boolean, isAttacking: boolean): React.Rea
           strokeLinejoin="round"
         />
         {/* Kované zpevnění a objímka */}
-        <rect x="85" y="36" width="6" height="6" rx="1.5" fill="#475569" stroke="#1c1308" strokeWidth="2" />
+        <rect
+          x="85"
+          y="36"
+          width="6"
+          height="6"
+          rx="1.5"
+          fill="#475569"
+          stroke="#1c1308"
+          strokeWidth="2"
+        />
       </g>
 
       {/* Ruce svírající krumpáč v pohotovostním nápřahu */}
@@ -273,7 +434,13 @@ function renderHavirskyPermonik(isHit: boolean, isAttacking: boolean): React.Rea
       <circle cx="89" cy="64" r="4.8" fill="#fed7aa" stroke="#1c1308" strokeWidth="2.5" />
 
       {/* Levá ruka opřená v bok */}
-      <path d="M40 62 Q30 68 34 76" stroke="#1c1308" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+      <path
+        d="M40 62 Q30 68 34 76"
+        stroke="#1c1308"
+        strokeWidth="3.5"
+        strokeLinecap="round"
+        fill="none"
+      />
       <circle cx="35" cy="76" r="4.5" fill="#fed7aa" stroke="#1c1308" strokeWidth="2.2" />
 
       {/* Hlava havířského permoníka */}
@@ -288,8 +455,20 @@ function renderHavirskyPermonik(isHit: boolean, isAttacking: boolean): React.Rea
         strokeLinejoin="round"
       />
       {/* Kotlety */}
-      <path d="M44 42 Q45 50 48 52" stroke="#b45309" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-      <path d="M76 42 Q75 50 72 52" stroke="#b45309" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+      <path
+        d="M44 42 Q45 50 48 52"
+        stroke="#b45309"
+        strokeWidth="3.5"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <path
+        d="M76 42 Q75 50 72 52"
+        stroke="#b45309"
+        strokeWidth="3.5"
+        strokeLinecap="round"
+        fill="none"
+      />
 
       {/* Rázovitý havířský nos s červeným leskem */}
       <circle cx="60" cy="46" r="4.5" fill="#fb923c" stroke="#1c1308" strokeWidth="2" />
@@ -300,8 +479,20 @@ function renderHavirskyPermonik(isHit: boolean, isAttacking: boolean): React.Rea
       <ellipse cx="67" cy="40" rx="2.8" ry="3.2" fill="#1c1308" />
       <circle cx="68" cy="39" r="1.2" fill="#ffffff" />
       {/* Zvídavé obočí */}
-      <path d="M50 35 Q54 33 57 36" stroke="#1c1308" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <path d="M70 35 Q66 33 63 36" stroke="#1c1308" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+      <path
+        d="M50 35 Q54 33 57 36"
+        stroke="#1c1308"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <path
+        d="M70 35 Q66 33 63 36"
+        stroke="#1c1308"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        fill="none"
+      />
 
       {/* DLOUHÁ ŠPIČATÁ ČAPKA: PASTELOVÁ MERUŇKOVO-KORÁLOVÁ (#fca5a5 / #fdba74) */}
       <ellipse cx="60" cy="34" rx="17.5" ry="5.5" fill="#fed7aa" stroke="#1c1308" strokeWidth="3" />
@@ -323,11 +514,28 @@ function renderHavirskyPermonik(isHit: boolean, isAttacking: boolean): React.Rea
         strokeLinejoin="round"
       />
       {/* Pastelové záhyby látky */}
-      <path d="M52 14 Q64 12 74 20" stroke="#f87171" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <path d="M38 32 Q32 38 28 46" stroke="#f87171" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <path
+        d="M52 14 Q64 12 74 20"
+        stroke="#f87171"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <path
+        d="M38 32 Q32 38 28 46"
+        stroke="#f87171"
+        strokeWidth="2"
+        strokeLinecap="round"
+        fill="none"
+      />
 
       {/* Drobný zelený lístek kapradí vetknutý za lem čapky pro štěstí v podzemí */}
-      <path d="M72 32 Q78 22 84 20 Q80 28 75 33 Z" fill="#4ade80" stroke="#1c1308" strokeWidth="1.8" />
+      <path
+        d="M72 32 Q78 22 84 20 Q80 28 75 33 Z"
+        fill="#4ade80"
+        stroke="#1c1308"
+        strokeWidth="1.8"
+      />
     </svg>
   );
 }
@@ -342,7 +550,11 @@ function renderHavirskyPermonik(isHit: boolean, isAttacking: boolean): React.Rea
  * ========================================================================= */
 function renderSkalniPermonik(isHit: boolean, isAttacking: boolean): React.ReactNode {
   return (
-    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md" aria-label="Skalní permoník s kahancem">
+    <svg
+      viewBox="0 0 120 120"
+      className="w-full h-full drop-shadow-md"
+      aria-label="Skalní permoník s kahancem"
+    >
       {/* Hřejivá záře z kahance */}
       <circle cx="26" cy="80" r="16" fill="#fef08a" opacity="0.3" pointerEvents="none" />
       <circle cx="26" cy="80" r="8" fill="#fde047" opacity="0.45" pointerEvents="none" />
@@ -352,10 +564,38 @@ function renderSkalniPermonik(isHit: boolean, isAttacking: boolean): React.React
 
       {/* Těžké havířské boty s tlustou podrážkou */}
       <g>
-        <path d="M42 90 L38 110 L50 111 L52 90" fill="#27272a" stroke="#1c1308" strokeWidth="3.5" strokeLinejoin="round" />
-        <ellipse cx="44" cy="110" rx="8" ry="3.5" fill="#18181b" stroke="#1c1308" strokeWidth="2.5" />
-        <path d="M68 90 L70 110 L82 111 L78 90" fill="#27272a" stroke="#1c1308" strokeWidth="3.5" strokeLinejoin="round" />
-        <ellipse cx="76" cy="110" rx="8" ry="3.5" fill="#18181b" stroke="#1c1308" strokeWidth="2.5" />
+        <path
+          d="M42 90 L38 110 L50 111 L52 90"
+          fill="#27272a"
+          stroke="#1c1308"
+          strokeWidth="3.5"
+          strokeLinejoin="round"
+        />
+        <ellipse
+          cx="44"
+          cy="110"
+          rx="8"
+          ry="3.5"
+          fill="#18181b"
+          stroke="#1c1308"
+          strokeWidth="2.5"
+        />
+        <path
+          d="M68 90 L70 110 L82 111 L78 90"
+          fill="#27272a"
+          stroke="#1c1308"
+          strokeWidth="3.5"
+          strokeLinejoin="round"
+        />
+        <ellipse
+          cx="76"
+          cy="110"
+          rx="8"
+          ry="3.5"
+          fill="#18181b"
+          stroke="#1c1308"
+          strokeWidth="2.5"
+        />
       </g>
 
       {/* Zavalitý trpasličí kabátec z 19. století */}
@@ -385,17 +625,60 @@ function renderSkalniPermonik(isHit: boolean, isAttacking: boolean): React.React
         strokeLinejoin="round"
       />
       {/* Vousem prosvítající pramínky */}
-      <path d="M52 56 Q50 72 56 82" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <path d="M68 56 Q70 72 64 82" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+      <path
+        d="M52 56 Q50 72 56 82"
+        stroke="#e2e8f0"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <path
+        d="M68 56 Q70 72 64 82"
+        stroke="#e2e8f0"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        fill="none"
+      />
 
       {/* Staročeská hliněná fajfka vykukující z vousů */}
       <g>
-        <path d="M54 52 L44 50 L42 45" stroke="#1c1308" strokeWidth="2.8" fill="none" strokeLinecap="round" />
-        <rect x="40" y="41" width="6" height="7" rx="1.5" fill="#a16207" stroke="#1c1308" strokeWidth="1.6" />
+        <path
+          d="M54 52 L44 50 L42 45"
+          stroke="#1c1308"
+          strokeWidth="2.8"
+          fill="none"
+          strokeLinecap="round"
+        />
+        <rect
+          x="40"
+          y="41"
+          width="6"
+          height="7"
+          rx="1.5"
+          fill="#a16207"
+          stroke="#1c1308"
+          strokeWidth="1.6"
+        />
         <path d="M40 41 Q43 39 46 41" fill="#facc15" stroke="#1c1308" strokeWidth="1.2" />
         {/* Pokojné obláčky dýmu z dýmky */}
-        <circle cx="40" cy="34" r="3" fill="#ffffff" opacity="0.7" stroke="#1c1308" strokeWidth="1" />
-        <circle cx="36" cy="27" r="4.2" fill="#ffffff" opacity="0.5" stroke="#1c1308" strokeWidth="1" />
+        <circle
+          cx="40"
+          cy="34"
+          r="3"
+          fill="#ffffff"
+          opacity="0.7"
+          stroke="#1c1308"
+          strokeWidth="1"
+        />
+        <circle
+          cx="36"
+          cy="27"
+          r="4.2"
+          fill="#ffffff"
+          opacity="0.5"
+          stroke="#1c1308"
+          strokeWidth="1"
+        />
       </g>
 
       {/* Kulatý havířský nos a laskavé oči */}
@@ -417,25 +700,53 @@ function renderSkalniPermonik(isHit: boolean, isAttacking: boolean): React.React
         strokeLinejoin="round"
       />
       {/* Vnitřní stín a záhyby pastelové plsti */}
-      <path d="M56 12 Q70 10 82 18" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <path d="M86 24 Q88 34 84 42" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <path
+        d="M56 12 Q70 10 82 18"
+        stroke="#4ade80"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <path
+        d="M86 24 Q88 34 84 42"
+        stroke="#4ade80"
+        strokeWidth="2"
+        strokeLinecap="round"
+        fill="none"
+      />
 
       {/* Stříbrná jehlice s horským křišťálem vetknutá do čapky */}
-      <line x1="50" y1="28" x2="62" y2="18" stroke="#cbd5e1" strokeWidth="2" strokeLinecap="round" />
+      <line
+        x1="50"
+        y1="28"
+        x2="62"
+        y2="18"
+        stroke="#cbd5e1"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
       <polygon points="62,18 65,15 67,19 64,21" fill="#e0f2fe" stroke="#1c1308" strokeWidth="1.5" />
 
       {/* TĚŽKÝ SKALNÍ KOVANÝ KRUMPÁČ OPŘENÝ O ZEM (ŽÁDNÉ VÝBUŠNINY) */}
       <g
         transform={
           isAttacking
-            ? 'rotate(25 92 78) translate(6 -8)'
+            ? "rotate(25 92 78) translate(6 -8)"
             : isHit
-            ? 'rotate(-20 92 78) translate(-6 2)'
-            : 'rotate(0 92 78)'
+              ? "rotate(-20 92 78) translate(-6 2)"
+              : "rotate(0 92 78)"
         }
       >
         {/* Dřevěné topůrko opřené o kamennou zem */}
-        <line x1="88" y1="48" x2="98" y2="110" stroke="#a16207" strokeWidth="5" strokeLinecap="round" />
+        <line
+          x1="88"
+          y1="48"
+          x2="98"
+          y2="110"
+          stroke="#a16207"
+          strokeWidth="5"
+          strokeLinecap="round"
+        />
         {/* Kovaná hlavice skalního krumpáče */}
         <path
           d="M74 46 Q88 48 102 54 L100 50 Q88 44 76 42 Z"
@@ -452,7 +763,16 @@ function renderSkalniPermonik(isHit: boolean, isAttacking: boolean): React.React
           strokeLinejoin="round"
         />
         {/* Železná kovaná objímka */}
-        <rect x="88" y="47" width="6" height="5" rx="1.5" fill="#334155" stroke="#1c1308" strokeWidth="2" />
+        <rect
+          x="88"
+          y="47"
+          width="6"
+          height="5"
+          rx="1.5"
+          fill="#334155"
+          stroke="#1c1308"
+          strokeWidth="2"
+        />
         {/* Ruka držící krumpáč */}
         <circle cx="89" cy="62" r="5" fill="#fed7aa" stroke="#1c1308" strokeWidth="2.5" />
       </g>
@@ -460,18 +780,58 @@ function renderSkalniPermonik(isHit: boolean, isAttacking: boolean): React.React
       {/* LEVÁ RUKA: MOSAZNÝ BEZPEČNÝ DŮLNÍ KAHANEC Z 19. STOLETÍ */}
       <g>
         {/* Ruka nesoucí kahanec */}
-        <path d="M42 62 Q32 68 28 74" stroke="#1c1308" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+        <path
+          d="M42 62 Q32 68 28 74"
+          stroke="#1c1308"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+          fill="none"
+        />
         <circle cx="28" cy="74" r="4.5" fill="#fed7aa" stroke="#1c1308" strokeWidth="2.2" />
 
         {/* Mosazný řetízek s háčkem */}
-        <line x1="28" y1="74" x2="26" y2="82" stroke="#1c1308" strokeWidth="2" strokeDasharray="2,2" />
+        <line
+          x1="28"
+          y1="74"
+          x2="26"
+          y2="82"
+          stroke="#1c1308"
+          strokeWidth="2"
+          strokeDasharray="2,2"
+        />
 
         {/* Tělo mosazného kahance */}
-        <rect x="20" y="82" width="13" height="17" rx="3" fill="#ca8a04" stroke="#1c1308" strokeWidth="2.2" />
-        <ellipse cx="26.5" cy="82" rx="6.5" ry="2.5" fill="#eab308" stroke="#1c1308" strokeWidth="1.5" />
+        <rect
+          x="20"
+          y="82"
+          width="13"
+          height="17"
+          rx="3"
+          fill="#ca8a04"
+          stroke="#1c1308"
+          strokeWidth="2.2"
+        />
+        <ellipse
+          cx="26.5"
+          cy="82"
+          rx="6.5"
+          ry="2.5"
+          fill="#eab308"
+          stroke="#1c1308"
+          strokeWidth="1.5"
+        />
 
         {/* Skleněný průhled s plamínkem */}
-        <rect x="23" y="86" width="7" height="9" rx="1.5" fill="#fef08a" stroke="#1c1308" strokeWidth="1.2" />
+        <rect
+          x="23"
+          y="86"
+          width="7"
+          height="9"
+          rx="1.5"
+          fill="#fef08a"
+          stroke="#1c1308"
+          strokeWidth="1.2"
+        />
         <ellipse cx="26.5" cy="90" rx="2" ry="3.5" fill="#f97316" />
         <circle cx="26.5" cy="91" r="1.2" fill="#ef4444" />
       </g>
@@ -490,7 +850,11 @@ function renderSkalniPermonik(isHit: boolean, isAttacking: boolean): React.React
  * ========================================================================= */
 function renderDulniMistr(isHit: boolean, isAttacking: boolean): React.ReactNode {
   return (
-    <svg viewBox="0 0 120 120" className="w-full h-full drop-shadow-md" aria-label="Starohorský důlní mistr">
+    <svg
+      viewBox="0 0 120 120"
+      className="w-full h-full drop-shadow-md"
+      aria-label="Starohorský důlní mistr"
+    >
       <defs>
         {/* Zlatavá aura starého důlního pána */}
         <radialGradient id="mistr-aura" cx="50%" cy="50%" r="50%">
@@ -509,13 +873,59 @@ function renderDulniMistr(isHit: boolean, isAttacking: boolean): React.ReactNode
 
       {/* Slavnostní havířské boty se stříbrnými přezkami */}
       <g>
-        <path d="M40 88 L36 110 L49 111 L51 88" fill="#18181b" stroke="#1c1308" strokeWidth="3.5" strokeLinejoin="round" />
-        <ellipse cx="42" cy="110" rx="8" ry="3.5" fill="#09090b" stroke="#1c1308" strokeWidth="2.5" />
-        <rect x="40" y="106" width="5" height="4" rx="1" fill="#cbd5e1" stroke="#1c1308" strokeWidth="1.5" />
+        <path
+          d="M40 88 L36 110 L49 111 L51 88"
+          fill="#18181b"
+          stroke="#1c1308"
+          strokeWidth="3.5"
+          strokeLinejoin="round"
+        />
+        <ellipse
+          cx="42"
+          cy="110"
+          rx="8"
+          ry="3.5"
+          fill="#09090b"
+          stroke="#1c1308"
+          strokeWidth="2.5"
+        />
+        <rect
+          x="40"
+          y="106"
+          width="5"
+          height="4"
+          rx="1"
+          fill="#cbd5e1"
+          stroke="#1c1308"
+          strokeWidth="1.5"
+        />
 
-        <path d="M70 88 L72 110 L85 111 L81 88" fill="#18181b" stroke="#1c1308" strokeWidth="3.5" strokeLinejoin="round" />
-        <ellipse cx="78" cy="110" rx="8" ry="3.5" fill="#09090b" stroke="#1c1308" strokeWidth="2.5" />
-        <rect x="76" y="106" width="5" height="4" rx="1" fill="#cbd5e1" stroke="#1c1308" strokeWidth="1.5" />
+        <path
+          d="M70 88 L72 110 L85 111 L81 88"
+          fill="#18181b"
+          stroke="#1c1308"
+          strokeWidth="3.5"
+          strokeLinejoin="round"
+        />
+        <ellipse
+          cx="78"
+          cy="110"
+          rx="8"
+          ry="3.5"
+          fill="#09090b"
+          stroke="#1c1308"
+          strokeWidth="2.5"
+        />
+        <rect
+          x="76"
+          y="106"
+          width="5"
+          height="4"
+          rx="1"
+          fill="#cbd5e1"
+          stroke="#1c1308"
+          strokeWidth="1.5"
+        />
       </g>
 
       {/* Slavnostní černá havířská uniforma mistra s mosaznými knoflíky */}
@@ -538,7 +948,13 @@ function renderDulniMistr(isHit: boolean, isAttacking: boolean): React.ReactNode
       </g>
 
       {/* Těžký hornický řetěz s broušeným českým granátem na krku */}
-      <path d="M48 58 Q62 68 76 58" fill="none" stroke="#facc15" strokeWidth="2.5" strokeLinecap="round" />
+      <path
+        d="M48 58 Q62 68 76 58"
+        fill="none"
+        stroke="#facc15"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
       <polygon points="62,67 66,72 62,77 58,72" fill="#dc2626" stroke="#1c1308" strokeWidth="1.8" />
       <circle cx="62" cy="72" r="1.2" fill="#ffffff" />
 
@@ -554,7 +970,16 @@ function renderDulniMistr(isHit: boolean, isAttacking: boolean): React.ReactNode
         strokeWidth="2.8"
         strokeLinejoin="round"
       />
-      <rect x="49" y="74" width="7" height="3.5" rx="1" fill="#94a3b8" stroke="#1c1308" strokeWidth="1.5" />
+      <rect
+        x="49"
+        y="74"
+        width="7"
+        height="3.5"
+        rx="1"
+        fill="#94a3b8"
+        stroke="#1c1308"
+        strokeWidth="1.5"
+      />
 
       {/* Pravý zapletený cop plnovousu */}
       <path
@@ -564,7 +989,16 @@ function renderDulniMistr(isHit: boolean, isAttacking: boolean): React.ReactNode
         strokeWidth="2.8"
         strokeLinejoin="round"
       />
-      <rect x="62" y="74" width="7" height="3.5" rx="1" fill="#94a3b8" stroke="#1c1308" strokeWidth="1.5" />
+      <rect
+        x="62"
+        y="74"
+        width="7"
+        height="3.5"
+        rx="1"
+        fill="#94a3b8"
+        stroke="#1c1308"
+        strokeWidth="1.5"
+      />
 
       {/* Moudrý velký bílý knír nad vousy */}
       <path
@@ -590,14 +1024,22 @@ function renderDulniMistr(isHit: boolean, isAttacking: boolean): React.ReactNode
       <g
         transform={
           isAttacking
-            ? 'rotate(30 92 68) translate(8 -10)'
+            ? "rotate(30 92 68) translate(8 -10)"
             : isHit
-            ? 'rotate(-25 92 68) translate(-8 4)'
-            : 'rotate(5 92 68)'
+              ? "rotate(-25 92 68) translate(-8 4)"
+              : "rotate(5 92 68)"
         }
       >
         {/* Násada z černého bahenního dubu vykládaná zlatými pruhy */}
-        <line x1="88" y1="30" x2="102" y2="108" stroke="#291807" strokeWidth="5" strokeLinecap="round" />
+        <line
+          x1="88"
+          y1="30"
+          x2="102"
+          y2="108"
+          stroke="#291807"
+          strokeWidth="5"
+          strokeLinecap="round"
+        />
         <line x1="89" y1="44" x2="91" y2="48" stroke="#facc15" strokeWidth="2.5" />
         <line x1="93" y1="62" x2="95" y2="66" stroke="#facc15" strokeWidth="2.5" />
         <line x1="97" y1="80" x2="99" y2="84" stroke="#facc15" strokeWidth="2.5" />
@@ -619,18 +1061,51 @@ function renderDulniMistr(isHit: boolean, isAttacking: boolean): React.ReactNode
           strokeLinejoin="round"
         />
         {/* Zlatá objímka s rytinou */}
-        <rect x="88" y="30" width="7" height="6" rx="1.5" fill="#eab308" stroke="#1c1308" strokeWidth="2" />
+        <rect
+          x="88"
+          y="30"
+          width="7"
+          height="6"
+          rx="1.5"
+          fill="#eab308"
+          stroke="#1c1308"
+          strokeWidth="2"
+        />
         {/* Ruka v bílé slavnostní rukavičce */}
         <circle cx="89" cy="54" r="5.5" fill="#f8fafc" stroke="#1c1308" strokeWidth="2.5" />
       </g>
 
       {/* Levá ruka s pozlaceným klenotem */}
-      <path d="M40 58 Q28 66 32 76" stroke="#1c1308" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+      <path
+        d="M40 58 Q28 66 32 76"
+        stroke="#1c1308"
+        strokeWidth="3.5"
+        strokeLinecap="round"
+        fill="none"
+      />
       <circle cx="32" cy="76" r="5" fill="#f8fafc" stroke="#1c1308" strokeWidth="2.2" />
       {/* Zlatá slavnostní lucernička na kroužku */}
       <line x1="32" y1="76" x2="30" y2="84" stroke="#facc15" strokeWidth="2" />
-      <rect x="24" y="84" width="13" height="18" rx="3" fill="#facc15" stroke="#1c1308" strokeWidth="2.2" />
-      <rect x="27" y="88" width="7" height="10" rx="1.5" fill="#ffffff" stroke="#1c1308" strokeWidth="1.2" />
+      <rect
+        x="24"
+        y="84"
+        width="13"
+        height="18"
+        rx="3"
+        fill="#facc15"
+        stroke="#1c1308"
+        strokeWidth="2.2"
+      />
+      <rect
+        x="27"
+        y="88"
+        width="7"
+        height="10"
+        rx="1.5"
+        fill="#ffffff"
+        stroke="#1c1308"
+        strokeWidth="1.2"
+      />
       <circle cx="30.5" cy="93" r="2.5" fill="#f59e0b" />
 
       {/* DLOUHÁ ŠPIČATÁ ČAPKA: UŠLECHTILÁ PASTELOVÁ LEVANDULOVÁ (#c4b5fd / #ddd6fe) */}
@@ -647,16 +1122,49 @@ function renderDulniMistr(isHit: boolean, isAttacking: boolean): React.ReactNode
         strokeLinejoin="round"
       />
       {/* Pastelové záhyby šeříkové látky */}
-      <path d="M58 8 Q74 6 88 15" stroke="#a78bfa" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <path d="M92 24 Q96 34 90 44" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <path
+        d="M58 8 Q74 6 88 15"
+        stroke="#a78bfa"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <path
+        d="M92 24 Q96 34 90 44"
+        stroke="#a78bfa"
+        strokeWidth="2"
+        strokeLinecap="round"
+        fill="none"
+      />
 
       {/* Reliéfní zlatý havířský odznak mistra na čapce (mlátek a želízko s korunkou) */}
       <g>
         <circle cx="62" cy="18" r="5" fill="#facc15" stroke="#1c1308" strokeWidth="1.8" />
-        <line x1="59" y1="15" x2="65" y2="21" stroke="#1c1308" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="65" y1="15" x2="59" y2="21" stroke="#1c1308" strokeWidth="1.5" strokeLinecap="round" />
+        <line
+          x1="59"
+          y1="15"
+          x2="65"
+          y2="21"
+          stroke="#1c1308"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+        <line
+          x1="65"
+          y1="15"
+          x2="59"
+          y2="21"
+          stroke="#1c1308"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
         {/* Zlatá korunka nad odznakem */}
-        <path d="M58 13 L60 10 L62 12 L64 10 L66 13 Z" fill="#ffd438" stroke="#1c1308" strokeWidth="1.2" />
+        <path
+          d="M58 13 L60 10 L62 12 L64 10 L66 13 Z"
+          fill="#ffd438"
+          stroke="#1c1308"
+          strokeWidth="1.2"
+        />
       </g>
     </svg>
   );

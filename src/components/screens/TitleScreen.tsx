@@ -1,5 +1,5 @@
-import React from 'react';
-import { EnemySprite } from '../sprites/EnemySprite';
+import React from "react";
+import { EnemySprite } from "../sprites/EnemySprite";
 
 interface TitleScreenProps {
   onNewRun: () => void;
@@ -24,7 +24,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
   onOptions,
   onChangelog,
   onTest,
-  onBestiary
+  onBestiary,
 }) => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-parchment-pattern p-4 select-none relative overflow-y-auto">
@@ -38,7 +38,9 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
               <h2 className="font-title text-2xl sm:text-3xl font-black text-[#1c1308] leading-tight">
                 Lovec bubáků
               </h2>
-              <span className="text-xs font-bold text-[#694825]">podle Josefa Lady (Bubáci a hastrmani)</span>
+              <span className="text-xs font-bold text-[#694825]">
+                podle Josefa Lady (Bubáci a hastrmani)
+              </span>
             </div>
           </div>
           <div className="flex items-center gap-1.5">
@@ -62,7 +64,8 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
         </div>
 
         <p className="text-center text-sm font-semibold text-[#4a3420] mb-6 max-w-md">
-          Vyberte si venkovského hrdinu se slánkou, křížkem či odvarem a vydejte se přes Hrusice, Klapáčův mlýn až k Černé tůni.
+          Vyberte si venkovského hrdinu se slánkou, křížkem či odvarem a vydejte se přes Hrusice,
+          Klapáčův mlýn až k Černé tůni.
         </p>
 
         {/* Action Menu Grid */}
@@ -79,10 +82,10 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
             type="button"
             onClick={onContinue}
             disabled={!hasSavedRun}
-            className={`lada-button text-base py-3 ${hasSavedRun ? 'lada-button-good' : ''}`}
-            title={hasSavedRun ? 'Pokračovat v rozehraném putování' : 'Žádné uložené putování'}
+            className={`lada-button text-base py-3 ${hasSavedRun ? "lada-button-good" : ""}`}
+            title={hasSavedRun ? "Pokračovat v rozehraném putování" : "Žádné uložené putování"}
           >
-            ▶️ Pokračovat {hasSavedRun ? '' : '(prázdné)'}
+            ▶️ Pokračovat {hasSavedRun ? "" : "(prázdné)"}
           </button>
 
           {/* Test & Bestiary Buttons */}
