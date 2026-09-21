@@ -1,5 +1,4 @@
 @import "tailwindcss" source(none);
-@import "./game.css";
 @source "../src";
 @import "tw-animate-css";
 
