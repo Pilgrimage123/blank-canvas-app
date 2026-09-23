@@ -77,6 +77,12 @@ export function App() {
   const movieTimerRef = useRef<any>(null);
 
   const toastTimeoutRef = useRef<any>(null);
+  const lastTestFightRef = useRef<{
+    type: "full" | "preset";
+    heroId: HeroId;
+    locId: LocationId;
+    count?: number;
+  } | null>(null);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -331,9 +337,15 @@ export function App() {
       const cdIdea = Math.max(0, c.cdIdea - 1);
       const cdScenery = Math.max(0, c.cdScenery - 1);
 
-      // Salt DOTs on enemies every 3 Aug
+      // Salt DOTs on enemies every 3 Aug (and reset transient hit flag from previous tick)
       let enemies = c.enemies.map((e) => {
-        if (!e.alive || e.saltDot <= 0 || newTime % 3 !== 0) return e;
+        const isSaltTick = e.alive && e.saltDot > 0 && newTime % 3 === 0;
+        if (!isSaltTick) {
+          return {
+            ...e,
+            isHit: false,
+          };
+        }
         const dmg = e.saltDot;
         const blocked = Math.min(e.block, dmg);
         const through = dmg - blocked;
@@ -341,13 +353,16 @@ export function App() {
         stats.dmgDealt += through;
 
         logs = addLog(`${e.name} byl spálen Solí na kůži za ${through} HP.`, logs);
+        const tookSaltHit = through > 0;
         return {
           ...e,
           block: e.block - blocked,
           hp: newHp,
           saltDot: Math.max(0, e.saltDot - 1),
           alive: newHp > 0,
-          isHit: through > 0,
+          // Běžné zranění solí spouští zásahovou animaci i otřes
+          isHit: tookSaltHit,
+          hitNonce: tookSaltHit ? (e.hitNonce || 0) + 1 : e.hitNonce,
         };
       });
 
@@ -440,19 +455,23 @@ export function App() {
               logs,
             );
 
+            // Běžná zranění (útok kartou, sůl, schopnosti) i vyřazení spouštějí plnou zásahovou animaci i otřes postavy!
+            const tookHit = d > 0;
+
             return {
               ...e,
               block: e.block - blk,
               hp: newHp,
               timer: newTimer,
               alive: newHp > 0,
-              isHit: true,
+              isHit: tookHit || e.isHit,
+              hitNonce: tookHit ? (e.hitNonce || 0) + 1 : e.hitNonce,
             };
           });
 
           // Immediate retaliation (Odveta) from struck living enemies
           enemies = enemies.map((e) => {
-            if (e.revenge && e.isHit && e.alive) {
+            if (e.revenge && e.alive) {
               const revDmg = e.dmg + (e.omen || 0);
               if (playerDodge > 0) {
                 playerDodge -= 1;
@@ -519,7 +538,6 @@ export function App() {
         return {
           ...e,
           timer: e.timer - 1,
-          isHit: false,
           isAttacking: false,
         };
       });
@@ -670,7 +688,8 @@ export function App() {
 
       // Win / Lose verification
       const allDead = enemies.every((e) => !e.alive);
-      if (allDead) {
+      const isAnyDefeatAnimating = enemies.some((e) => e.isHit);
+      if (allDead && !isAnyDefeatAnimating) {
         logs = addLog("Všichni bubáci byli rozprášeni! Kraj je volný.", logs);
         return {
           ...prevState,
@@ -764,15 +783,27 @@ export function App() {
   }, [isCombatActive, playerTimer, pendingCard, isEnemyStriking, combatTime, tickOneAugenblick]);
 
   // Auto-clear transient enemy animation flags (isHit, isAttacking, isMoving, attackFrame, moveFrame) so they never get stuck on screen
+  const combatEnemies = state?.combat?.enemies;
   const hasActiveAnim = Boolean(
     state?.phase === "combat" &&
-    state?.combat?.enemies.some(
+    combatEnemies?.some(
       (e) => e.isHit || e.isAttacking || e.isMoving || e.attackFrame || e.moveFrame,
     ),
   );
 
+  const activeHitNonceSum = combatEnemies?.reduce((acc, e) => acc + (e.hitNonce || 0), 0) || 0;
+
   useEffect(() => {
     if (!hasActiveAnim) return;
+
+    const hasMovingEnemy = Boolean(combatEnemies?.some((e) => e.isMoving));
+    const pathLen = state?.path?.length ?? 0;
+    const isTestSeed = Boolean(state?.seed?.startsWith("test_"));
+    const isTestRun = pathLen === 0 || isTestSeed;
+    const allEnemiesDefeated = Boolean(
+      combatEnemies && combatEnemies.length > 0 && combatEnemies.every((e) => !e.alive),
+    );
+    const animDelay = hasMovingEnemy ? 1800 : isTestRun && allEnemiesDefeated ? 2600 : 450;
 
     const animTimer = setTimeout(() => {
       setState((prev) => {
@@ -781,32 +812,129 @@ export function App() {
           (e) => e.isHit || e.isAttacking || e.isMoving || e.attackFrame || e.moveFrame,
         );
         if (!enemiesStillActive) return prev;
+
+        const updatedEnemies = prev.combat.enemies.map((e) => {
+          if (e.isHit || e.isAttacking || e.isMoving || e.attackFrame || e.moveFrame) {
+            return {
+              ...e,
+              isHit: false,
+              isAttacking: false,
+              isMoving: false,
+              attackFrame: undefined,
+              moveFrame: undefined,
+            };
+          }
+          return e;
+        });
+
+        // Pokud byli všichni bubáci vyřazeni a právě dozněla vyřazovací animace, dokončíme vítězství
+        const allDead = updatedEnemies.every((e) => !e.alive);
+        if (allDead) {
+          const logs = addLog("Všichni bubáci byli rozprášeni! Kraj je volný.", prev.log);
+          return {
+            ...prev,
+            log: logs,
+            fatigueOut: prev.combat.fatigue,
+            awaitingAfter: prev.path && prev.path.length > 0,
+            phase: prev.path && prev.path.length > 0 ? "map" : "test",
+            combat: null,
+          };
+        }
+
         return {
           ...prev,
           combat: {
             ...prev.combat,
-            enemies: prev.combat.enemies.map((e) => {
-              if (e.isHit || e.isAttacking || e.isMoving || e.attackFrame || e.moveFrame) {
-                return {
-                  ...e,
-                  isHit: false,
-                  isAttacking: false,
-                  isMoving: false,
-                  attackFrame: undefined,
-                  moveFrame: undefined,
-                };
-              }
-              return e;
-            }),
+            enemies: updatedEnemies,
           },
         };
       });
-    }, 650);
+    }, animDelay);
 
     return () => {
       clearTimeout(animTimer);
     };
-  }, [hasActiveAnim]);
+  }, [hasActiveAnim, activeHitNonceSum, combatEnemies, state?.path, state?.seed]);
+
+  // Posun bojovníků v řadě po 3 sekundách od začátku ústupu poraženého bubáka
+  // Bubáci stojící ZA ním se animovaně posunou dopředu, bubáci PŘED ním a v DRUHÉ řadě se nehýbou vůbec!
+  const handleShiftRowQueue = useCallback(
+    (rowType: "horni" | "dolni" | "front" | "back", defeatedUid: string) => {
+      setState((prev) => {
+        if (!prev || !prev.combat) return prev;
+        const combat = prev.combat;
+
+        const isTargetRow = (e: EnemyInstance) => {
+          if (rowType === "horni" || rowType === "back") {
+            return (
+              e.row === "back" ||
+              e.row === "top" ||
+              e.row === "horni" ||
+              (!e.row && combat.enemies.indexOf(e) >= 4)
+            );
+          } else {
+            return (
+              e.row === "front" || e.row === "dolni" || (!e.row && combat.enemies.indexOf(e) < 4)
+            );
+          }
+        };
+
+        const rowEnemies = combat.enemies.filter(isTargetRow);
+        const defIdx = rowEnemies.findIndex((e) => e.uid === defeatedUid);
+        if (defIdx === -1) return prev;
+
+        // Pouze stále bojující bubáci, kteří stáli ZA poraženým bubákem (indexy > defIdx)
+        const followersBehind = rowEnemies.slice(defIdx + 1).filter((e) => e.alive);
+        if (followersBehind.length === 0) return prev;
+
+        const followersSet = new Set(followersBehind.map((e) => e.uid));
+
+        // Spustíme animaci pohybu vpřed pro následovníky v řadě
+        let updatedEnemies = combat.enemies.map((e) => {
+          if (followersSet.has(e.uid)) {
+            return {
+              ...e,
+              isMoving: true,
+              moveDirection: "forward" as const,
+            };
+          }
+          return e;
+        });
+
+        // Přesuneme poraženého bubáka na konec jeho řady v seznamu, aby následovníci zaplnili uvolněná místa
+        const defGlobalIdx = updatedEnemies.findIndex((e) => e.uid === defeatedUid);
+        if (defGlobalIdx !== -1) {
+          const [defEnemy] = updatedEnemies.splice(defGlobalIdx, 1);
+          let lastFollowerIdx = -1;
+          updatedEnemies.forEach((e, i) => {
+            if (followersSet.has(e.uid)) lastFollowerIdx = i;
+          });
+          if (lastFollowerIdx !== -1) {
+            updatedEnemies.splice(lastFollowerIdx + 1, 0, defEnemy);
+          } else {
+            updatedEnemies.push(defEnemy);
+          }
+        }
+
+        const names = followersBehind.map((e) => e.name).join(", ");
+        const rowName = rowType === "horni" || rowType === "back" ? "horní řadě" : "dolní řadě";
+        const logs = addLog(
+          `🐾 ${names} v ${rowName} po 3 sekundách postupují dopředu a zaplňují uvolněné místo!`,
+          prev.log,
+        );
+
+        return {
+          ...prev,
+          log: logs,
+          combat: {
+            ...combat,
+            enemies: updatedEnemies,
+          },
+        };
+      });
+    },
+    [],
+  );
 
   // Player action: Mrknutí (Wait 1 Aug)
   const handleBlink = () => {
@@ -944,8 +1072,9 @@ export function App() {
         if (sp.dot) target.saltDot = (target.saltDot || 0) + sp.dot;
         target.hp = newHp;
         target.block -= blk;
-        target.isHit = true;
         target.alive = newHp > 0;
+        target.isHit = true;
+        target.hitNonce = (target.hitNonce || 0) + 1;
         stats.dmgDealt += through;
         logs = addLog(`${sp.name} zasáhla ${target.name} za ${through} HP!`, logs);
 
@@ -1390,7 +1519,7 @@ export function App() {
       shopOffer: null,
       log: [
         `🧪 Testovací souboj: ${heroDef.name} vs. 8 bubáků ve dvou řadách (${locDef.name})!`,
-        "Přední řada (cesta): 4 bubáci • Zadní řada (břeh): 4 bubáci.",
+        "Dolní řada (cesta): 4 bubáci • Horní řada (břeh): 4 bubáci.",
       ],
       phase: "combat",
       rngStep: 0,
@@ -1427,6 +1556,7 @@ export function App() {
     };
 
     setState(testState);
+    lastTestFightRef.current = { type: "full", heroId, locId };
     showToast(`🧪 Test: 8 bubáků ve 2 řadách (${locDef.name}) připraveno!`);
   };
 
@@ -1725,8 +1855,72 @@ export function App() {
     };
 
     setState(testState);
+    lastTestFightRef.current = { type: "preset", heroId, locId, count };
     showToast(`🧪 Test: ${count} bubáci (${locDef.name}) připraveni!`);
   };
+
+  // Immediate test eliminate bogey for testing retreat and queue shifts
+  const handleEliminateEnemy = useCallback((uid: string) => {
+    setState((prev) => {
+      if (!prev || !prev.combat) return prev;
+      const enemy = prev.combat.enemies.find((e) => e.uid === uid);
+      if (!enemy || !enemy.alive) return prev;
+
+      const updatedEnemies = prev.combat.enemies.map((e) => {
+        if (e.uid === uid) {
+          return {
+            ...e,
+            alive: false,
+            hp: 0,
+            block: 0,
+            isHit: true,
+            hitNonce: (e.hitNonce || 0) + 1,
+            rewardGiven: true,
+          };
+        }
+        return e;
+      });
+
+      let newFocus = prev.combat.focus;
+      if (newFocus === uid) {
+        const nextLiving = updatedEnemies.find((e) => e.alive);
+        newFocus = nextLiving ? nextLiving.uid : null;
+      }
+
+      const logs = addLog(
+        `🧪 Test: ${enemy.name} byl vyřazen testovacím tlačítkem! Vzdává se a spouští se odpočet pro posun řady.`,
+        prev.log,
+      );
+
+      return {
+        ...prev,
+        log: logs,
+        combat: {
+          ...prev.combat,
+          enemies: updatedEnemies,
+          focus: newFocus,
+        },
+      };
+    });
+    showToast("🏳️ Bubák vyřazen! Sledujte ústup a posun řady.");
+  }, []);
+
+  const handleRestartTestFight = useCallback(() => {
+    if (lastTestFightRef.current) {
+      if (lastTestFightRef.current.type === "full") {
+        handleStartTestFullFight(lastTestFightRef.current.heroId, lastTestFightRef.current.locId);
+      } else {
+        handleStartTestPresetFight(
+          lastTestFightRef.current.count ?? 4,
+          lastTestFightRef.current.heroId,
+          lastTestFightRef.current.locId,
+        );
+      }
+    } else {
+      handleStartTestFullFight("pobuda", "vesnice");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Start Automated Movie Tutorial
   const handleStartMovie = () => {
@@ -1905,6 +2099,7 @@ export function App() {
           onIdea={handleIdea}
           onScenery={handleScenery}
           onSpecial={handleSpecial}
+          onShiftRowQueue={handleShiftRowQueue}
           onSetFocus={(uid) =>
             setState((prev) =>
               prev?.combat ? { ...prev, combat: { ...prev.combat, focus: uid } } : prev,
@@ -1922,6 +2117,11 @@ export function App() {
             }
           }}
           onOpenBestiary={() => setShowBestiaryModal(true)}
+          isTestFight={
+            !state.path || state.path.length === 0 || Boolean(state.seed?.startsWith("test_"))
+          }
+          onEliminateEnemy={handleEliminateEnemy}
+          onRestartTestFight={handleRestartTestFight}
         />
       )}
 

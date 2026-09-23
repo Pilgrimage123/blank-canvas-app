@@ -893,7 +893,7 @@ export const CARD_DB: Record<string, CardDef> = {
     intent: "self",
     tags: [],
     text: "Získá 2 Úhyb (zcela anuluje příští útoky).",
-    flavor: "Rychlý šup za roh, jako když pytlák utíká před hajným.",
+    flavor: "Rychlý šup za roh, jako když kluk utíká před hajným.",
     dodge: 2,
     shop: "levna",
   },

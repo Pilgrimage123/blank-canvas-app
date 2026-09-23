@@ -248,11 +248,11 @@ export const TestLandscapesTab: React.FC = () => {
                 </div>
                 <ul className="text-[0.7rem] text-[#4a3520] space-y-1 list-disc list-inside">
                   <li>
-                    <strong className="text-[#1c1308]">Břeh (zadní řada):</strong>{" "}
+                    <strong className="text-[#1c1308]">Břeh (horní řada):</strong>{" "}
                     {currentInfo.groundDesc}
                   </li>
                   <li>
-                    <strong className="text-[#1c1308]">Cesta (přední řada):</strong>{" "}
+                    <strong className="text-[#1c1308]">Cesta (dolní řada):</strong>{" "}
                     {currentInfo.pathDesc}
                   </li>
                 </ul>

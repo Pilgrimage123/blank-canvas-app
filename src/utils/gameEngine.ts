@@ -539,12 +539,12 @@ export function createTestEightEnemies(
   const loc = LOCATIONS.find((l) => l.id === locId) || LOCATIONS[0];
   // 8 distinct bogey types from Josef Lada's world, 4 in front row and 4 in back row
   const eightTypeDefs: { id: EnemyTypeId; role: EnemyRole; row: "front" | "back" }[] = [
-    // Přední řada (4 bojovníci na cestě blíže k lovci)
+    // Dolní řada (4 bojovníci na cestě blíže k lovci)
     { id: "bubak", role: "linie", row: "front" },
     { id: "rarasek", role: "linie", row: "front" },
     { id: "kostlivec", role: "linie", row: "front" },
     { id: "helkal", role: "linie", row: "front" },
-    // Zadní řada (4 podporovatelé a dělostřelci na horním travnatém břehu)
+    // Horní řada (4 podporovatelé a dělostřelci na horním travnatém břehu)
     { id: "hastrman", role: "delostrelba", row: "back" },
     { id: "polednice", role: "podpora", row: "back" },
     { id: "mrtvak", role: "podpora", row: "back" },

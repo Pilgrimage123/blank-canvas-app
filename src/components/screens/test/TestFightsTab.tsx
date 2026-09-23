@@ -22,14 +22,14 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
   onStartPresetFight,
 }) => {
   const eightEnemiesPreview = [
-    { name: "Bubák od stodoly", type: "bubak", role: "Linie (Přední řada)" },
-    { name: "Rarášek z pece", type: "rarasek", role: "Linie (Přední řada)" },
-    { name: "Starý kostlivec", type: "kostlivec", role: "Linie (Přední řada)" },
-    { name: "Divoch hejkal", type: "helkal", role: "Linie (Přední řada)" },
-    { name: "Hastrman od stoky", type: "vodnik", role: "Dělostřelba (Zadní řada)" },
-    { name: "Polednice", type: "polednice", role: "Podpora (Zadní řada)" },
-    { name: "Mrtvák ze škarpy", type: "mrtvak", role: "Podpora (Zadní řada)" },
-    { name: "Klekánice z šera", type: "klekanice", role: "Podpora (Zadní řada)" },
+    { name: "Bubák od stodoly", type: "bubak", role: "Linie (Dolní řada)" },
+    { name: "Rarášek z pece", type: "rarasek", role: "Linie (Dolní řada)" },
+    { name: "Starý kostlivec", type: "kostlivec", role: "Linie (Dolní řada)" },
+    { name: "Divoch hejkal", type: "helkal", role: "Linie (Dolní řada)" },
+    { name: "Hastrman od stoky", type: "vodnik", role: "Dělostřelba (Horní řada)" },
+    { name: "Polednice", type: "polednice", role: "Podpora (Horní řada)" },
+    { name: "Mrtvák ze škarpy", type: "mrtvak", role: "Podpora (Horní řada)" },
+    { name: "Klekánice z šera", type: "klekanice", role: "Podpora (Horní řada)" },
   ];
 
   return (
@@ -46,8 +46,8 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
             </h2>
             <p className="text-xs sm:text-sm text-[#4a3520] font-medium leading-relaxed max-w-xl">
               Rozpočet střetu je navýšen, aby pokryl <strong>všech 8 bubáků</strong>, kde je{" "}
-              <strong>každý jiného druhu</strong>. Rozestaví se ve dvou řadách po čtyřech: 4 v
-              přední řadě na cestě a 4 v zadní řadě na vyvýšeném břehu.
+              <strong>každý jiného druhu</strong>. Rozestaví se ve dvou řadách po čtyřech: 4 v dolní
+              řadě na cestě a 4 v horní řadě na vyvýšeném břehu.
             </p>
           </div>
 
@@ -74,7 +74,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
               <span>8 zúčastněných bubáků v sestavě:</span>
             </span>
             <span className="text-[0.65rem] text-[#8c5614] font-bold">
-              Přední řada (cesta) + Zadní řada (vyvýšený břeh)
+              Dolní řada (cesta) + Horní řada (vyvýšený břeh)
             </span>
           </div>
           <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5 sm:gap-2">
@@ -94,10 +94,23 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
                     idx < 4 ? "bg-[#eedcb0] text-[#5c3e21]" : "bg-[#dbeafe] text-[#1e3a8a]"
                   }`}
                 >
-                  {idx < 4 ? "1. řada" : "2. řada"}
+                  {idx < 4 ? "Dolní řada" : "Horní řada"}
                 </div>
               </div>
             ))}
+          </div>
+
+          <div className="mt-3 bg-[#fff8e8] border border-[#1c1308] p-2.5 rounded-xl flex items-center gap-2.5 text-xs text-[#5c3e21]">
+            <span className="text-xl flex-none">🏳️</span>
+            <div>
+              <strong className="text-[#1c1308]">Nové tlačítko v boji: „Vyřaď bubáka“</strong>
+              <p className="text-[0.72rem] text-[#6e502c] mt-0.5 leading-snug">
+                Přímo v testovacím boji můžete kdykoliv kliknout na tlačítko{" "}
+                <strong>„Vyřaď bubáka“</strong> a následně kliknout na libovolného bubáka na bojišti
+                — ten se ihned vzdá a můžete detailně otestovat jeho ústup a 3sekundový posun
+                následovníků v řadě!
+              </p>
+            </div>
           </div>
         </div>
       </div>

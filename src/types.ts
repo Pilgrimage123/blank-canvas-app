@@ -114,12 +114,14 @@ export interface EnemyInstance {
   alive: boolean;
   uskokDodge?: boolean;
   isHit?: boolean;
+  hitNonce?: number;
+  hitFrame?: number;
   isAttacking?: boolean;
   attackFrame?: number;
   isMoving?: boolean;
   moveFrame?: number;
   moveDirection?: "forward" | "backward" | "up" | "down" | "lateral";
-  row?: "front" | "back";
+  row?: "front" | "back" | "top" | "bottom" | "horni" | "dolni";
 }
 
 export type CardType = "attack" | "defend" | "prep" | "junk";

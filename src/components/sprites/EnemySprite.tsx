@@ -9,10 +9,13 @@ import { renderLadaFolkloreNewSprite } from "./LadaFolkloreNewSprites";
 import { renderLadaPermonikSprite } from "./LadaPermonikSprites";
 import { renderLadaNewFamilySprite } from "./LadaNewFamilySprites";
 import { renderLadaCertEleganSprite } from "./LadaCertEleganSprites";
+import { LadaEnemyHitReactionOverlay } from "./LadaEnemyHitReactions";
 
 export interface EnemySpriteProps {
   type: EnemyTypeId | string;
   isHit?: boolean;
+  hitNonce?: number;
+  hitFrame?: number; // 1 to 3 pro krokování 3-fázové reakce na zásah
   isAttacking?: boolean;
   attackFrame?: number; // 1 to 5 pro krokování útočné animace
   isMoving?: boolean; // přesun z místa na místo
@@ -25,6 +28,7 @@ export interface EnemySpriteProps {
   variantName?: string;
   variantLevel?: number;
   applyStageScale?: boolean;
+  isDefeated?: boolean;
 }
 
 import { getStageScale } from "../../utils/spriteUtils";
@@ -32,6 +36,8 @@ import { getStageScale } from "../../utils/spriteUtils";
 export const EnemySprite: React.FC<EnemySpriteProps> = ({
   type,
   isHit = false,
+  hitNonce,
+  hitFrame,
   isAttacking = false,
   attackFrame,
   isMoving = false,
@@ -43,6 +49,7 @@ export const EnemySprite: React.FC<EnemySpriteProps> = ({
   variantName,
   variantLevel,
   applyStageScale = true,
+  isDefeated = false,
 }) => {
   const resolvedType = React.useMemo(() => {
     let t = (type || "").toLowerCase();
@@ -308,7 +315,12 @@ export const EnemySprite: React.FC<EnemySpriteProps> = ({
     isPermonikFamily;
 
   const getMotionClass = () => {
-    if (isHit) return "anim-hit";
+    // Krokování 3-fázové reakce na zásah (1 až 3)
+    if (typeof hitFrame === "number" && hitFrame >= 1 && hitFrame <= 3) {
+      return `pose-enemy-hit-${hitFrame}`;
+    }
+    // Plynulá 3-fázová animace zásahu
+    if (isHit) return "anim-hit-3frame-enemy";
 
     // Krokování útočné animace (1 až 5)
     if (typeof attackFrame === "number" && attackFrame >= 1 && attackFrame <= 5) {
@@ -327,6 +339,11 @@ export const EnemySprite: React.FC<EnemySpriteProps> = ({
       if (moveDirection === "backward") return "anim-move-4frame-retreat";
       if (moveDirection === "lateral") return "anim-move-4frame-lateral";
       return "anim-move-4frame-enemy";
+    }
+
+    // Poražený bubák sedí odevzdaně schouleně na zemi (žádná průhlednost)
+    if (isDefeated && !isHit) {
+      return "pose-enemy-surrendered-huddled";
     }
 
     if (
@@ -349,17 +366,19 @@ export const EnemySprite: React.FC<EnemySpriteProps> = ({
   return (
     <div
       key={
-        isHit
-          ? "hit"
-          : typeof attackFrame === "number"
-            ? `atk-${attackFrame}`
-            : isAttacking
-              ? "atk"
-              : typeof moveFrame === "number"
-                ? `mov-${moveFrame}`
-                : isMoving
-                  ? "mov"
-                  : "idle"
+        typeof hitFrame === "number"
+          ? `hit-${hitFrame}`
+          : isHit
+            ? `hit-${hitNonce ?? 1}`
+            : typeof attackFrame === "number"
+              ? `atk-${attackFrame}`
+              : isAttacking
+                ? "atk"
+                : typeof moveFrame === "number"
+                  ? `mov-${moveFrame}`
+                  : isMoving
+                    ? "mov"
+                    : "idle"
       }
       className={`relative inline-flex items-center justify-center select-none ${getMotionClass()} ${className}`}
       style={{ width, height }}
@@ -368,16 +387,21 @@ export const EnemySprite: React.FC<EnemySpriteProps> = ({
       {resolvedType === "cert_elegan"
         ? renderLadaCertEleganSprite(
             resolvedStage,
-            isHit,
+            isHit || typeof hitFrame === "number",
             isAttacking || !!attackFrame,
             variantName,
           )
         : isDevilFamily
-          ? renderLadaCertSprite(resolvedType, resolvedStage, isHit, isAttacking || !!attackFrame)
+          ? renderLadaCertSprite(
+              resolvedType,
+              resolvedStage,
+              isHit || typeof hitFrame === "number",
+              isAttacking || !!attackFrame,
+            )
           : isPermonikFamily
             ? renderLadaPermonikSprite(
                 resolvedStage,
-                isHit,
+                isHit || typeof hitFrame === "number",
                 isAttacking || !!attackFrame,
                 variantName,
               )
@@ -386,6 +410,16 @@ export const EnemySprite: React.FC<EnemySpriteProps> = ({
       {!isDevilFamily &&
         !isNewFolkloreFamily &&
         renderVariantAccents(resolvedType, resolvedStage, variantName)}
+
+      {/* 3-fázové Ladovské vizuální reakce a deformace při zásahu pro všech 33 bubáků */}
+      {(isHit || typeof hitFrame === "number") && (
+        <LadaEnemyHitReactionOverlay
+          type={resolvedType}
+          frame={typeof hitFrame === "number" ? hitFrame : undefined}
+          isHit={isHit || typeof hitFrame === "number"}
+          hitNonce={hitNonce}
+        />
+      )}
 
       {/* Ladovský 5-fázový útočný komický sečný oblouk a Bác! hvězdičky */}
       {showAttackSwoosh && (

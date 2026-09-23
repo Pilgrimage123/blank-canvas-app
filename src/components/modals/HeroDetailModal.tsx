@@ -67,7 +67,7 @@ const HERO_LORE: Record<string, HeroLoreInfo> = {
     lore: [
       "Její roubená chaloupka na pokraji hlubokého boru voní mateřídouškou, sušeným heřmánkem a kozlíkem.",
       "S hastrmany od Olšového rybníka vychází v dobrém — peče jim kynuté buchty a oni jí na oplátku nosí leknínové kořeny. Čertům zase vaří odvar z třezalky, když je bolí zuby.",
-      "Když se ale strašidla začnou chovat neuctivě a děsit sousedy v Hrusicích, vezme svůj plný košík a dokáže bubáky zmást a zahnat rychleji než leckterý silák.",
+      "Když se ale strašidla začnou chovat neuctivě a děsit děti v Hrusicích, vezme svůj plný košík a dokáže bubáky zmást a zahnat rychleji než leckterý silák.",
     ],
     strengths: [
       "Nejbohatší hrdina na startu (12 krejcarů) — v prvním šenku může okamžitě vylepšovat nebo kupovat.",

@@ -25,22 +25,318 @@ interface VersionEntry {
 // Záznamy v changelogu se mají dělat o něco méně detailní než doposud (stručnější, výstižné body zaměřené na podstatu).
 const CHANGELOG_DATA: VersionEntry[] = [
   {
-    version: "v0.6.9",
+    version: "v0.8.1",
     tag: "Aktuální verze",
     date: "24. září",
-    title: "Důsledná revize kánonu & očištění textů od nepovolených postav",
+    title: "Trvalé ukotvení zóny pro poražené — žádný posun blíže při vyřazování",
+    badge: "Stabilní bojiště & Fixní zóna",
+    flavorQuote:
+      "„Poražení mají své čestné místo v trávě pěkně vzadu. Ať se v boji děje cokoliv, zóna s bílou vlajkou zůstává na svém místě a k hrdinovi se nepřibližuje!“",
+    flavorAuthor: "starý hastrman Brčál",
+    highlights: [
+      {
+        category: "Fixní poloha zóny poražených",
+        icon: "🏳️",
+        items: [
+          "Bojové řady si po celou dobu souboje udržují plnou délku vyhrazených pozic.",
+          "Vyřazováním bubáků se zóna pro poražené již nikdy neposunuje blíže k hrdinovi ani do středu bojiště.",
+          "Uvolněná místa na konci řady zůstávají zachována jako stabilní prázdné sloty a ústupové trajektorie jsou dokonale konzistentní.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.8.0",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Stabilní čelo řady — bojovníci se při vyřazení nikdy neposunují dozadu",
+    badge: "Bojová formace & Taktický posun",
+    flavorQuote:
+      "„Voják i hastrman ví, že ustupuje jen ten, kdo dostal za uši! Kdo stojí v řadě, ten couvat nesmí — leda rázně vykročit dopředu!“",
+    flavorAuthor: "vysloužilec z napoleonských válek",
+    highlights: [
+      {
+        category: "Ukotvení čela formace",
+        icon: "🛡️",
+        items: [
+          "Bojové linie horní i dolní řady jsou nově pevně ukotveny od čela řady (směrem k hrdinovi).",
+          "Při vyřazení kteréhokoliv bubáka se celá řada ani přední bojovníci již nikdy neposunou dozadu.",
+          "Následovníci stojící za vyřazeným bubákem po 3 sekundách postupují výhradně dopředu a zacelují vzniklou mezeru.",
+          "Vyřazený bubák na konci řady uvolní místo plynule po dobu ústupu, aniž by tím jakkoliv pohnul zbývajícími spolubojovníky.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.7.9",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Testovací tlačítko „Vyřaď bubáka“ pro prověření ústupu a posunu řad",
+    badge: "Testovací zkušebna & Prověření ústupu",
+    flavorQuote:
+      "„Stačí jen ukázat prstem — a bubák hned mává bílou vlajkou a maže do trávy, zatímco chlapci za ním poctivě vyčkají tři vteřiny a srovnají řadu!“",
+    flavorAuthor: "starý hastrman Brčál",
+    highlights: [
+      {
+        category: "Tlačítko Vyřaď bubáka",
+        icon: "🏳️",
+        items: [
+          "V testovacích soubojích přidáno tlačítko „Vyřaď bubáka“ v horní liště i v dolním panelu akcí.",
+          "Po aktivaci stačí kliknout na libovolného bubáka na bojišti — ten je ihned vyřazen a spustí se jeho ústupová animace.",
+          "Odstraněna zbytečná bublina nad bubáky pro čistší a přehledné bojiště.",
+        ],
+      },
+      {
+        category: "Pohodlné opakování testů",
+        icon: "🔄",
+        items: [
+          "Možnost opakovaně vyřazovat bubáky na různých pozicích horní i dolní řady pro detailní kontrolu chování následovníků a 3sekundového časování.",
+          "Přidáno tlačítko pro okamžitý restart testovacího střetu přímo z bojiště.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.7.8",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Přejmenování na Horní a Dolní řadu & Shlukování vzdávajících se",
+    badge: "Bojové řady & Shlukování poražených",
+    flavorQuote:
+      "„Horní řada na mezi a dolní řada na cestě si drží své linie! Když někdo z linie vypadne, bojovníci za ním za tři vteřiny popojdou, a vzdávající se se usadí hezky v trávě za nimi.“",
+    flavorAuthor: "starý hastrman Brčál z Černé tůně",
+    highlights: [
+      {
+        category: "Rozdělení a chování řad",
+        icon: "🛤️",
+        items: [
+          "Řady oficiálně přejmenovány na „Horní řada“ (břeh) a „Dolní řada“ (cesta) napříč celou hrou.",
+          "Bubáci z horní nebo dolní řady se při úprku bubáka z druhé řady vůbec nepohybují.",
+          "V téže řadě zůstávají bubáci před ustupujícím stát; bojovníci za ním (např. Kostlivec a Helkal po Raráškovi) po 3 sekundách animovaně postoupí a zaplní místo.",
+        ],
+      },
+      {
+        category: "Prostor pro vzdávající se",
+        icon: "🏳️",
+        items: [
+          "Vzdávající se bubák je umístěn o jednu celou velikost bubáka více vzadu.",
+          "Další vzdávající se bubáci zaujímají místa náhodně kolem něj v přirozeném shluku, netlačí se na bojující a zůstávají dobře v obraze.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.7.7",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Taktické obsazování pozic ze zadní řady po 3 sekundách",
+    badge: "Bojová taktika & Animace řad",
+    flavorQuote:
+      "„Když přední bojovník složí zbraně a odšourá se do kouta, zadní řada chvíli vyčká — a teprve po třech vteřinách skočí na jeho uvolněné místo na cestě!“",
+    flavorAuthor: "strašidlo Mulisák ze Syslova",
+    highlights: [
+      {
+        category: "Střídání a pohyb v řadách",
+        icon: "🐾",
+        items: [
+          "Bojovníci stojící za poraženým bubákem přesně po 3 sekundách od začátku jeho ústupu animovaným skokem obsadí jeho uvolněné místo.",
+          "Během 3sekundového ústupu zůstává místo v přední řadě rezervované a ostatní bojovníci v řadě se vůbec nehýbou.",
+          "Pokud ustoupí bubák ze zadní řady, celá přední řada stojí pevně a nehýbe se.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.7.6",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Plynulejší a pomalejší pohyb bubáků z místa na místo",
+    badge: "Pohyb & Plynulost animací",
+    flavorQuote:
+      "„Když bubák přechází z břehu na cestu, nikam nespěchá — hezky se zhoupne v kolenou, měkce se přenese povětřím a došlápne s lehkým zvířením prachu.“",
+    flavorAuthor: "starý hastrman Brčál",
+    highlights: [
+      {
+        category: "Pohyb bubáků z místa na místo",
+        icon: "🐾",
+        items: [
+          "Přesun bubáků je zpomalen o 150 % (2,5× delší čas trvání) pro klidnější a přehlednější tempo scény.",
+          "Nahrazeny skokové mezifáze za plynulé křivky zhoupnutí, vrcholu poskoku a měkkého došlápnutí.",
+          "Vyladěn klouzavý ústup poražených bubáků i zkušebna pohybů v testovacím menu.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.7.5",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Vzdávající se bubáci s bílou vlajkou & Nové rozestavení bojiště",
+    badge: "Bojové animace & Rozestavení",
+    flavorQuote:
+      "„Když bubák dostane za vyučenou, zatáhne drápky, zasedne na bobek na kraj cesty a vztyčí bílou vlajku — žádné zmizení, ale řádná venkovská kapitulace!“",
+    flavorAuthor: "Josef Lada — Bubáci a hastrmani",
+    highlights: [
+      {
+        category: "Chování poražených bubáků",
+        icon: "🏳️",
+        items: [
+          "Poražení bubáci se plynulým klouzavým ústupem (gliding retreat) fyzicky přesunou z bojové linie doprava do prostoru pro vzdávající se.",
+          "Během pohybu se přikrčí, poskočí s odklonem a dopadnou na své nové místo bez jakéhokoli trhnutí či skoku.",
+          "Na zemi odevzdaně sedí schoulení s plnou sytostí bez jakékoli průhlednosti a klidně oddechují.",
+          "Kus nad každým poraženým bubákem vlaje animovaná bílá vlajka na dřevěné žerdi na znamení kapitulace.",
+        ],
+      },
+      {
+        category: "Rozestavení bojiště",
+        icon: "⚔️",
+        items: [
+          "Všichni neporažení bubáci jsou posunuti o velikost dvou bubáků dopředu blíže k lovci.",
+          "Vzadu za bojující linií vznikl velkorysý vyhrazený prostor pro poražené a vzdávající se potvůrky.",
+          "Na poražené bubáky lze klepnout a prohlédnout si jejich karty a detailní zápis v bestiáři.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.7.4",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Oprava zobrazení zásahů bubáků",
+    badge: "Oprava chyb & Bojové animace",
+    flavorQuote:
+      "„Ať do bubáka praštíte čímkoliv, musí sebou okamžitě trhnout, vyseknout komické Bác! a vidět všechny svaté!“",
+    flavorAuthor: "Josef Lada — Bubáci a hastrmani",
+    highlights: [
+      {
+        category: "Oprava animací & Bojová odezva",
+        icon: "💥",
+        items: [
+          "Odstraněno nechtěné nulování příznaku zásahu v herním cyklu při řešení karet, díky čemuž se nyní zásahy bubáků ihned a spolehlivě zobrazují.",
+          "Zásahy kartami, solí i schopnostmi nyní viditelně spouští 3-fázový otřes bubáka, komickou bublinu (Bác! / Sssst!), Ladovské částice i aureolu hvězdiček.",
+          "Plovoucí komická reakce dostala unikátní klíč podle čítače zásahů pro okamžité přehrání při každém dalším úderu.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.7.3",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Plná odezva na zásah při každém zranění",
+    badge: "Bojový rytmus & Game Feel",
+    flavorQuote:
+      "„Každá rána holí, každý špetec soli i bylinkové kouzlo musí mít pořádný šmrnc — bubák sebou musí škubnout, zakoulet očima a vyseknout komické Bác!“",
+    flavorAuthor: "Josef Lada — Bubáci a hastrmani",
+    highlights: [
+      {
+        category: "Bojová odezva & Animace",
+        icon: "💥",
+        items: [
+          "Běžná zranění (útok kartou, sůl na kůži i speciální schopnosti hrdiny) spolehlivě spouštějí plnou 3-fázovou animaci zásahu i otřes postavy.",
+          "Zavedeno počítadlo zásahů (hitNonce) pro okamžitý restart animace, bubliny (Bác! / Sssst!) a částic při rychlých následných úderech.",
+          "Vyřazení bubáka si zachovává doznění animace před rozplynutím a ukončením souboje.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.7.2",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Reakce na zásah vyhrazeny pro vyřazení bubáka",
+    badge: "Bojový rytmus & Animace",
+    flavorQuote:
+      "„Dokud má bubák kuráž a sílu, drží se zpříma a nenechá se vyvést z míry. Teprve když ho úplně zdoláte, vyvalí oči a roztočí se mu hlava!“",
+    flavorAuthor: "Josef Lada — Bubáci a hastrmani",
+    highlights: [
+      {
+        category: "Bojový rytmus & Animace",
+        icon: "🎭",
+        items: [
+          "Běžné zranění (útok kartou, sůl, schopnosti) již nespouští plnou reakci na zásah.",
+          "Kompletní 3-fázová animace zásahu, komický nápis (Bác! / Sssst!), částice i točící se aureola hvězdiček se spouští výhradně při vyřazení bubáka (pokles HP na 0).",
+          "Vyřazený bubák si během vyřazovací reakce zachovává plnou viditelnost a až poté se rozplyne.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.7.1",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Optika a ladění částicových efektů zásahu",
+    badge: "Vizuální ladění & Animace",
+    flavorQuote:
+      "„Když bácne, tak ať je pořádně vidět, jak se hastrmanovi zhoupla fajfka a vyvalily oči, a ne aby to přikryl chomáč dýmu!“",
+    flavorAuthor: "Josef Lada — Bubáci a hastrmani",
+    highlights: [
+      {
+        category: "Průhlednost a zarovnání částic",
+        icon: "✨",
+        items: [
+          "Odstraněn neprůhledný centrální obláček zakrývající obličej a reaktivní prvky postavy.",
+          "Nahrazeno dutým rázovým prstencem a akčními paprsky směřujícími vně do volného prostoru.",
+          "Přesné centrování efektu LadaHitParticles na střed postavy a rozptyl kapek, soli i sazí mimo obličej.",
+        ],
+      },
+      {
+        category: "Plynulá synchronizace 3 fází",
+        icon: "⏱️",
+        items: [
+          "Zaveden automatický plynulý přechod fází 1 -> 2 -> 3 při zásahu v boji i zkušebně.",
+          "Plná viditelnost mimiky, odletujících fajfek, cylindrů i deformace těla po celou dobu trvání zásahu.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.7.0",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "3-fázové Ladovské reakce na zásah pro všech 33 bubáků",
+    badge: "Animace & Game Feel",
+    flavorQuote:
+      "„Když dostane rarášek po nose, dýmka mu vyletí div ne do komína a oči má jako dva velké knoflíky od kabátu!“",
+    flavorAuthor: "Josef Lada — Bubáci a hastrmani",
+    highlights: [
+      {
+        category: "3-fázový animační cyklus zásahu (10–12 FPS, ~280–300 ms)",
+        icon: "💥",
+        items: [
+          "Fáze 1 (Hitstop): Bleskový komický záblesk a stlačení siluety (squash) s pevným kontaktním bodem k zemi.",
+          "Fáze 2 (Vrchol záklonu): Výrazné odmrštění vzad s odletujícími proprietami (fajfky, cylindry, sláma, pentle, kapky vody).",
+          "Fáze 3 (Odpružení & Došlap): Pružný předkmit a došlápnutí zpět do výchozího bojového střahu.",
+        ],
+      },
+      {
+        category: "Plná integrace pro všech 33 bubáků a zkušebna",
+        icon: "🎬",
+        items: [
+          "Unikátní vizuální reakce a SVG deformace pro každou z 33 nestvůr v LadaEnemyHitReactions.",
+          "Animační zkušebna rozšířena o krokování fází 1–3 s výpisem detailního popisu a všech 33 postav.",
+          "Plynulé propojení s bojovou obrazovkou a Ladovskými částicemi (Bác!, Sssst!, Šplouch!).",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.6.9",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Očištění světa od specifických postav Pepíkovy éry",
     badge: "Kánon & Ladovský svět",
     flavorQuote:
-      "„V našich časech v Hrusicích ještě o žádných školácích ani slechu, zato starý vodník Brčál a strašidlo Mulisák tu panují od nepaměti!“",
+      "„V našich časech v Hrusicích o Pepíkovi Ševců, Mikešovi ani Pašíkovi ještě nikdo neslyšel, zato starý vodník Brčál a strašidlo Mulisák tu panují od nepaměti!“",
     flavorAuthor: "obecní kronikář z Hrusic",
     highlights: [
       {
-        category: "Kanonická čistota světa (polovina 19. století)",
+        category: "Kanonické vymezení postav (polovina 19. století)",
         icon: "📜",
         items: [
-          "Odstraněny všechny anachronické zmínky o Pepíkovi, školácích a dětech z příběhových textů hrdinů i testovacího menu.",
-          "Postava na plotě sjednocena na autentického černého hrusického kocoura.",
-          "V Bestiáři upraveny formulace u Klekánice a vodníka (kapří potěr namísto pulců) pro vyloučení záměny s budoucími postavami.",
+          "Důsledně odstraněny jmenovité anachronické postavy (Pepík Ševců, kocour Mikeš, Pašík, Bobeš, Brčálův syn Pulec, Mulisákův syn Bubáček).",
+          "Interaktivní zvířátko na plotě sjednoceno na obecného hrusického černého kocoura.",
+          "Běžný venkovský folklor (obecní děti, líhně pulců či venkovská cháska) zůstává přirozenou součástí světa.",
         ],
       },
     ],

@@ -9,6 +9,7 @@ export interface LadaHitParticlesProps {
   isSalt?: boolean;
   size?: number;
   className?: string;
+  hitNonce?: number;
 }
 
 /**
@@ -28,6 +29,7 @@ export const LadaHitParticles: React.FC<LadaHitParticlesProps> = ({
   isSalt = false,
   size = 140,
   className = "",
+  hitNonce,
 }) => {
   if (!active) return null;
 
@@ -58,7 +60,8 @@ export const LadaHitParticles: React.FC<LadaHitParticlesProps> = ({
 
   return (
     <div
-      className={`pointer-events-none absolute inset-0 z-30 flex items-center justify-center overflow-visible select-none ${className}`}
+      key={hitNonce ? `particles-${hitNonce}` : undefined}
+      className={`pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex items-center justify-center overflow-visible select-none ${className}`}
       style={{ width: size, height: size }}
       aria-hidden="true"
     >
@@ -80,30 +83,36 @@ export const LadaHitParticles: React.FC<LadaHitParticlesProps> = ({
           </filter>
         </defs>
 
-        {/* 1. CENTRÁLNÍ KOMICKÝ ZÁBLESK / RÁZOVÝ PAPRSEK */}
+        {/* 1. DYNAMICKÝ RÁZOVÝ PRSTENEC A KOMICKÉ PAPRSKY (Zcela otevřený střed – postava, obličej ani reaktivní proprietky nejsou překryty) */}
         <g className="anim-hit-center-burst" style={{ transformOrigin: "80px 80px" }}>
-          {/* Centrální nárazový obláček */}
-          <path
-            d="M 80 62 C 90 55, 102 62, 100 74 C 110 80, 106 94, 96 96 C 92 106, 78 108, 70 100 C 60 104, 52 92, 56 82 C 50 72, 62 60, 72 65 Z"
-            fill="#fff9e6"
-            stroke="#1c1308"
-            strokeWidth="3"
-            strokeLinejoin="round"
-            className="anim-hit-puff-main"
-          />
-          {/* Vnitřní žlutý nárazový záblesk */}
-          <path
-            d="M 80 68 C 86 64, 94 68, 93 76 C 99 80, 97 90, 89 91 C 86 97, 77 98, 72 93 C 65 96, 60 88, 63 81 C 59 75, 68 67, 75 70 Z"
-            fill="#ffd438"
-            stroke="#1c1308"
-            strokeWidth="1.8"
-            strokeLinejoin="round"
-          />
-          {/* Komické paprsky úderu */}
-          <path
-            d="M 52 52 L 40 40 M 108 52 L 120 40 M 112 108 L 124 120 M 48 108 L 36 120 M 80 44 L 80 32 M 116 80 L 128 80 M 80 116 L 80 128 M 44 80 L 32 80"
+          {/* Vnější tušový rázový prstenec (dutý - fill none, průhledný střed) */}
+          <ellipse
+            cx="80"
+            cy="78"
+            rx="36"
+            ry="30"
+            fill="none"
             stroke="#1c1308"
             strokeWidth="2.8"
+            strokeDasharray="14 6"
+            className="anim-hit-ring-outer"
+          />
+          {/* Vnitřní zlatý bleskový prstenec (dutý - fill none) */}
+          <ellipse
+            cx="80"
+            cy="78"
+            rx="31"
+            ry="25"
+            fill="none"
+            stroke="#ffd438"
+            strokeWidth="2.2"
+            className="anim-hit-ring-inner"
+          />
+          {/* Komické paprsky úderu směřující do volného prostoru kolem postavy */}
+          <path
+            d="M 50 50 L 34 34 M 110 50 L 126 34 M 114 106 L 130 122 M 46 106 L 30 122 M 80 38 L 80 18 M 122 78 L 142 78 M 80 118 L 80 138 M 38 78 L 18 78"
+            stroke="#1c1308"
+            strokeWidth="2.6"
             strokeLinecap="round"
             className="anim-hit-spikes"
           />
@@ -206,37 +215,37 @@ export const LadaHitParticles: React.FC<LadaHitParticlesProps> = ({
         {/* TÉMA: VODNÍ KAPKY (Hastrman, Rusalka, Ropucha - Šplouch! 💦) */}
         {resolvedTheme === "water" && (
           <g className="anim-hit-theme-water">
-            {/* Kapka 1: Vystříknutí vlevo nahoru */}
+            {/* Kapka 1: Vystříknutí vlevo nahoru mimo obličej */}
             <g className="anim-hit-drop-1" style={{ transformOrigin: "80px 80px" }}>
               <path
-                d="M 52 42 C 47 48 45 56 50 60 C 55 64 63 62 64 56 C 65 48 56 38 52 42 Z"
+                d="M 40 34 C 35 40 33 48 38 52 C 43 56 51 54 52 48 C 53 40 44 30 40 34 Z"
                 fill="#58b5e6"
                 stroke="#1c1308"
                 strokeWidth="2.4"
                 strokeLinejoin="round"
               />
-              <circle cx="52" cy="54" r="2.2" fill="#ffffff" opacity="0.9" />
+              <circle cx="40" cy="46" r="2" fill="#ffffff" opacity="0.9" />
             </g>
-            {/* Kapka 2: Vystříknutí vpravo nahoru */}
+            {/* Kapka 2: Vystříknutí vpravo nahoru mimo obličej */}
             <g className="anim-hit-drop-2" style={{ transformOrigin: "80px 80px" }}>
               <path
-                d="M 108 42 C 113 48 115 56 110 60 C 105 64 97 62 96 56 C 95 48 104 38 108 42 Z"
+                d="M 120 34 C 125 40 127 48 122 52 C 117 56 109 54 108 48 C 107 40 116 30 120 34 Z"
                 fill="#42a5f5"
                 stroke="#1c1308"
                 strokeWidth="2.4"
                 strokeLinejoin="round"
               />
-              <circle cx="107" cy="54" r="2.2" fill="#ffffff" opacity="0.9" />
+              <circle cx="119" cy="46" r="2" fill="#ffffff" opacity="0.9" />
             </g>
             {/* Kapka 3: Drobná kapička vpravo */}
             <g className="anim-hit-drop-3" style={{ transformOrigin: "80px 80px" }}>
-              <circle cx="135" cy="85" r="4.5" fill="#72c5f7" stroke="#1c1308" strokeWidth="2" />
-              <circle cx="134" cy="83" r="1.5" fill="#ffffff" />
+              <circle cx="136" cy="85" r="4.5" fill="#72c5f7" stroke="#1c1308" strokeWidth="2" />
+              <circle cx="135" cy="83" r="1.5" fill="#ffffff" />
             </g>
             {/* Kapka 4: Drobná kapička vlevo */}
             <g className="anim-hit-drop-4" style={{ transformOrigin: "80px 80px" }}>
-              <circle cx="25" cy="88" r="4" fill="#72c5f7" stroke="#1c1308" strokeWidth="2" />
-              <circle cx="24" cy="86" r="1.4" fill="#ffffff" />
+              <circle cx="24" cy="88" r="4" fill="#72c5f7" stroke="#1c1308" strokeWidth="2" />
+              <circle cx="23" cy="86" r="1.4" fill="#ffffff" />
             </g>
           </g>
         )}
@@ -247,29 +256,29 @@ export const LadaHitParticles: React.FC<LadaHitParticlesProps> = ({
             {/* Krystal 1: Bílý diamant vpravo nahoře */}
             <g className="anim-hit-salt-1" style={{ transformOrigin: "80px 80px" }}>
               <polygon
-                points="112,48 122,42 128,52 118,58"
+                points="114,46 124,40 130,50 120,56"
                 fill="#ffffff"
                 stroke="#1c1308"
                 strokeWidth="2.2"
                 strokeLinejoin="round"
               />
-              <line x1="112" y1="48" x2="128" y2="52" stroke="#d5e8f7" strokeWidth="1.2" />
+              <line x1="114" y1="46" x2="130" y2="50" stroke="#d5e8f7" strokeWidth="1.2" />
             </g>
             {/* Krystal 2: Bílý diamant vlevo nahoře */}
             <g className="anim-hit-salt-2" style={{ transformOrigin: "80px 80px" }}>
               <polygon
-                points="48,46 38,40 32,50 42,56"
+                points="46,44 36,38 30,48 40,54"
                 fill="#ffffff"
                 stroke="#1c1308"
                 strokeWidth="2.2"
                 strokeLinejoin="round"
               />
-              <line x1="48" y1="46" x2="32" y2="50" stroke="#d5e8f7" strokeWidth="1.2" />
+              <line x1="46" y1="44" x2="30" y2="48" stroke="#d5e8f7" strokeWidth="1.2" />
             </g>
             {/* Krystal 3: Šestiúhelník dole vpravo */}
             <g className="anim-hit-salt-3" style={{ transformOrigin: "80px 80px" }}>
               <polygon
-                points="120,110 126,106 130,112 126,118 120,118 116,112"
+                points="122,110 128,106 132,112 128,118 122,118 118,112"
                 fill="#fffdec"
                 stroke="#1c1308"
                 strokeWidth="2.2"
@@ -279,17 +288,17 @@ export const LadaHitParticles: React.FC<LadaHitParticlesProps> = ({
             {/* Krystal 4: Drobná sůl dole vlevo */}
             <g className="anim-hit-salt-4" style={{ transformOrigin: "80px 80px" }}>
               <polygon
-                points="40,112 45,108 49,113 45,117"
+                points="38,112 43,108 47,113 43,117"
                 fill="#ffffff"
                 stroke="#1c1308"
                 strokeWidth="2"
                 strokeLinejoin="round"
               />
             </g>
-            {/* Jiskřivá zrnka soli */}
-            <circle cx="70" cy="38" r="2.2" fill="#ffffff" stroke="#1c1308" strokeWidth="1.2" />
-            <circle cx="92" cy="38" r="2" fill="#ffffff" stroke="#1c1308" strokeWidth="1.2" />
-            <circle cx="130" cy="80" r="2.4" fill="#ffffff" stroke="#1c1308" strokeWidth="1.4" />
+            {/* Jiskřivá zrnka soli v bezpečném odstupu od očí a obličeje */}
+            <circle cx="48" cy="22" r="2.2" fill="#ffffff" stroke="#1c1308" strokeWidth="1.2" />
+            <circle cx="112" cy="22" r="2" fill="#ffffff" stroke="#1c1308" strokeWidth="1.2" />
+            <circle cx="134" cy="80" r="2.4" fill="#ffffff" stroke="#1c1308" strokeWidth="1.4" />
           </g>
         )}
 
@@ -299,38 +308,38 @@ export const LadaHitParticles: React.FC<LadaHitParticlesProps> = ({
             {/* Pekelná černá saze vlevo */}
             <g className="anim-hit-soot-1" style={{ transformOrigin: "80px 80px" }}>
               <ellipse
-                cx="44"
-                cy="52"
+                cx="38"
+                cy="48"
                 rx="7"
                 ry="5.5"
                 fill="#2d1e15"
                 stroke="#1c1308"
                 strokeWidth="2"
               />
-              <circle cx="36" cy="46" r="3" fill="#1c1308" />
+              <circle cx="30" cy="42" r="3" fill="#1c1308" />
             </g>
             {/* Pekelná saze vpravo */}
             <g className="anim-hit-soot-2" style={{ transformOrigin: "80px 80px" }}>
               <ellipse
-                cx="116"
-                cy="54"
+                cx="122"
+                cy="50"
                 rx="7.5"
                 ry="6"
                 fill="#2d1e15"
                 stroke="#1c1308"
                 strokeWidth="2"
               />
-              <circle cx="124" cy="48" r="3.2" fill="#1c1308" />
+              <circle cx="130" cy="44" r="3.2" fill="#1c1308" />
             </g>
             {/* Žhavá uhlíková jiskra 1 */}
             <g className="anim-hit-spark-1" style={{ transformOrigin: "80px 80px" }}>
-              <circle cx="56" cy="36" r="3.5" fill="#ff5722" stroke="#1c1308" strokeWidth="1.8" />
-              <circle cx="55" cy="35" r="1.3" fill="#ffeb3b" />
+              <circle cx="46" cy="28" r="3.5" fill="#ff5722" stroke="#1c1308" strokeWidth="1.8" />
+              <circle cx="45" cy="27" r="1.3" fill="#ffeb3b" />
             </g>
             {/* Žhavá uhlíková jiskra 2 */}
             <g className="anim-hit-spark-2" style={{ transformOrigin: "80px 80px" }}>
-              <circle cx="104" cy="34" r="3.5" fill="#ff5722" stroke="#1c1308" strokeWidth="1.8" />
-              <circle cx="103" cy="33" r="1.3" fill="#ffeb3b" />
+              <circle cx="114" cy="26" r="3.5" fill="#ff5722" stroke="#1c1308" strokeWidth="1.8" />
+              <circle cx="113" cy="25" r="1.3" fill="#ffeb3b" />
             </g>
           </g>
         )}
@@ -393,25 +402,26 @@ export const LadaHitParticles: React.FC<LadaHitParticlesProps> = ({
                 <circle cx="38" cy="54" r="2.2" fill="#ffffff" stroke="#1c1308" strokeWidth="1.2" />
               </g>
             )}
-            {/* Kostelník: Kapičky svěcené vody a zlatý záblesk */}
+            {/* Kostelník: Kapičky svěcené vody a zlatý záblesk kříže nad hlavou */}
             {subType === "kostelnik" && (
               <g className="anim-hit-hero-holy" style={{ transformOrigin: "80px 80px" }}>
-                <circle cx="118" cy="44" r="4.2" fill="#80d8ff" stroke="#1c1308" strokeWidth="2" />
-                <circle cx="42" cy="46" r="3.8" fill="#80d8ff" stroke="#1c1308" strokeWidth="2" />
+                <circle cx="122" cy="40" r="4" fill="#80d8ff" stroke="#1c1308" strokeWidth="2" />
+                <circle cx="36" cy="42" r="3.6" fill="#80d8ff" stroke="#1c1308" strokeWidth="2" />
+                {/* Zlatý křížek plovoucí jako svatozář nad kloboukem */}
                 <line
                   x1="80"
-                  y1="28"
+                  y1="12"
                   x2="80"
-                  y2="40"
+                  y2="24"
                   stroke="#ffd438"
                   strokeWidth="2.5"
                   strokeLinecap="round"
                 />
                 <line
                   x1="74"
-                  y1="32"
+                  y1="16"
                   x2="86"
-                  y2="32"
+                  y2="16"
                   stroke="#ffd438"
                   strokeWidth="2.5"
                   strokeLinecap="round"
@@ -429,14 +439,16 @@ export const LadaHitParticles: React.FC<LadaHitParticlesProps> = ({
  * Komická točící se aureola z hvězdiček nad hlavou zasaženého lovce či omráčeného bubáka
  * („Vidí všechny svaté“, „Zatočila se mu hlava“)
  */
-export const LadaDizzyHalo: React.FC<{ active: boolean; className?: string }> = ({
-  active,
-  className = "",
-}) => {
+export const LadaDizzyHalo: React.FC<{
+  active: boolean;
+  className?: string;
+  hitNonce?: number;
+}> = ({ active, className = "", hitNonce }) => {
   if (!active) return null;
 
   return (
     <div
+      key={hitNonce ? `dizzy-${hitNonce}` : undefined}
       className={`pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 z-35 flex items-center justify-center w-24 h-12 select-none anim-dizzy-halo-container ${className}`}
       aria-hidden="true"
     >
