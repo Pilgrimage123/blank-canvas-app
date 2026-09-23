@@ -67,7 +67,7 @@ const HERO_LORE: Record<string, HeroLoreInfo> = {
     lore: [
       "Její roubená chaloupka na pokraji hlubokého boru voní mateřídouškou, sušeným heřmánkem a kozlíkem.",
       "S hastrmany od Olšového rybníka vychází v dobrém — peče jim kynuté buchty a oni jí na oplátku nosí leknínové kořeny. Čertům zase vaří odvar z třezalky, když je bolí zuby.",
-      "Když se ale strašidla začnou chovat neuctivě a děsit děti v Hrusicích, vezme svůj plný košík a dokáže bubáky zmást a zahnat rychleji než leckterý silák.",
+      "Když se ale strašidla začnou chovat neuctivě a děsit sousedy v Hrusicích, vezme svůj plný košík a dokáže bubáky zmást a zahnat rychleji než leckterý silák.",
     ],
     strengths: [
       "Nejbohatší hrdina na startu (12 krejcarů) — v prvním šenku může okamžitě vylepšovat nebo kupovat.",
@@ -81,6 +81,27 @@ const HERO_LORE: Record<string, HeroLoreInfo> = {
     ],
     tactics:
       "Hrajte na neustálý koloběh karet v ruce. Propojujte Bylinkové odvary a Nápad s útočnými kartami. Čerstvý odvar používejte pokaždé, když se ochladí, abyste drželi Únavu na nule. V šenku prioritně shánějte Košík bylin a Úkrok za stodolu.",
+  },
+  babicka: {
+    epithet: "Laskavá stařenka z Ratibořic s bystrou vnučkou Barunkou",
+    quote: "„Kdo do tebe kamenem, ty do něho chlebem, a na světě bude hned o kousek lépe.“",
+    lore: [
+      "V polovině 19. století, v malebných časech pokojného staročeského venkova, putuje českým krajem laskavá Magdalena Novotná – známá široko daleko jednoduše jako Babička.",
+      "Po jejím boku věrně kráčí mladá a vnímavá vnučka Barunka s copánky a bystrým zrakem. Barunka nosí košík, pozoruje lesní i vodní havěť a učí se moudrosti starých pověstí.",
+      "Na zlé bubáky, mlsné vodníky i samolibé čerty neplatí jen sukovice a kříž, ale především čisté srdce, poctivý pecen chleba se solí a vřetánko, jehož předení vrací do světa klid a řád.",
+    ],
+    strengths: [
+      "Nejvyšší základní Životy (42 HP) a mimořádná vyrovnanost i proti těm nejstrašidelnějším potvorám.",
+      "Pecen chleba se solí v balíčku dává okamžitý Blok (+5) a uleví od Únavy (−3) zcela bez nápřahu.",
+      "Mimo ruku má připravenou posilu: Chléb se solí a vlídné slovo (+7 Blok, −3 Únava, lízne 1 kartu).",
+      "Zlaté vřetánko zasahuje za 6 poškození a odmotává nit nepřátelského záměru.",
+    ],
+    weaknesses: [
+      "Střední Připravenost 24 (start za 26 Aug) vyžaduje rozvážný úvodní tah a včasné krytí.",
+      "Spoléhá na mírnění a odzbrojení spíše než na agresivní bleskové výpady.",
+    ],
+    tactics:
+      "Udržujte si chladnou hlavu a klidné srdce. Pecen chleba se solí zahrajte bez prodlení kdykoliv naroste Únava nebo když bubák chystá zákeřný úder. Speciální schopnost uplatněte v okamžiku, kdy nepřítel zesiluje nápřah. V šenku doplňujte Barunčinu bystrou radu, Zlaté vřetánko a Velký kříž.",
   },
 };
 

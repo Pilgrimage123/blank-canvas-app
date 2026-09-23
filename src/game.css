@@ -502,6 +502,259 @@ h4,
   }
 }
 
+/* =========================================================================
+ * 5-FRAME ATTACK ANIMATIONS (Josefa Lady styl: poctivých 5 fází s nápřahem a bácnutím)
+ * Fáze 1: Nápřah (0–20%) - stažení vzad, akumulace síly
+ * Fáze 2: Vrchol nápřahu (20–40%) - maximální napětí, nahoře
+ * Fáze 3: Bleskový výpad a úder (40–60%) - plný nápřah dopředu, Bác!
+ * Fáze 4: Dojezd a setrvačnost (60–80%) - setrvačný dojezd za cíl
+ * Fáze 5: Zotavení a návrat (80–100%) - odpružení zpět do střehu
+ * ========================================================================= */
+
+@keyframes ladaHunterAttack5Frame {
+  /* Fáze 1: Nápřah vzad */
+  0%, 19.999% {
+    transform: translateX(-16px) translateY(2px) scale(0.96, 1.04) rotate(-8deg);
+    filter: drop-shadow(-3px 5px 0 rgba(28, 19, 8, 0.45));
+  }
+  /* Fáze 2: Vrchol nápřahu (Apex Hold) */
+  20%, 39.999% {
+    transform: translateX(-26px) translateY(-6px) scale(0.92, 1.08) rotate(-16deg);
+    filter: drop-shadow(-5px 7px 0 rgba(28, 19, 8, 0.5));
+  }
+  /* Fáze 3: Bleskový výpad doprava a úder (Bác! 💥) */
+  40%, 59.999% {
+    transform: translateX(54px) translateY(4px) scale(1.18, 0.9) rotate(14deg);
+    filter: drop-shadow(6px 3px 0 rgba(28, 19, 8, 0.6)) brightness(1.22);
+  }
+  /* Fáze 4: Dojezd a setrvačnost */
+  60%, 79.999% {
+    transform: translateX(38px) translateY(1px) scale(1.08, 0.96) rotate(6deg);
+    filter: drop-shadow(4px 4px 0 rgba(28, 19, 8, 0.4));
+  }
+  /* Fáze 5: Zotavení a návrat do střehu */
+  80%, 100% {
+    transform: translateX(0px) translateY(0px) scale(1, 1) rotate(0deg);
+    filter: none;
+  }
+}
+
+@keyframes ladaEnemyAttack5Frame {
+  /* Fáze 1: Nápřah vzad (doprava) */
+  0%, 19.999% {
+    transform: translateX(16px) translateY(2px) scale(0.96, 1.04) rotate(8deg);
+    filter: drop-shadow(3px 5px 0 rgba(28, 19, 8, 0.45));
+  }
+  /* Fáze 2: Vrchol nápřahu (Apex Hold) */
+  20%, 39.999% {
+    transform: translateX(26px) translateY(-6px) scale(0.92, 1.08) rotate(16deg);
+    filter: drop-shadow(5px 7px 0 rgba(28, 19, 8, 0.5));
+  }
+  /* Fáze 3: Bleskový výpad doleva a seknutí (Bác! / Žuch! 💥) */
+  40%, 59.999% {
+    transform: translateX(-54px) translateY(4px) scale(1.18, 0.9) rotate(-14deg);
+    filter: drop-shadow(-6px 3px 0 rgba(28, 19, 8, 0.6)) brightness(1.22);
+  }
+  /* Fáze 4: Dojezd a setrvačnost */
+  60%, 79.999% {
+    transform: translateX(-38px) translateY(1px) scale(1.08, 0.96) rotate(-6deg);
+    filter: drop-shadow(-4px 4px 0 rgba(28, 19, 8, 0.4));
+  }
+  /* Fáze 5: Zotavení a návrat na své místo */
+  80%, 100% {
+    transform: translateX(0px) translateY(0px) scale(1, 1) rotate(0deg);
+    filter: none;
+  }
+}
+
+/* =========================================================================
+ * 4-FRAME MOVEMENT ANIMATIONS FOR ENEMIES (Přesun z místa na místo)
+ * Fáze 1: Vykročení a příprava (0–25%) - přikrčení, přenesení váhy
+ * Fáze 2: Poskok ve vzduchu (25–50%) - veselý ladovský poskok, obě nohy v luftě
+ * Fáze 3: Došlap na zem (50–75%) - došlápnutí na novém místě, komické splácnutí
+ * Fáze 4: Odpružení a narovnání (75–100%) - vyrovnání postavy do stabilního postoje
+ * ========================================================================= */
+
+@keyframes ladaEnemyMove4Frame {
+  /* Fáze 1: Vykročení */
+  0%, 24.999% {
+    transform: translateY(3px) scale(1.05, 0.95) rotate(-2deg);
+  }
+  /* Fáze 2: Poskok ve vzduchu (Apex Hop) */
+  25%, 49.999% {
+    transform: translateY(-16px) scale(0.95, 1.08) rotate(-6deg);
+  }
+  /* Fáze 3: Došlap na zem (Impact Landing) */
+  50%, 74.999% {
+    transform: translateY(4px) scale(1.1, 0.9) rotate(3deg);
+  }
+  /* Fáze 4: Odpružení do střehu */
+  75%, 100% {
+    transform: translateY(0px) scale(1, 1) rotate(0deg);
+  }
+}
+
+/* Přesun ze zadní řady (břeh) do přední řady (cesta) - 4 fáze */
+@keyframes ladaEnemyMoveAdvance4Frame {
+  /* Fáze 1: Příprava ke skoku ze svahu */
+  0%, 24.999% {
+    transform: translate(0px, 3px) scale(1.06, 0.94) rotate(-3deg);
+  }
+  /* Fáze 2: Plachtění vzduchem směrem dopředu a dolů */
+  25%, 49.999% {
+    transform: translate(-14px, -18px) scale(0.94, 1.1) rotate(-8deg);
+  }
+  /* Fáze 3: Došlápnutí na polní cestu s oblakem prachu */
+  50%, 74.999% {
+    transform: translate(-22px, 8px) scale(1.14, 0.88) rotate(4deg);
+  }
+  /* Fáze 4: Narovnání v přední řadě */
+  75%, 100% {
+    transform: translate(-20px, 4px) scale(1, 1) rotate(0deg);
+  }
+}
+
+/* Přesun z přední řady do zadní řady (Úkryt do křoví / na břeh) - 4 fáze */
+@keyframes ladaEnemyMoveRetreat4Frame {
+  /* Fáze 1: Přikrčení před skokem vzad */
+  0%, 24.999% {
+    transform: translate(0px, 3px) scale(1.06, 0.94) rotate(3deg);
+  }
+  /* Fáze 2: Skok vzad do bezpečí břehu */
+  25%, 49.999% {
+    transform: translate(14px, -18px) scale(0.94, 1.1) rotate(8deg);
+  }
+  /* Fáze 3: Dopad do trávy */
+  50%, 74.999% {
+    transform: translate(22px, -6px) scale(1.12, 0.88) rotate(-3deg);
+  }
+  /* Fáze 4: Narovnání v zadní řadě */
+  75%, 100% {
+    transform: translate(20px, -4px) scale(1, 1) rotate(0deg);
+  }
+}
+
+/* Boční přesun mezi pozicemi (Lateral swap) - 4 fáze */
+@keyframes ladaEnemyMoveLateral4Frame {
+  /* Fáze 1: Vykročení do strany */
+  0%, 24.999% {
+    transform: translate(-4px, 3px) scale(1.05, 0.95) rotate(-2deg);
+  }
+  /* Fáze 2: Šouravý poskok */
+  25%, 49.999% {
+    transform: translate(-16px, -14px) scale(0.95, 1.08) rotate(-5deg);
+  }
+  /* Fáze 3: Došlap na nové místo */
+  50%, 74.999% {
+    transform: translate(-28px, 4px) scale(1.1, 0.9) rotate(2deg);
+  }
+  /* Fáze 4: Ustálení postoje */
+  75%, 100% {
+    transform: translate(-26px, 0px) scale(1, 1) rotate(0deg);
+  }
+}
+
+/* Komický prachový obláček pod nohama při došlapu (3. fáze pohybu) */
+@keyframes ladaDustPuff4Frame {
+  0%, 48% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(0.8) translateY(-2px);
+  }
+  74% {
+    opacity: 0.7;
+    transform: scale(1.25) translateY(-5px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.6) translateY(-8px);
+  }
+}
+
+/* Komický máchnutí / seknutí bleskového úderu (3. a 4. fáze útoku) */
+@keyframes ladaSwoosh5Frame {
+  0%, 39% {
+    opacity: 0;
+    transform: scaleX(0.2) rotate(-15deg);
+  }
+  40% {
+    opacity: 1;
+    transform: scaleX(1.1) rotate(5deg);
+  }
+  60% {
+    opacity: 0.9;
+    transform: scaleX(1.3) rotate(8deg);
+  }
+  80%, 100% {
+    opacity: 0;
+    transform: scaleX(1.5) rotate(12deg);
+  }
+}
+
+/* Třídy animací */
+.anim-attack-5frame-hunter {
+  animation: ladaHunterAttack5Frame 0.65s cubic-bezier(0.15, 0.85, 0.35, 1.1) forwards;
+  transform-origin: bottom center;
+}
+
+.anim-attack-5frame-enemy {
+  animation: ladaEnemyAttack5Frame 0.65s cubic-bezier(0.15, 0.85, 0.35, 1.1) forwards;
+  transform-origin: bottom center;
+}
+
+.anim-move-4frame-enemy {
+  animation: ladaEnemyMove4Frame 0.55s ease-in-out forwards;
+  transform-origin: bottom center;
+}
+
+.anim-move-4frame-advance {
+  animation: ladaEnemyMoveAdvance4Frame 0.65s ease-in-out forwards;
+  transform-origin: bottom center;
+}
+
+.anim-move-4frame-retreat {
+  animation: ladaEnemyMoveRetreat4Frame 0.65s ease-in-out forwards;
+  transform-origin: bottom center;
+}
+
+.anim-move-4frame-lateral {
+  animation: ladaEnemyMoveLateral4Frame 0.6s ease-in-out forwards;
+  transform-origin: bottom center;
+}
+
+.anim-dust-puff {
+  animation: ladaDustPuff4Frame 0.55s ease-out forwards;
+  transform-origin: center bottom;
+  transform-box: fill-box;
+}
+
+.anim-comic-swoosh {
+  animation: ladaSwoosh5Frame 0.65s ease-out forwards;
+  transform-origin: center center;
+  transform-box: fill-box;
+}
+
+/* Statické pózy pro krokování animací ve zkušebně / prohlížeči (TestScreen Inspector) */
+.pose-hunter-atk-1 { transform: translateX(-16px) translateY(2px) scale(0.96, 1.04) rotate(-8deg); }
+.pose-hunter-atk-2 { transform: translateX(-26px) translateY(-6px) scale(0.92, 1.08) rotate(-16deg); }
+.pose-hunter-atk-3 { transform: translateX(54px) translateY(4px) scale(1.18, 0.9) rotate(14deg); filter: brightness(1.22); }
+.pose-hunter-atk-4 { transform: translateX(38px) translateY(1px) scale(1.08, 0.96) rotate(6deg); }
+.pose-hunter-atk-5 { transform: translateX(0px) translateY(0px) scale(1, 1) rotate(0deg); }
+
+.pose-enemy-atk-1 { transform: translateX(16px) translateY(2px) scale(0.96, 1.04) rotate(8deg); }
+.pose-enemy-atk-2 { transform: translateX(26px) translateY(-6px) scale(0.92, 1.08) rotate(16deg); }
+.pose-enemy-atk-3 { transform: translateX(-54px) translateY(4px) scale(1.18, 0.9) rotate(-14deg); filter: brightness(1.22); }
+.pose-enemy-atk-4 { transform: translateX(-38px) translateY(1px) scale(1.08, 0.96) rotate(-6deg); }
+.pose-enemy-atk-5 { transform: translateX(0px) translateY(0px) scale(1, 1) rotate(0deg); }
+
+.pose-enemy-move-1 { transform: translateY(3px) scale(1.05, 0.95) rotate(-2deg); }
+.pose-enemy-move-2 { transform: translateY(-16px) scale(0.95, 1.08) rotate(-6deg); }
+.pose-enemy-move-3 { transform: translateY(4px) scale(1.1, 0.9) rotate(3deg); }
+.pose-enemy-move-4 { transform: translateY(0px) scale(1, 1) rotate(0deg); }
+
 @keyframes ladaWoundPulse {
   0% {
     transform: scale(1.6);
@@ -1182,3 +1435,1290 @@ h4,
 ::-webkit-scrollbar-thumb:hover {
   background: #845e31;
 }
+
+/* ==========================================================================
+   SCENIC COMBAT ARENA ANIMATIONS (Josef Lada World)
+   ========================================================================== */
+
+/* 1. Lada Animated Sun (Sluníčko s rotujícími paprsky, pulsem a mrkáním) */
+@keyframes ladaSunRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ladaSunPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06) translateY(-2px);
+  }
+}
+
+@keyframes ladaSunWink {
+  0%, 90%, 96%, 100% {
+    transform: scaleY(1);
+  }
+  93% {
+    transform: scaleY(0.12);
+  }
+}
+
+.anim-lada-sun-pulse {
+  animation: ladaSunPulse 4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+.anim-lada-sun-rays {
+  animation: ladaSunRotate 24s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+.anim-lada-sun-wink {
+  animation: ladaSunWink 5s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+/* 2. Clouds Horizontal Drifting */
+@keyframes ladaCloudDrift1 {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(26px);
+  }
+}
+
+@keyframes ladaCloudDrift2 {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-22px);
+  }
+}
+
+.anim-cloud-drift-1 {
+  animation: ladaCloudDrift1 18s ease-in-out infinite;
+  transform-box: fill-box;
+}
+
+.anim-cloud-drift-2 {
+  animation: ladaCloudDrift2 24s ease-in-out infinite;
+  transform-box: fill-box;
+}
+
+/* 3. Waterwheel Rotation & Splashes */
+@keyframes ladaWheelSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.anim-waterwheel-spin {
+  animation: ladaWheelSpin 7s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+/* 4. Tree & Reeds Swaying */
+@keyframes ladaWindSway {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(2.8deg);
+  }
+}
+
+@keyframes ladaReedsSway {
+  0%, 100% {
+    transform: rotate(0deg) skewX(0deg);
+  }
+  50% {
+    transform: rotate(-3.5deg) skewX(-2.5deg);
+  }
+}
+
+.anim-wind-sway {
+  animation: ladaWindSway 4.5s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+.anim-reeds-sway {
+  animation: ladaReedsSway 3.2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+/* 5. Flying swallows / ravens / bats */
+@keyframes ladaBirdGlide1 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(32px, -8px) scale(1.05);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes ladaBirdGlide2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-28px, 7px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes ladaWingFlap {
+  0%, 100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.45);
+  }
+}
+
+.anim-bird-glide-1 {
+  animation: ladaBirdGlide1 7s ease-in-out infinite;
+  transform-box: fill-box;
+}
+
+.anim-bird-glide-2 {
+  animation: ladaBirdGlide2 9s ease-in-out infinite;
+  transform-box: fill-box;
+}
+
+.anim-wing-flap {
+  animation: ladaWingFlap 0.65s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+/* 6. Lunar Halo & Floating Wisps / Bludičky */
+@keyframes ladaMoonGlow {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes ladaBludickaFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(0.85);
+    opacity: 0.4;
+  }
+  25% {
+    transform: translate(7px, -12px) scale(1.2);
+    opacity: 0.95;
+  }
+  50% {
+    transform: translate(-5px, -20px) scale(1);
+    opacity: 0.7;
+  }
+  75% {
+    transform: translate(5px, -9px) scale(1.15);
+    opacity: 0.85;
+  }
+}
+
+.anim-moon-glow {
+  animation: ladaMoonGlow 4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+.anim-bludicka-1 {
+  animation: ladaBludickaFloat 4.2s ease-in-out infinite 0s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+.anim-bludicka-2 {
+  animation: ladaBludickaFloat 4.8s ease-in-out infinite -2.1s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+.anim-bludicka-3 {
+  animation: ladaBludickaFloat 3.8s ease-in-out infinite -1.2s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+/* 7. Graveyard & Swamp Mist */
+@keyframes ladaMistDrift1 {
+  0%, 100% {
+    transform: translateX(0);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateX(32px);
+    opacity: 0.65;
+  }
+}
+
+@keyframes ladaMistDrift2 {
+  0%, 100% {
+    transform: translateX(0);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translateX(-34px);
+    opacity: 0.6;
+  }
+}
+
+.anim-mist-1 {
+  animation: ladaMistDrift1 12s ease-in-out infinite;
+}
+
+.anim-mist-2 {
+  animation: ladaMistDrift2 15s ease-in-out infinite;
+}
+
+/* 8. Fireflies / Světlušky */
+@keyframes ladaFireflyGlow {
+  0%, 100% {
+    opacity: 0.15;
+    transform: translate(0, 0) scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(5px, -8px) scale(1.3);
+  }
+}
+
+.anim-firefly-1 {
+  animation: ladaFireflyGlow 2.8s ease-in-out infinite 0s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+.anim-firefly-2 {
+  animation: ladaFireflyGlow 3.4s ease-in-out infinite -1.2s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+.anim-firefly-3 {
+  animation: ladaFireflyGlow 3.1s ease-in-out infinite -2.2s;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+/* 9. Castle banner flutter & Torch flicker */
+@keyframes ladaBannerWave {
+  0%, 100% {
+    transform: skewY(0deg) scaleX(1);
+  }
+  50% {
+    transform: skewY(5deg) scaleX(0.92);
+  }
+}
+
+.anim-banner-wave {
+  animation: ladaBannerWave 2.2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+
+/* 10. Whirlpool Vortex (Černá tůň) & Storm pulse */
+@keyframes ladaWhirlpoolSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+
+.anim-whirlpool-spin {
+  animation: ladaWhirlpoolSpin 14s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+@keyframes ladaThunderPulse {
+  0%, 91%, 95%, 100% {
+    opacity: 0;
+  }
+  93% {
+    opacity: 0.35;
+  }
+  94% {
+    opacity: 0.1;
+  }
+}
+
+.anim-thunder-pulse {
+  animation: ladaThunderPulse 8.5s ease-in-out infinite;
+}
+
+/* 11. Water Lily Pad & Bobbing */
+@keyframes ladaWaterBob {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-3.5px) rotate(1.2deg);
+  }
+}
+
+.anim-water-bob {
+  animation: ladaWaterBob 3.6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+/* 12. Lada Animal & Fauna Animations */
+@keyframes ladaCatTailSwish {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-14deg);
+  }
+  75% {
+    transform: rotate(18deg);
+  }
+}
+
+.anim-cat-tail {
+  animation: ladaCatTailSwish 2.6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+@keyframes ladaAnimalGraze {
+  0%, 100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  20%, 45% {
+    transform: rotate(7deg) translateY(2px);
+  }
+  55%, 85% {
+    transform: rotate(-3deg) translateY(-1px);
+  }
+}
+
+.anim-animal-graze {
+  animation: ladaAnimalGraze 5.2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: bottom left;
+}
+
+@keyframes ladaWoodpeckerPeck {
+  0%, 100%, 30%, 65% {
+    transform: rotate(0deg);
+  }
+  5%, 15%, 25% {
+    transform: rotate(16deg);
+  }
+  10%, 20% {
+    transform: rotate(-4deg);
+  }
+}
+
+.anim-woodpecker-peck {
+  animation: ladaWoodpeckerPeck 3.8s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: 6px 12px;
+}
+
+@keyframes ladaFrogCroak {
+  0%, 100%, 40% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  12%, 24% {
+    transform: scale(1.45);
+    opacity: 1;
+  }
+  18% {
+    transform: scale(1.15);
+    opacity: 0.9;
+  }
+}
+
+.anim-frog-croak {
+  animation: ladaFrogCroak 3.2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+@keyframes ladaSquirrelTail {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  40% {
+    transform: rotate(-12deg) scale(1.05);
+  }
+  70% {
+    transform: rotate(8deg) scale(0.98);
+  }
+}
+
+.anim-squirrel-tail {
+  animation: ladaSquirrelTail 2.4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: bottom left;
+}
+
+@keyframes ladaButterflyFlutter {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(14px, -12px) rotate(8deg);
+  }
+  50% {
+    transform: translate(24px, 4px) rotate(-6deg);
+  }
+  75% {
+    transform: translate(8px, -16px) rotate(10deg);
+  }
+}
+
+.anim-butterfly-flutter {
+  animation: ladaButterflyFlutter 4.8s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+@keyframes ladaButterflyWings {
+  0%, 100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(0.25);
+  }
+}
+
+.anim-butterfly-wings {
+  animation: ladaButterflyWings 0.32s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+@keyframes ladaBatFlutter {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  30% {
+    transform: translate(22px, -14px) scale(0.95);
+  }
+  60% {
+    transform: translate(-16px, -20px) scale(1.05);
+  }
+  80% {
+    transform: translate(-26px, -4px) scale(1);
+  }
+}
+
+.anim-bat-flutter {
+  animation: ladaBatFlutter 4.5s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+@keyframes ladaHareEars {
+  0%, 100%, 50% {
+    transform: rotate(0deg);
+  }
+  20%, 35% {
+    transform: rotate(-9deg);
+  }
+  70%, 85% {
+    transform: rotate(8deg);
+  }
+}
+
+.anim-hare-ears {
+  animation: ladaHareEars 3.6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+@keyframes ladaGooseWaddle {
+  0%, 100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  30% {
+    transform: rotate(-4deg) translateY(-2px);
+  }
+  70% {
+    transform: rotate(4deg) translateY(-1px);
+  }
+}
+
+.anim-goose-waddle {
+  animation: ladaGooseWaddle 2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+@keyframes ladaDragonflyHover {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(6px, -4px);
+  }
+  50% {
+    transform: translate(-4px, 5px);
+  }
+  75% {
+    transform: translate(5px, 2px);
+  }
+}
+
+.anim-dragonfly-hover {
+  animation: ladaDragonflyHover 2.2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+@keyframes ladaCatfishDive {
+  0%, 100%, 70% {
+    transform: translateY(14px) scale(0.6);
+    opacity: 0;
+  }
+  25%, 50% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.95;
+  }
+  38% {
+    transform: translateY(-4px) scale(1.05);
+    opacity: 1;
+  }
+}
+
+.anim-catfish-dive {
+  animation: ladaCatfishDive 6.5s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+/* =========================================================================
+   INTERACTIVE SCENIC EASTER EGGS (Clickable Folk Mischief & Visual Juice)
+   ========================================================================= */
+.interactive-scenic {
+  pointer-events: auto !important;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+.interactive-scenic:hover {
+  filter: drop-shadow(0 0 8px rgba(245, 194, 60, 0.95)) brightness(1.15);
+  transform: scale(1.08);
+}
+
+.interactive-scenic:active {
+  transform: scale(0.92);
+}
+
+@keyframes ladaEasterBounce {
+  0% {
+    transform: scale(1, 1);
+  }
+  20% {
+    transform: scale(1.3, 0.75) translateY(-4px);
+  }
+  45% {
+    transform: scale(0.85, 1.25) translateY(-12px);
+  }
+  70% {
+    transform: scale(1.1, 0.95) translateY(-2px);
+  }
+  100% {
+    transform: scale(1, 1) translateY(0);
+  }
+}
+
+.anim-easter-bounce {
+  animation: ladaEasterBounce 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+@keyframes ladaComicPopFloat {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -20%) scale(0.65) rotate(-6deg);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -60%) scale(1.15) rotate(3deg);
+  }
+  35% {
+    opacity: 1;
+    transform: translate(-50%, -85%) scale(1) rotate(0deg);
+  }
+  75% {
+    opacity: 1;
+    transform: translate(-50%, -120%) scale(0.98) rotate(-2deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -150%) scale(0.8) rotate(4deg);
+  }
+}
+
+.anim-comic-pop-float {
+  animation: ladaComicPopFloat 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  pointer-events: none;
+}
+
+/* =========================================================================
+ * LADOVSKÉ ČÁSTICOVÉ EFEKTY PŘI ZÁSAHU (ON-HIT PARTICLES & PLAYFUL SCREEN JUICE)
+ * ========================================================================= */
+
+/* 1. Centrální nárazový obláček a komické paprsky */
+@keyframes ladaHitCenterBurst {
+  0% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  20% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  45% {
+    transform: scale(1.0);
+    opacity: 0.95;
+  }
+  80% {
+    transform: scale(1.2);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaHitSpikes {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  25% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1.4);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.anim-hit-center-burst {
+  animation: ladaHitCenterBurst 0.55s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+.anim-hit-spikes {
+  animation: ladaHitSpikes 0.4s ease-out forwards;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+/* 2. Ladovské komické hvězdičky - rozlétnutí do stran s rotací */
+@keyframes ladaHitStar1 {
+  0% {
+    transform: translate(0, 0) scale(0.2) rotate(0deg);
+    opacity: 0;
+  }
+  25% {
+    transform: translate(14px, -16px) scale(1.25) rotate(45deg);
+    opacity: 1;
+  }
+  65% {
+    transform: translate(26px, -28px) scale(1.05) rotate(90deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(36px, -38px) scale(0.4) rotate(140deg);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaHitStar2 {
+  0% {
+    transform: translate(0, 0) scale(0.2) rotate(0deg);
+    opacity: 0;
+  }
+  25% {
+    transform: translate(-14px, -15px) scale(1.2) rotate(-40deg);
+    opacity: 1;
+  }
+  65% {
+    transform: translate(-25px, -26px) scale(1) rotate(-85deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-34px, -34px) scale(0.4) rotate(-130deg);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaHitStar3 {
+  0% {
+    transform: translate(0, 0) scale(0.2) rotate(0deg);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(16px, 14px) scale(1.2) rotate(35deg);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(28px, 24px) scale(0.95) rotate(80deg);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(36px, 32px) scale(0.3) rotate(120deg);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaHitStar4 {
+  0% {
+    transform: translate(0, 0) scale(0.2) rotate(0deg);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(-15px, 15px) scale(1.15) rotate(-35deg);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(-26px, 24px) scale(0.9) rotate(-75deg);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(-34px, 32px) scale(0.3) rotate(-110deg);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaHitStar5 {
+  0% {
+    transform: translate(0, 0) scale(0.2) rotate(0deg);
+    opacity: 0;
+  }
+  25% {
+    transform: translate(0, -18px) scale(1.2) rotate(25deg);
+    opacity: 1;
+  }
+  65% {
+    transform: translate(0, -32px) scale(0.95) rotate(55deg);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(0, -42px) scale(0.3) rotate(90deg);
+    opacity: 0;
+  }
+}
+
+.anim-hit-star-1 {
+  animation: ladaHitStar1 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-box: fill-box;
+}
+
+.anim-hit-star-2 {
+  animation: ladaHitStar2 0.62s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-box: fill-box;
+}
+
+.anim-hit-star-3 {
+  animation: ladaHitStar3 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-box: fill-box;
+}
+
+.anim-hit-star-4 {
+  animation: ladaHitStar4 0.58s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-box: fill-box;
+}
+
+.anim-hit-star-5 {
+  animation: ladaHitStar5 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-box: fill-box;
+}
+
+/* 3. Komické obláčky prachu s tlustou tuší (Puf! ☁️) */
+@keyframes ladaHitDust1 {
+  0% {
+    transform: translate(0, 0) scale(0.3);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(-14px, 2px) scale(1.15);
+    opacity: 0.95;
+  }
+  70% {
+    transform: translate(-26px, 4px) scale(1.35);
+    opacity: 0.65;
+  }
+  100% {
+    transform: translate(-34px, 6px) scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaHitDust2 {
+  0% {
+    transform: translate(0, 0) scale(0.3);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(14px, 2px) scale(1.15);
+    opacity: 0.95;
+  }
+  70% {
+    transform: translate(26px, 4px) scale(1.35);
+    opacity: 0.65;
+  }
+  100% {
+    transform: translate(34px, 6px) scale(1.5);
+    opacity: 0;
+  }
+}
+
+.anim-hit-dust-1 {
+  animation: ladaHitDust1 0.65s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+  transform-box: fill-box;
+}
+
+.anim-hit-dust-2 {
+  animation: ladaHitDust2 0.65s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+  transform-box: fill-box;
+}
+
+/* 4. Vodní kapky a šplíchanec (pro vodníky a rousalky) */
+@keyframes ladaHitDrop1 {
+  0% {
+    transform: translate(0, 0) scale(0.3);
+    opacity: 0;
+  }
+  35% {
+    transform: translate(-18px, -24px) scale(1.2);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(-28px, -12px) scale(1.0);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(-34px, 12px) scale(0.5);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaHitDrop2 {
+  0% {
+    transform: translate(0, 0) scale(0.3);
+    opacity: 0;
+  }
+  35% {
+    transform: translate(18px, -24px) scale(1.2);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(28px, -12px) scale(1.0);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(34px, 12px) scale(0.5);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaHitDrop3 {
+  0% {
+    transform: translate(0, 0) scale(0.3);
+    opacity: 0;
+  }
+  35% {
+    transform: translate(22px, -8px) scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(34px, 8px) scale(0.4);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaHitDrop4 {
+  0% {
+    transform: translate(0, 0) scale(0.3);
+    opacity: 0;
+  }
+  35% {
+    transform: translate(-22px, -8px) scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-34px, 8px) scale(0.4);
+    opacity: 0;
+  }
+}
+
+.anim-hit-drop-1 {
+  animation: ladaHitDrop1 0.65s cubic-bezier(0.18, 0.9, 0.35, 1) forwards;
+  transform-box: fill-box;
+}
+
+.anim-hit-drop-2 {
+  animation: ladaHitDrop2 0.65s cubic-bezier(0.18, 0.9, 0.35, 1) forwards;
+  transform-box: fill-box;
+}
+
+.anim-hit-drop-3 {
+  animation: ladaHitDrop3 0.6s cubic-bezier(0.18, 0.9, 0.35, 1) forwards;
+  transform-box: fill-box;
+}
+
+.anim-hit-drop-4 {
+  animation: ladaHitDrop4 0.6s cubic-bezier(0.18, 0.9, 0.35, 1) forwards;
+  transform-box: fill-box;
+}
+
+/* 5. Solné krystalky a jiskry soli */
+@keyframes ladaHitSalt1 {
+  0% {
+    transform: translate(0, 0) scale(0.2) rotate(0deg);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(20px, -20px) scale(1.25) rotate(45deg);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(34px, -28px) scale(1.05) rotate(90deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(44px, -34px) scale(0.4) rotate(140deg);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaHitSalt2 {
+  0% {
+    transform: translate(0, 0) scale(0.2) rotate(0deg);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(-20px, -20px) scale(1.25) rotate(-45deg);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(-34px, -28px) scale(1.05) rotate(-90deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-44px, -34px) scale(0.4) rotate(-140deg);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaHitSalt3 {
+  0% {
+    transform: translate(0, 0) scale(0.2) rotate(0deg);
+    opacity: 0;
+  }
+  35% {
+    transform: translate(24px, 16px) scale(1.15) rotate(35deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(38px, 28px) scale(0.35) rotate(80deg);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaHitSalt4 {
+  0% {
+    transform: translate(0, 0) scale(0.2) rotate(0deg);
+    opacity: 0;
+  }
+  35% {
+    transform: translate(-24px, 16px) scale(1.15) rotate(-35deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-38px, 28px) scale(0.35) rotate(-80deg);
+    opacity: 0;
+  }
+}
+
+.anim-hit-salt-1 {
+  animation: ladaHitSalt1 0.65s cubic-bezier(0.18, 0.9, 0.35, 1) forwards;
+  transform-box: fill-box;
+}
+
+.anim-hit-salt-2 {
+  animation: ladaHitSalt2 0.65s cubic-bezier(0.18, 0.9, 0.35, 1) forwards;
+  transform-box: fill-box;
+}
+
+.anim-hit-salt-3 {
+  animation: ladaHitSalt3 0.6s cubic-bezier(0.18, 0.9, 0.35, 1) forwards;
+  transform-box: fill-box;
+}
+
+.anim-hit-salt-4 {
+  animation: ladaHitSalt4 0.6s cubic-bezier(0.18, 0.9, 0.35, 1) forwards;
+  transform-box: fill-box;
+}
+
+/* 6. Pekelné saze a žhavé uhlíky (pro čerty a rarášky) */
+@keyframes ladaHitSoot1 {
+  0% {
+    transform: translate(0, 0) scale(0.3) rotate(0deg);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(-18px, -18px) scale(1.2) rotate(-20deg);
+    opacity: 0.95;
+  }
+  75% {
+    transform: translate(-28px, -30px) scale(1.35) rotate(-45deg);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-36px, -40px) scale(1.5) rotate(-60deg);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaHitSoot2 {
+  0% {
+    transform: translate(0, 0) scale(0.3) rotate(0deg);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(18px, -18px) scale(1.2) rotate(20deg);
+    opacity: 0.95;
+  }
+  75% {
+    transform: translate(28px, -30px) scale(1.35) rotate(45deg);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(36px, -40px) scale(1.5) rotate(60deg);
+    opacity: 0;
+  }
+}
+
+@keyframes ladaHitSpark {
+  0% {
+    transform: translate(0, 0) scale(0.3);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(var(--sx, 12px), -24px) scale(1.3);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(calc(var(--sx, 12px) * 1.5), -38px) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(calc(var(--sx, 12px) * 2), -50px) scale(0.2);
+    opacity: 0;
+  }
+}
+
+.anim-hit-soot-1 {
+  animation: ladaHitSoot1 0.7s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+  transform-box: fill-box;
+}
+
+.anim-hit-soot-2 {
+  animation: ladaHitSoot2 0.7s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+  transform-box: fill-box;
+}
+
+.anim-hit-spark-1 {
+  --sx: -18px;
+  animation: ladaHitSpark 0.65s cubic-bezier(0.18, 0.9, 0.35, 1) forwards;
+  transform-box: fill-box;
+}
+
+.anim-hit-spark-2 {
+  --sx: 18px;
+  animation: ladaHitSpark 0.65s cubic-bezier(0.18, 0.9, 0.35, 1) forwards;
+  transform-box: fill-box;
+}
+
+/* 7. Hrdinské tématické částečky (pírko, bylinky, chléb, svěcená voda) */
+@keyframes ladaHitHeroFleck {
+  0% {
+    transform: translate(0, 0) scale(0.3) rotate(0deg);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(16px, -20px) scale(1.2) rotate(35deg);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(26px, -10px) scale(1.05) rotate(75deg);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(34px, 10px) scale(0.4) rotate(120deg);
+    opacity: 0;
+  }
+}
+
+.anim-hit-hero-feather,
+.anim-hit-hero-herb,
+.anim-hit-hero-bread,
+.anim-hit-hero-holy {
+  animation: ladaHitHeroFleck 0.75s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  transform-box: fill-box;
+}
+
+/* 8. Komická aureola točících se hvězdiček nad hlavou (Dizzy Halo) */
+@keyframes ladaDizzyStarA {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(25px, -6px) scale(1.15);
+  }
+  50% {
+    transform: translate(50px, 0px) scale(0.85);
+  }
+  75% {
+    transform: translate(25px, 6px) scale(0.75);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes ladaDizzyStarB {
+  0% {
+    transform: translate(0, 0) scale(0.85);
+  }
+  25% {
+    transform: translate(-25px, 6px) scale(0.75);
+  }
+  50% {
+    transform: translate(-50px, 0px) scale(1);
+  }
+  75% {
+    transform: translate(-25px, -6px) scale(1.15);
+  }
+  100% {
+    transform: translate(0, 0) scale(0.85);
+  }
+}
+
+@keyframes ladaDizzyStarC {
+  0%, 100% {
+    transform: translateY(0) scale(1) rotate(-8deg);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.15) rotate(8deg);
+  }
+}
+
+@keyframes ladaDizzyContainer {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 6px) scale(0.8);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, 0px) scale(1);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(-50%, 0px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -6px) scale(0.85);
+  }
+}
+
+.anim-dizzy-halo-container {
+  animation: ladaDizzyContainer 1.4s ease-out forwards;
+}
+
+.anim-dizzy-star-a {
+  animation: ladaDizzyStarA 1.2s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+.anim-dizzy-star-b {
+  animation: ladaDizzyStarB 1.2s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+.anim-dizzy-star-c {
+  animation: ladaDizzyStarC 0.9s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center center;
+}
+
+/* 9. Měkký teplý otřes bojiště při úderu (Playful Screen Wobble) */
+@keyframes ladaScreenWobble {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate(-4px, 3px) rotate(-0.5deg);
+  }
+  40% {
+    transform: translate(4px, -2px) rotate(0.4deg);
+  }
+  65% {
+    transform: translate(-2px, 1px) rotate(-0.2deg);
+  }
+  85% {
+    transform: translate(1px, -1px) rotate(0.1deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+.anim-screen-wobble {
+  animation: ladaScreenWobble 0.38s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+

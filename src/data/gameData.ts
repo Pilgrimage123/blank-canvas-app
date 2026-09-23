@@ -893,7 +893,7 @@ export const CARD_DB: Record<string, CardDef> = {
     intent: "self",
     tags: [],
     text: "Získá 2 Úhyb (zcela anuluje příští útoky).",
-    flavor: "Rychlý šup za roh, jako když kluk utíká před hajným.",
+    flavor: "Rychlý šup za roh, jako když pytlák utíká před hajným.",
     dodge: 2,
     shop: "levna",
   },
@@ -964,6 +964,50 @@ export const CARD_DB: Record<string, CardDef> = {
     text: "Blokuje místo v ruce. Stojí 2 Akce na spálení / odhození.",
     flavor: "Chuchvalce slizkých řas a studené vody rozmočily celou brašnu.",
     shop: "levna",
+  },
+  vretanko: {
+    id: "vretanko",
+    name: "Zlaté vřetánko",
+    type: "attack",
+    cost: 3,
+    pre: 2,
+    post: 0,
+    intent: "single",
+    tags: ["kriz"],
+    text: "Rázný úder vřetánkem za 6. Zranění +Aug 1:1, odmotá nit osudu.",
+    flavor: "Při každém otočení vřetánka babička vlídně promluví a bubáci ztrácejí odvahu.",
+    dmg: 6,
+    shop: "stred",
+  },
+  chleb_sul: {
+    id: "chleb_sul",
+    name: "Pecen chleba se solí",
+    type: "prep",
+    cost: 2,
+    pre: 0,
+    post: 0,
+    intent: "self",
+    tags: ["sul"],
+    text: "Získá 5 Blok a odstraní 3 Únavy. Působí ihned bez nápřahu.",
+    flavor: "„Kdo do tebe kamenem, ty do něho chlebem.“ Vlídné přivítání odzbrojí i zlou sílu.",
+    block: 5,
+    fatigue: -3,
+    shop: "stred",
+  },
+  barunka_rada: {
+    id: "barunka_rada",
+    name: "Barunčina bystrá rada",
+    type: "prep",
+    cost: 2,
+    pre: 0,
+    post: 0,
+    intent: "self",
+    tags: [],
+    text: "Lízne 2 karty a získá 1 Úhyb. Působí ihned bez nápřahu.",
+    flavor: "Mladá Barunka bystrým zrakem včas zahlédne, odkud který bubák vyskočí.",
+    draw: 2,
+    dodge: 1,
+    shop: "draha",
   },
 };
 
@@ -1078,9 +1122,39 @@ export const HEROES: Record<string, HeroDef> = {
     deck: { sul: 3, kriz: 3, odvar: 4 },
     special: { id: "cerstvy", name: "🌿 Čerstvý odvar", label: "Odvar", cd: 6, draw: 2, fat: -2 },
   },
+  babicka: {
+    id: "babicka",
+    name: "Babička a mladá Barunka",
+    desc: "Laskavá Magdalena Novotná z bělidla a zvídavá vnučka Barunka. Přinášejí chléb se solí, vřetánko a laskavé slovo, které odzbrojí každého bubáka.",
+    stats:
+      "42 HP · Připravenost 24 · 11 krejcarů · Chléb se solí (+7 Blok, −3 Únava, lízne 1 kartu)",
+    hp: 42,
+    ready: 24,
+    salt: 11,
+    breath: 7,
+    sleepFat: 8,
+    deck: { sul: 3, kriz: 3, odvar: 2, vretanko: 1, chleb_sul: 1 },
+    special: {
+      id: "chleb_a_laska",
+      name: "🍞 Chléb se solí a vlídné slovo",
+      label: "Chléb a sůl",
+      cd: 7,
+      block: 7,
+      fat: -3,
+      draw: 1,
+    },
+  },
 };
 
 export const NODE_DB: Record<string, NodeDef> = {
+  babicka_setkani: {
+    polarity: "kladny",
+    timing: "po",
+    name: "Setkání s Babičkou a Barunkou",
+    flavor:
+      "U polní meze vás pohostí babička Magdalena a mladá Barunka voňavým chlebem se solí a dodají klid do duše.",
+    effect: "heal_bless",
+  },
   hospoda: {
     polarity: "kladny",
     timing: "misto",
@@ -1168,6 +1242,7 @@ export const NODE_DB: Record<string, NodeDef> = {
 };
 
 export const NODE_EFFECTS: Record<string, string> = {
+  babicka_setkani: "Hned: vyléčí 6 HP, odstraní 5 Únavy a daruje pocit bezpečí.",
   hospoda: "Otevře šenk: nákup nových karet, vylepšení, odhoz a odpočinek u piva.",
   farar: "Vyléčí 7 Únavy nesené mezi zastávkami. Bezpečná zastávka bez boje.",
   nalez: "Hned: +krejcary podle zastávky, občas i užitečná karta do brašny.",

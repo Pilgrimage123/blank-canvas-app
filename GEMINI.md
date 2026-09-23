@@ -32,6 +32,21 @@ When given a gameplay concept, topic, or system request, format your response us
 
 ---
 
+**Kanonické časové a příběhové zasazení (Pravidlo kánonu):**
+
+- **Časové zasazení**: Hra se odehrává přibližně **50 let před narozením Pepíka** (zhruba v polovině 19. století, 40.–50. léta 19. století).
+- **Striktně zakázané postavy**:
+  - **Pepík** (ani malý Josef Lada)
+  - **Kamarádi Pepíka** (školáci a venkovské děti z Pepíkovy party)
+  - **Pulec** (syn hastrmana Brčála – v této době ještě není na světě)
+  - **Bubáček** (syn strašidla Mulisáka – v této době ještě není na světě)
+- **Povolené a klíčové postavy**:
+  - **Hastrman Brčál** (starý vodník z Černé tůně a potoků)
+  - **Strašidlo Mulisák** (strašidlo ze zříceniny hradu Syslova u Bubákova)
+  - Dospělí venkovští hrdinové a obyvatelé (Pobuda z Hrusic, Kořenářka, Vysloužilec, Ponocný, Hajný, Rybář...), čerti, vodníci, bludičky, hejkalové, permoníci, polednice, loupežníci a venkovská zvířata.
+
+---
+
 **Povinné systémové pravidlo vývoje (Changelog Discipline):**
 
 - **VŠECHNY ZMĚNY MUSÍ BÝT VŽDY ZAPSÁNY DO CHANGELOGU (`src/components/modals/ChangelogModal.tsx`)**:

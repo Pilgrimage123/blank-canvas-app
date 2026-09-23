@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { GameState, RunOptions, CardDef, EnemyInstance, HeroId, LocationId } from "./types";
 import {
   loadStoredOptions,
@@ -198,6 +198,12 @@ export function App() {
           const dmg = 5 + state.locIndex;
           nextHp = Math.max(1, nextHp - dmg);
           showToast(`Pytlácké železo: −${dmg} životů!`);
+        } else if (nodeId === "babicka_setkani") {
+          const maxHp = HEROES[state.hero]?.hp || 40;
+          const heal = 6;
+          nextHp = Math.min(maxHp, nextHp + heal);
+          nextFatigue = Math.max(0, nextFatigue - 5);
+          showToast(`Setkání s Babičkou a Barunkou: +${heal} HP a −5 Únavy!`);
         }
 
         const nextLocIdx = state.locIndex + 1;
@@ -304,70 +310,8 @@ export function App() {
     saveGame(nextState);
   };
 
-  // Combat Time Advancement Loop (runs when playerTimer > 0 or pendingCard)
-  useEffect(() => {
-    if (!state || state.phase !== "combat" || !state.combat) return;
-    const c = state.combat;
-
-    if ((c.playerTimer > 0 || c.pendingCard) && !c.pauseTime && state.hp > 0) {
-      // "dokud, ale nikdo nejedná běží trojnásobnou rychlostí"
-      // Speed logic: If nobody is actively executing an action (no pending card, no enemy striking),
-      // time advances at 3x speed (AUG_MS / 3 = 300ms). When an action is resolving, normal speed (AUG_MS) is used.
-      const isCardResolving = Boolean(c.pendingCard);
-      const isEnemyStriking = c.enemies.some((e) => e.alive && e.isAttacking);
-      const isAnyoneActing = isCardResolving || isEnemyStriking;
-      const currentTickMs = isAnyoneActing ? AUG_MS : Math.round(AUG_MS / 3);
-
-      const timer = setTimeout(() => {
-        tickOneAugenblick();
-      }, currentTickMs);
-
-      return () => {
-        clearTimeout(timer);
-      };
-    }
-  }, [
-    state?.combat?.playerTimer,
-    state?.combat?.pendingCard,
-    state?.combat?.time,
-    state?.phase,
-    state?.combat?.pauseTime,
-    state?.hp,
-  ]);
-
-  // Auto-clear transient enemy animation flags (isHit, isAttacking) so they never get stuck on screen
-  useEffect(() => {
-    if (!state || state.phase !== "combat" || !state.combat) return;
-    const hasActiveAnimation = state.combat.enemies.some((e) => e.isHit || e.isAttacking);
-    if (!hasActiveAnimation) return;
-
-    const animTimer = setTimeout(() => {
-      setState((prev) => {
-        if (!prev || !prev.combat) return prev;
-        const enemiesStillActive = prev.combat.enemies.some((e) => e.isHit || e.isAttacking);
-        if (!enemiesStillActive) return prev;
-        return {
-          ...prev,
-          combat: {
-            ...prev.combat,
-            enemies: prev.combat.enemies.map((e) => {
-              if (e.isHit || e.isAttacking) {
-                return { ...e, isHit: false, isAttacking: false };
-              }
-              return e;
-            }),
-          },
-        };
-      });
-    }, 550);
-
-    return () => {
-      clearTimeout(animTimer);
-    };
-  }, [state?.combat?.enemies, state?.phase]);
-
   // Tick exactly one Augenblick
-  const tickOneAugenblick = () => {
+  const tickOneAugenblick = useCallback(() => {
     setState((prevState) => {
       if (!prevState || !prevState.combat) return prevState;
       let c = { ...prevState.combat };
@@ -415,6 +359,7 @@ export function App() {
       let playerDodge = c.dodge;
       let playerFatigue = c.fatigue;
       let extraPost = c.extraPost || 0;
+      let playerBusy = c.playerBusy === "hit" ? null : c.playerBusy;
 
       if (pending && newPlayerTimer <= 0) {
         const def: CardDef = CARD_DB[pending.card.id] || CARD_DB.sul;
@@ -521,6 +466,9 @@ export function App() {
                 playerBlock -= rBlk;
                 hp = Math.max(0, hp - rThrough);
                 stats.dmgTaken += rThrough;
+                if (rThrough > 0) {
+                  playerBusy = "hit";
+                }
                 logs = addLog(
                   `💥 Odveta! ${e.name} byl zasažen a okamžitě sekl zpět za ${revDmg} (${rBlk > 0 ? `${rBlk} do Bloku, ` : ""}${rThrough} do Životů)!`,
                   logs,
@@ -542,15 +490,13 @@ export function App() {
         logs = addLog(`${def.name} byl dokončen.`, logs);
       }
 
-      let playerBusy = c.playerBusy;
-
       // Check dead enemies
       enemies.forEach((e) => {
         if (!e.alive && e.hp <= 0 && !e.rewardGiven) {
           stats.kills += 1;
           const reward = 4 + prevState.locIndex;
           salt += reward;
-          (e as any).rewardGiven = true;
+          e.rewardGiven = true;
           logs = addLog(`${e.name} se rozplynul! Získáváte +${reward} krejcarů.`, logs);
 
           if (e.traits.includes("nakaza")) {
@@ -597,6 +543,9 @@ export function App() {
             playerBlock -= blk;
             hp = Math.max(0, hp - through);
             stats.dmgTaken += through;
+            if (through > 0) {
+              playerBusy = "hit";
+            }
             logs = addLog(
               `${e.name} zasadil Úder za ${rawDmg} (${blk > 0 ? `${blk} do Bloku, ` : ""}${through} do Životů)!`,
               logs,
@@ -630,6 +579,9 @@ export function App() {
             playerBlock -= blk;
             hp = Math.max(0, hp - through);
             stats.dmgTaken += through;
+            if (through > 0) {
+              playerBusy = "hit";
+            }
             logs = addLog(
               `${e.name} vypršel čas Odvety a zasadil Úder za ${rawDmg} (${blk > 0 ? `${blk} do Bloku, ` : ""}${through} do Životů)!`,
               logs,
@@ -779,7 +731,82 @@ export function App() {
         },
       };
     });
-  };
+  }, []);
+
+  // Combat Time Advancement Loop (runs when playerTimer > 0 or pendingCard)
+  const isCombatActive =
+    state?.phase === "combat" &&
+    Boolean(state.combat) &&
+    !state.combat.pauseTime &&
+    (state.hp ?? 0) > 0;
+  const playerTimer = state?.combat?.playerTimer ?? 0;
+  const pendingCard = state?.combat?.pendingCard;
+  const combatTime = state?.combat?.time;
+  const isEnemyStriking = Boolean(state?.combat?.enemies.some((e) => e.alive && e.isAttacking));
+
+  useEffect(() => {
+    if (!isCombatActive) return;
+
+    if (playerTimer > 0 || pendingCard) {
+      // Speed logic: If nobody is actively executing an action, time advances at 3x speed
+      const isCardResolving = Boolean(pendingCard);
+      const isAnyoneActing = isCardResolving || isEnemyStriking;
+      const currentTickMs = isAnyoneActing ? AUG_MS : Math.round(AUG_MS / 3);
+
+      const timer = setTimeout(() => {
+        tickOneAugenblick();
+      }, currentTickMs);
+
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [isCombatActive, playerTimer, pendingCard, isEnemyStriking, combatTime, tickOneAugenblick]);
+
+  // Auto-clear transient enemy animation flags (isHit, isAttacking, isMoving, attackFrame, moveFrame) so they never get stuck on screen
+  const hasActiveAnim = Boolean(
+    state?.phase === "combat" &&
+    state?.combat?.enemies.some(
+      (e) => e.isHit || e.isAttacking || e.isMoving || e.attackFrame || e.moveFrame,
+    ),
+  );
+
+  useEffect(() => {
+    if (!hasActiveAnim) return;
+
+    const animTimer = setTimeout(() => {
+      setState((prev) => {
+        if (!prev || !prev.combat) return prev;
+        const enemiesStillActive = prev.combat.enemies.some(
+          (e) => e.isHit || e.isAttacking || e.isMoving || e.attackFrame || e.moveFrame,
+        );
+        if (!enemiesStillActive) return prev;
+        return {
+          ...prev,
+          combat: {
+            ...prev.combat,
+            enemies: prev.combat.enemies.map((e) => {
+              if (e.isHit || e.isAttacking || e.isMoving || e.attackFrame || e.moveFrame) {
+                return {
+                  ...e,
+                  isHit: false,
+                  isAttacking: false,
+                  isMoving: false,
+                  attackFrame: undefined,
+                  moveFrame: undefined,
+                };
+              }
+              return e;
+            }),
+          },
+        };
+      });
+    }, 650);
+
+    return () => {
+      clearTimeout(animTimer);
+    };
+  }, [hasActiveAnim]);
 
   // Player action: Mrknutí (Wait 1 Aug)
   const handleBlink = () => {
@@ -926,7 +953,7 @@ export function App() {
           stats.kills += 1;
           const reward = 4 + prev.locIndex;
           salt += reward;
-          (target as any).rewardGiven = true;
+          target.rewardGiven = true;
           logs = addLog(`${target.name} se rozplynul! Získáváte +${reward} krejcarů.`, logs);
 
           if (target.traits.includes("nakaza")) {
@@ -986,7 +1013,7 @@ export function App() {
   };
 
   // Play a card from hand
-  const handlePlayCard = (cardIdx: number) => {
+  const handlePlayCard = (cardIdx: number, targetUid?: string) => {
     if (!state?.combat || state.combat.playerTimer > 0 || state.combat.pendingCard) return;
     const c = state.combat;
     const card = c.hand[cardIdx];
@@ -997,6 +1024,8 @@ export function App() {
       showToast("Nemáte dostatek Akcí na zahrání této karty!");
       return;
     }
+
+    const effectiveTarget = targetUid || c.focus;
 
     // Instant resolution for cards with pre === 0 (e.g. Bylinkový odvar, Košík bylin)
     if (def.pre === 0) {
@@ -1011,7 +1040,10 @@ export function App() {
         let playerDodge = combatState.dodge;
         let playerFatigue = combatState.fatigue;
 
-        if (def.block) playerBlock += def.block;
+        if (def.block) {
+          playerBlock +=
+            def.block + (def.tags?.includes("kriz") ? HEROES[prev.hero]?.krizBonus || 0 : 0);
+        }
         if (def.dodge) playerDodge += def.dodge;
         if (def.fatigue) playerFatigue = Math.max(0, playerFatigue + def.fatigue);
 
@@ -1037,6 +1069,7 @@ export function App() {
           combat: {
             ...combatState,
             actions: combatState.actions - def.cost,
+            focus: effectiveTarget,
             hand,
             draw,
             discard,
@@ -1067,9 +1100,10 @@ export function App() {
         combat: {
           ...prev.combat,
           actions: prev.combat.actions - def.cost,
+          focus: effectiveTarget,
           extraPost: 0,
           hand: nextHand,
-          pendingCard: { card, target: prev.combat.focus },
+          pendingCard: { card, target: effectiveTarget },
           playerTimer: preDelay > 0 ? preDelay : 0,
         },
       };

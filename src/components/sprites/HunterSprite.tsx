@@ -5,11 +5,12 @@ export interface HunterSpriteProps {
   size?: number | string;
   isHit?: boolean;
   isAttacking?: boolean;
+  attackFrame?: number; // 1 to 5 pro krokování animace
   className?: string;
 }
 
 /**
- * Autentické Ladovské sprity lovců (Josef Lada: Bubáci a hastrmani, Kocour Mikeš, Hrusické pohádky).
+ * Autentické Ladovské sprity lovců (Josef Lada: Bubáci a hastrmani, České pohádky, Staročeské obrázky).
  *
  * Lovci v pohádkovém světě Josefa Lady:
  * 1. Pobuda z Hrusic ('pobuda'):
@@ -27,6 +28,7 @@ export const HunterSprite: React.FC<HunterSpriteProps> = ({
   size = 115,
   isHit = false,
   isAttacking = false,
+  attackFrame,
   className = "",
 }) => {
   const width = typeof size === "number" ? size : 115;
@@ -34,16 +36,28 @@ export const HunterSprite: React.FC<HunterSpriteProps> = ({
 
   const getMotionClass = () => {
     if (isHit) return "anim-hit";
-    if (isAttacking) return "anim-attack";
+    if (typeof attackFrame === "number" && attackFrame >= 1 && attackFrame <= 5) {
+      return `pose-hunter-atk-${attackFrame}`;
+    }
+    if (isAttacking) return "anim-attack-5frame-hunter";
     return "anim-lada-breathe";
   };
 
   return (
     <div
+      key={
+        isHit
+          ? "hit"
+          : typeof attackFrame === "number"
+            ? `f-${attackFrame}`
+            : isAttacking
+              ? "atk"
+              : "idle"
+      }
       className={`relative inline-flex items-center justify-center select-none ${getMotionClass()} ${className}`}
       style={{ width, height }}
     >
-      {renderHunterSvg(heroId, isHit, isAttacking)}
+      {renderHunterSvg(heroId, isHit, isAttacking, attackFrame)}
     </div>
   );
 };
@@ -52,22 +66,29 @@ function renderHunterSvg(
   heroId: string,
   isHit: boolean = false,
   isAttacking: boolean = false,
+  attackFrame?: number,
 ): React.ReactNode {
   switch (heroId) {
     case "kostelnik":
-      return renderKostelnikSprite(isHit, isAttacking);
+      return renderKostelnikSprite(isHit, isAttacking, attackFrame);
     case "bylinkarka":
-      return renderBylinkarkaSprite(isHit, isAttacking);
+      return renderBylinkarkaSprite(isHit, isAttacking, attackFrame);
+    case "babicka":
+      return renderBabickaSprite(isHit, isAttacking, attackFrame);
     case "pobuda":
     default:
-      return renderPobudaSprite(isHit, isAttacking);
+      return renderPobudaSprite(isHit, isAttacking, attackFrame);
   }
 }
 
 /* =========================================================================
  * 1. POBUDA Z HRUSIC (Venkovský tulák s fajfkou, sukovicí a slánkou)
  * ========================================================================= */
-function renderPobudaSprite(isHit: boolean = false, isAttacking: boolean = false) {
+function renderPobudaSprite(
+  isHit: boolean = false,
+  isAttacking: boolean = false,
+  attackFrame?: number,
+) {
   return (
     <svg
       viewBox="0 0 120 130"
@@ -150,26 +171,31 @@ function renderPobudaSprite(isHit: boolean = false, isAttacking: boolean = false
         />
       </g>
 
-      {/* Sukovatá tulácká hůl (sukovice) v pravé ruce – opřená o zem */}
-      <g id="pobuda-walking-stick" className={isAttacking ? "anim-attack" : ""}>
-        {/* Gnarled oak stick with wood knots */}
+      {/* Sukovatá tulácká hůl (sukovice) v pravé ruce – opřená o zem nebo máchající v 5 fázích */}
+      <g id="pobuda-walking-stick">
+        {/* Dynamic stick path depending on attack frame */}
         <path
           d={
-            isAttacking
-              ? "M82 40 L108 18 L111 22 L85 45 Z"
-              : "M85 58 Q88 78 87 122 L82 122 Q84 78 81 58 Z"
+            attackFrame === 1
+              ? "M76 52 L56 22 L60 20 L80 50 Z"
+              : attackFrame === 2
+                ? "M72 44 L58 10 L63 8 L77 42 Z"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "M82 40 L118 20 L121 24 L85 45 Z"
+                  : attackFrame === 4
+                    ? "M80 50 L115 65 L112 69 L77 54 Z"
+                    : "M85 58 Q88 78 87 122 L82 122 Q84 78 81 58 Z"
           }
           fill="#6b4421"
           stroke="#1c1308"
           strokeWidth="2.5"
           strokeLinejoin="round"
         />
-        {/* Suky a letokruhy na holi */}
-        {!isAttacking && (
+        {/* Suky a letokruhy na holi v klidu */}
+        {(!isAttacking || attackFrame === 5) && !attackFrame && (
           <>
             <circle cx="85" cy="74" r="2.2" fill="#4d3016" stroke="#1c1308" strokeWidth="1" />
             <circle cx="84" cy="98" r="1.8" fill="#4d3016" stroke="#1c1308" strokeWidth="1" />
-            {/* Kožené poutko na zápěstí */}
             <path
               d="M82 62 Q77 68 81 72"
               fill="none"
@@ -178,6 +204,33 @@ function renderPobudaSprite(isHit: boolean = false, isAttacking: boolean = false
               strokeLinecap="round"
             />
           </>
+        )}
+        {/* 5-fázový komický sečný oblouk a Bác! hvězdičky pro 3. a 4. fázi */}
+        {(attackFrame === 3 || attackFrame === 4 || (isAttacking && !attackFrame)) && (
+          <g className="anim-comic-swoosh">
+            <path
+              d="M62 8 C95 12 122 36 114 68"
+              fill="none"
+              stroke="#ffd438"
+              strokeWidth="4"
+              strokeLinecap="round"
+            />
+            <path
+              d="M66 12 C96 16 118 38 112 64"
+              fill="none"
+              stroke="#ffffff"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+            />
+            <polygon
+              points="114,16 118,23 125,23 119,28 122,35 114,31 107,35 109,28 103,23 110,23"
+              fill="#e63920"
+              stroke="#1c1308"
+              strokeWidth="1.2"
+            />
+            <circle cx="118" cy="42" r="2.2" fill="#ffd438" stroke="#1c1308" strokeWidth="0.8" />
+            <circle cx="106" cy="56" r="1.8" fill="#ff8c38" stroke="#1c1308" strokeWidth="0.8" />
+          </g>
         )}
       </g>
 
@@ -565,7 +618,11 @@ function renderPobudaSprite(isHit: boolean = false, isAttacking: boolean = false
 /* =========================================================================
  * 2. POBOŽNÝ KOSTELNÍK (Černý šosák, kropáč, kancionál a drátěné brýle)
  * ========================================================================= */
-function renderKostelnikSprite(isHit: boolean = false, isAttacking: boolean = false) {
+function renderKostelnikSprite(
+  isHit: boolean = false,
+  isAttacking: boolean = false,
+  attackFrame?: number,
+) {
   return (
     <svg
       viewBox="0 0 120 130"
@@ -881,103 +938,192 @@ function renderKostelnikSprite(isHit: boolean = false, isAttacking: boolean = fa
         <circle cx="58" cy="10" r="2.5" fill="#f4c23c" stroke="#1c1308" strokeWidth="1.5" />
       </g>
 
-      {/* Masivní mosazný kropáč (aspergillum) s prýštící svěcenou vodou */}
-      <g id="kostelnik-aspergillum" className={isAttacking ? "anim-attack" : ""}>
-        {/* Soustružená dřevěná rukojeť */}
+      {/* Masivní mosazný kropáč (aspergillum) s prýštící svěcenou vodou v 5 fázích */}
+      <g id="kostelnik-aspergillum">
+        {/* Soustružená dřevěná rukojeť podle fází */}
         <line
-          x1={isAttacking ? "74" : "78"}
-          y1={isAttacking ? "58" : "62"}
-          x2={isAttacking ? "96" : "98"}
-          y2={isAttacking ? "36" : "46"}
+          x1={
+            attackFrame === 1
+              ? "70"
+              : attackFrame === 2
+                ? "76"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "78"
+                  : attackFrame === 4
+                    ? "76"
+                    : "78"
+          }
+          y1={
+            attackFrame === 1
+              ? "62"
+              : attackFrame === 2
+                ? "56"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "54"
+                  : attackFrame === 4
+                    ? "60"
+                    : "62"
+          }
+          x2={
+            attackFrame === 1
+              ? "60"
+              : attackFrame === 2
+                ? "82"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "108"
+                  : attackFrame === 4
+                    ? "104"
+                    : "98"
+          }
+          y2={
+            attackFrame === 1
+              ? "40"
+              : attackFrame === 2
+                ? "18"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "28"
+                  : attackFrame === 4
+                    ? "56"
+                    : "46"
+          }
           stroke="#7a461b"
           strokeWidth="4.2"
           strokeLinecap="round"
         />
         <line
-          x1={isAttacking ? "74" : "78"}
-          y1={isAttacking ? "58" : "62"}
-          x2={isAttacking ? "96" : "98"}
-          y2={isAttacking ? "36" : "46"}
+          x1={
+            attackFrame === 1
+              ? "70"
+              : attackFrame === 2
+                ? "76"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "78"
+                  : attackFrame === 4
+                    ? "76"
+                    : "78"
+          }
+          y1={
+            attackFrame === 1
+              ? "62"
+              : attackFrame === 2
+                ? "56"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "54"
+                  : attackFrame === 4
+                    ? "60"
+                    : "62"
+          }
+          x2={
+            attackFrame === 1
+              ? "60"
+              : attackFrame === 2
+                ? "82"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "108"
+                  : attackFrame === 4
+                    ? "104"
+                    : "98"
+          }
+          y2={
+            attackFrame === 1
+              ? "40"
+              : attackFrame === 2
+                ? "18"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "28"
+                  : attackFrame === 4
+                    ? "56"
+                    : "46"
+          }
           stroke="#1c1308"
           strokeWidth="1"
         />
 
         {/* Mosazná kropící koule s děrováním */}
         <circle
-          cx={isAttacking ? "100" : "102"}
-          cy={isAttacking ? "32" : "42"}
+          cx={
+            attackFrame === 1
+              ? "58"
+              : attackFrame === 2
+                ? "84"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "112"
+                  : attackFrame === 4
+                    ? "108"
+                    : "102"
+          }
+          cy={
+            attackFrame === 1
+              ? "36"
+              : attackFrame === 2
+                ? "14"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "24"
+                  : attackFrame === 4
+                    ? "56"
+                    : "42"
+          }
           r="8"
           fill="#f5c63d"
           stroke="#1c1308"
           strokeWidth="2.8"
         />
-        {/* Otvory v kropáči ve tvaru hvězdičky */}
+        {/* Otvory v kropáči */}
         <circle
-          cx={isAttacking ? "100" : "102"}
-          cy={isAttacking ? "32" : "42"}
+          cx={
+            attackFrame === 1
+              ? "58"
+              : attackFrame === 2
+                ? "84"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "112"
+                  : attackFrame === 4
+                    ? "108"
+                    : "102"
+          }
+          cy={
+            attackFrame === 1
+              ? "36"
+              : attackFrame === 2
+                ? "14"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "24"
+                  : attackFrame === 4
+                    ? "56"
+                    : "42"
+          }
           r="1.5"
           fill="#a87b13"
         />
-        <circle
-          cx={isAttacking ? "97" : "99"}
-          cy={isAttacking ? "30" : "40"}
-          r="1.2"
-          fill="#a87b13"
-        />
-        <circle
-          cx={isAttacking ? "103" : "105"}
-          cy={isAttacking ? "30" : "40"}
-          r="1.2"
-          fill="#a87b13"
-        />
-        <circle
-          cx={isAttacking ? "97" : "99"}
-          cy={isAttacking ? "34" : "44"}
-          r="1.2"
-          fill="#a87b13"
-        />
-        <circle
-          cx={isAttacking ? "103" : "105"}
-          cy={isAttacking ? "34" : "44"}
-          r="1.2"
-          fill="#a87b13"
-        />
 
-        {/* Třpytivá svěcená voda – kapky a bublinky stříkající do prostoru */}
-        <g>
-          {/* První jasná kapka */}
-          <circle
-            cx={isAttacking ? "108" : "108"}
-            cy={isAttacking ? "24" : "34"}
-            r="3"
-            fill="#60baff"
-            stroke="#1c1308"
-            strokeWidth="1.2"
-            className="anim-water-sprinkle-1"
-          />
-          {/* Druhá kapka svěcené vody s bublinkou */}
-          <circle
-            cx={isAttacking ? "114" : "112"}
-            cy={isAttacking ? "18" : "26"}
-            r="3.8"
-            fill="#8cd1ff"
-            stroke="#1c1308"
-            strokeWidth="1.2"
-            className="anim-water-sprinkle-2"
-          />
-          {/* Posvátná jiskřička požehnání */}
-          <path
-            d={
-              isAttacking
-                ? "M115 12 L117 8 L119 12 L123 14 L119 16 L117 20 L115 16 L111 14 Z"
-                : "M110 20 L112 16 L114 20 L118 22 L114 24 L112 28 L110 24 L106 22 Z"
-            }
-            fill="#ffd95c"
-            stroke="#1c1308"
-            strokeWidth="1"
-            className="anim-sparkle-twinkle"
-          />
-        </g>
+        {/* Svěcená voda a komický oblouk pro 3. a 4. fázi (Bác! a požehnání) */}
+        {(attackFrame === 3 || attackFrame === 4 || (isAttacking && !attackFrame)) && (
+          <g className="anim-comic-swoosh">
+            <path
+              d="M84 14 C106 18 126 38 116 66"
+              fill="none"
+              stroke="#60baff"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+            />
+            <path
+              d="M86 16 C104 20 120 38 114 62"
+              fill="none"
+              stroke="#ffffff"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
+            <circle cx="118" cy="18" r="3.2" fill="#60baff" stroke="#1c1308" strokeWidth="1" />
+            <circle cx="124" cy="30" r="2.8" fill="#ffd438" stroke="#1c1308" strokeWidth="1" />
+            <circle cx="122" cy="46" r="2.4" fill="#60baff" stroke="#1c1308" strokeWidth="0.8" />
+            <polygon
+              points="120,20 122,25 127,25 123,28 125,33 120,30 115,33 117,28 113,25 118,25"
+              fill="#ffd438"
+              stroke="#1c1308"
+              strokeWidth="1"
+            />
+          </g>
+        )}
       </g>
     </svg>
   );
@@ -986,7 +1132,11 @@ function renderKostelnikSprite(isHit: boolean = false, isAttacking: boolean = fa
 /* =========================================================================
  * 3. MOUDRÁ BYLINKÁŘKA (Lidový kroj, proutěný košík, heřmánek a horký odvar)
  * ========================================================================= */
-function renderBylinkarkaSprite(isHit: boolean = false, isAttacking: boolean = false) {
+function renderBylinkarkaSprite(
+  isHit: boolean = false,
+  isAttacking: boolean = false,
+  attackFrame?: number,
+) {
   return (
     <svg
       viewBox="0 0 120 130"
@@ -1186,14 +1336,61 @@ function renderBylinkarkaSprite(isHit: boolean = false, isAttacking: boolean = f
         </g>
       </g>
 
-      {/* Kameninový koflík s horkým léčivým odvarem v pravé ruce */}
-      <g id="bylinkarka-mug" className={isAttacking ? "anim-attack" : ""}>
-        {/* Ruka držící hrnek */}
-        <circle cx="82" cy="74" r="5.5" fill="#edd2b1" stroke="#1c1308" strokeWidth="2.5" />
+      {/* Kameninový koflík s horkým léčivým odvarem v pravé ruce v 5 fázích */}
+      <g id="bylinkarka-mug">
+        {/* Ruka držící hrnek podle fází */}
+        <circle
+          cx={
+            attackFrame === 1
+              ? "78"
+              : attackFrame === 2
+                ? "76"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "88"
+                  : attackFrame === 4
+                    ? "86"
+                    : "82"
+          }
+          cy={
+            attackFrame === 1
+              ? "76"
+              : attackFrame === 2
+                ? "66"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "60"
+                  : attackFrame === 4
+                    ? "68"
+                    : "74"
+          }
+          r="5.5"
+          fill="#edd2b1"
+          stroke="#1c1308"
+          strokeWidth="2.5"
+        />
         {/* Glazovaný kameninový hrnek */}
         <rect
-          x={isAttacking ? "84" : "82"}
-          y={isAttacking ? "58" : "68"}
+          x={
+            attackFrame === 1
+              ? "78"
+              : attackFrame === 2
+                ? "76"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "90"
+                  : attackFrame === 4
+                    ? "86"
+                    : "82"
+          }
+          y={
+            attackFrame === 1
+              ? "70"
+              : attackFrame === 2
+                ? "60"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "54"
+                  : attackFrame === 4
+                    ? "62"
+                    : "68"
+          }
           width="13"
           height="14"
           rx="2.5"
@@ -1203,25 +1400,62 @@ function renderBylinkarkaSprite(isHit: boolean = false, isAttacking: boolean = f
         />
         {/* Modrý lidový proužek na hrnku */}
         <line
-          x1={isAttacking ? "84" : "82"}
-          y1={isAttacking ? "62" : "72"}
-          x2={isAttacking ? "97" : "95"}
-          y2={isAttacking ? "62" : "72"}
+          x1={
+            attackFrame === 1
+              ? "78"
+              : attackFrame === 2
+                ? "76"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "90"
+                  : attackFrame === 4
+                    ? "86"
+                    : "82"
+          }
+          y1={
+            attackFrame === 1
+              ? "74"
+              : attackFrame === 2
+                ? "64"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "58"
+                  : attackFrame === 4
+                    ? "66"
+                    : "72"
+          }
+          x2={
+            attackFrame === 1
+              ? "91"
+              : attackFrame === 2
+                ? "89"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "103"
+                  : attackFrame === 4
+                    ? "99"
+                    : "95"
+          }
+          y2={
+            attackFrame === 1
+              ? "74"
+              : attackFrame === 2
+                ? "64"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "58"
+                  : attackFrame === 4
+                    ? "66"
+                    : "72"
+          }
           stroke="#4287f5"
           strokeWidth="2"
-        />
-        {/* Ouško hrnku */}
-        <path
-          d={isAttacking ? "M97 61 C102 61 102 70 97 70" : "M95 71 C100 71 100 80 95 80"}
-          fill="none"
-          stroke="#8c5127"
-          strokeWidth="2.5"
         />
 
         {/* Horká stoupající voňavá pára z bylinkového čaje */}
         <g id="herbal-steam">
           <path
-            d={isAttacking ? "M88 56 Q85 46 91 38" : "M86 66 Q83 56 89 48"}
+            d={
+              attackFrame === 3 || (isAttacking && !attackFrame)
+                ? "M94 50 Q90 38 98 28"
+                : "M86 66 Q83 56 89 48"
+            }
             fill="none"
             stroke="#f5ede1"
             strokeWidth="2.5"
@@ -1229,7 +1463,11 @@ function renderBylinkarkaSprite(isHit: boolean = false, isAttacking: boolean = f
             className="anim-herbal-steam-1"
           />
           <path
-            d={isAttacking ? "M93 54 Q97 44 91 34" : "M91 64 Q95 54 89 44"}
+            d={
+              attackFrame === 3 || (isAttacking && !attackFrame)
+                ? "M100 48 Q104 36 98 26"
+                : "M91 64 Q95 54 89 44"
+            }
             fill="none"
             stroke="#ffffff"
             strokeWidth="2"
@@ -1237,6 +1475,42 @@ function renderBylinkarkaSprite(isHit: boolean = false, isAttacking: boolean = f
             className="anim-herbal-steam-2"
           />
         </g>
+
+        {/* Šplouchající horký odvar a kvítky heřmánku pro 3. a 4. fázi (Bác!) */}
+        {(attackFrame === 3 || attackFrame === 4 || (isAttacking && !attackFrame)) && (
+          <g className="anim-comic-swoosh">
+            <path
+              d="M96 46 C112 32 126 40 120 68"
+              fill="none"
+              stroke="#e69818"
+              strokeWidth="3.8"
+              strokeLinecap="round"
+            />
+            <path
+              d="M98 48 C112 36 122 42 118 64"
+              fill="none"
+              stroke="#fff2b2"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+            />
+            {/* Létající kvítky heřmánku */}
+            <g transform="translate(114, 32)">
+              <circle cx="0" cy="0" r="4.2" fill="#ffffff" stroke="#1c1308" strokeWidth="0.8" />
+              <circle cx="0" cy="0" r="1.8" fill="#f4c23c" />
+            </g>
+            <g transform="translate(122, 50)">
+              <circle cx="0" cy="0" r="3.6" fill="#ffffff" stroke="#1c1308" strokeWidth="0.8" />
+              <circle cx="0" cy="0" r="1.5" fill="#f4c23c" />
+            </g>
+            <circle cx="108" cy="24" r="2.2" fill="#ffd438" stroke="#1c1308" strokeWidth="0.8" />
+            <polygon
+              points="114,24 116,28 121,28 117,31 119,35 114,32 110,35 112,31 108,28 113,28"
+              fill="#e63920"
+              stroke="#1c1308"
+              strokeWidth="1"
+            />
+          </g>
+        )}
       </g>
 
       {/* Červený turecký šátek (plachetka) kryjící hlavu zezadu a po stranách */}
@@ -1377,6 +1651,615 @@ function renderBylinkarkaSprite(isHit: boolean = false, isAttacking: boolean = f
         {/* Bílé lidové puntíky na cípech šátku */}
         <circle cx="52" cy="56" r="1.2" fill="#ffffff" />
         <circle cx="64" cy="56" r="1.2" fill="#ffffff" />
+      </g>
+    </svg>
+  );
+}
+
+/* =========================================================================
+ * 4. BABIČKA & MLADÁ BARUNKA (Magdalena Novotná s vřetánkem a bystrá Barunka)
+ * ========================================================================= */
+function renderBabickaSprite(
+  isHit: boolean = false,
+  isAttacking: boolean = false,
+  attackFrame?: number,
+) {
+  return (
+    <svg
+      viewBox="0 0 120 130"
+      className="w-full h-full drop-shadow-md"
+      aria-label="Babička a mladá Barunka"
+    >
+      {/* Měkký stín na zemi pro obě postavy */}
+      <ellipse cx="56" cy="123" rx="44" ry="6.8" fill="#1c1308" opacity="0.28" />
+
+      {/* ===================================================================
+       * A. BABIČKA (Magdalena Novotná)
+       * =================================================================== */}
+      {/* 1. Pohodlné plstěné střevíce a vlněné punčochy */}
+      <g id="babicka-shoes">
+        <path
+          d="M32 113 L29 117 C27 120 23 121 19 122 C17 123 18 125 22 125 C28 125 36 125 38 123 C39 121 38 116 37 113 Z"
+          fill="#2b1a10"
+          stroke="#1c1308"
+          strokeWidth="2.5"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M48 113 L47 117 C46 120 44 122 41 123 C39 124 40 125 44 125 C50 125 56 124 57 122 C58 120 56 116 54 113 Z"
+          fill="#2b1a10"
+          stroke="#1c1308"
+          strokeWidth="2.5"
+          strokeLinejoin="round"
+        />
+        {/* Světlé vlněné ponožky */}
+        <path d="M30 113 L37 113" stroke="#f4ede0" strokeWidth="3" strokeLinecap="round" />
+        <path d="M47 113 L54 113" stroke="#f4ede0" strokeWidth="3" strokeLinecap="round" />
+      </g>
+
+      {/* 2. Dlouhá řasená sukně (tmavá vínově-hnědá s poctivými záhyby) */}
+      <g id="babicka-skirt">
+        <path
+          d="M26 68 Q18 90 20 116 Q39 120 58 118 Q59 90 54 68 Z"
+          fill="#4a2228"
+          stroke="#1c1308"
+          strokeWidth="3.2"
+          strokeLinejoin="round"
+        />
+        {/* Záhyby na sukni */}
+        <path
+          d="M26 84 Q27 100 27 115"
+          stroke="#1c1308"
+          strokeWidth="1.8"
+          fill="none"
+          opacity="0.6"
+        />
+        <path
+          d="M52 84 Q52 100 51 115"
+          stroke="#1c1308"
+          strokeWidth="1.8"
+          fill="none"
+          opacity="0.6"
+        />
+      </g>
+
+      {/* 3. Velká bílá babičkovská zástěra s modrotiskovým lemem */}
+      <g id="babicka-apron">
+        <path
+          d="M28 69 C36 69 46 69 52 69 C55 86 54 104 53 115 C44 117 35 117 26 115 C25 104 25 86 28 69 Z"
+          fill="#fdfaf3"
+          stroke="#1c1308"
+          strokeWidth="2.6"
+          strokeLinejoin="round"
+        />
+        {/* Modrý dekorativní lidový lem na spodku zástěry */}
+        <path d="M27 110 Q39 112 52 110" stroke="#2a5280" strokeWidth="2.2" fill="none" />
+        <path
+          d="M28 112 Q39 114 51 112"
+          stroke="#2a5280"
+          strokeWidth="1.2"
+          strokeDasharray="2,2"
+          fill="none"
+        />
+        {/* Kapsář na zástěře s vykukujícím kapesníčkem */}
+        <rect
+          x="34"
+          y="86"
+          width="13"
+          height="13"
+          rx="2"
+          fill="#f4ecdc"
+          stroke="#1c1308"
+          strokeWidth="1.8"
+        />
+        <path d="M37 86 L41 81 L44 86" fill="#c72f1e" stroke="#1c1308" strokeWidth="1.2" />
+      </g>
+
+      {/* 4. Tmavomodrá kordulka (vestička) se šněrováním a bílé nabírané rukávy */}
+      <g id="babicka-bodice">
+        {/* Babiččina košilka */}
+        <path
+          d="M26 50 C23 54 22 62 25 68 C35 70 45 70 54 68 C57 62 56 54 53 50 Z"
+          fill="#1d385c"
+          stroke="#1c1308"
+          strokeWidth="3"
+          strokeLinejoin="round"
+        />
+        {/* Bílá plátěná náprsenka */}
+        <path d="M33 50 L46 50 L44 65 L35 65 Z" fill="#ffffff" stroke="#1c1308" strokeWidth="1.6" />
+        {/* Červené šněrování vestičky */}
+        <path
+          d="M36 54 L43 58 M43 54 L36 58 M36 60 L43 64 M43 60 L36 64"
+          stroke="#c72f1e"
+          strokeWidth="1.5"
+        />
+      </g>
+
+      {/* 5. Pravá ruka s vřetánkem nebo bochníkem chleba */}
+      <g id="babicka-spindle-arm" className={isAttacking ? "anim-attack" : ""}>
+        {/* Rukáv bílé košilky s řasením */}
+        <path
+          d={
+            attackFrame === 1
+              ? "M25 54 Q15 50 17 62 Q23 66 28 60 Z"
+              : attackFrame === 2
+                ? "M25 54 Q12 40 18 36 Q25 44 28 54 Z"
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? "M25 54 Q10 46 16 38 Q25 44 28 54 Z"
+                  : "M25 54 Q16 62 18 72 Q24 73 28 62 Z"
+          }
+          fill="#ffffff"
+          stroke="#1c1308"
+          strokeWidth="2.6"
+        />
+        {/* Zápěstí a ruka */}
+        <circle
+          cx={
+            attackFrame === 1
+              ? 17
+              : attackFrame === 2
+                ? 18
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? 16
+                  : 18
+          }
+          cy={
+            attackFrame === 1
+              ? 64
+              : attackFrame === 2
+                ? 34
+                : attackFrame === 3 || (isAttacking && !attackFrame)
+                  ? 36
+                  : 74
+          }
+          r="4.2"
+          fill="#ffd2b8"
+          stroke="#1c1308"
+          strokeWidth="2"
+        />
+
+        {/* Dřevěné vřetánko s vlnou */}
+        <g id="babicka-spindle">
+          <line
+            x1={
+              attackFrame === 1
+                ? 17
+                : attackFrame === 2
+                  ? 18
+                  : attackFrame === 3 || (isAttacking && !attackFrame)
+                    ? 14
+                    : 18
+            }
+            y1={
+              attackFrame === 1
+                ? 52
+                : attackFrame === 2
+                  ? 18
+                  : attackFrame === 3 || (isAttacking && !attackFrame)
+                    ? 20
+                    : 60
+            }
+            x2={
+              attackFrame === 1
+                ? 17
+                : attackFrame === 2
+                  ? 18
+                  : attackFrame === 3 || (isAttacking && !attackFrame)
+                    ? 18
+                    : 18
+            }
+            y2={
+              attackFrame === 1
+                ? 78
+                : attackFrame === 2
+                  ? 48
+                  : attackFrame === 3 || (isAttacking && !attackFrame)
+                    ? 54
+                    : 88
+            }
+            stroke="#6e4624"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+          />
+          {/* Závažíčko / vřeteno z hruškového dřeva */}
+          <ellipse
+            cx={
+              attackFrame === 1
+                ? 17
+                : attackFrame === 2
+                  ? 18
+                  : attackFrame === 3 || (isAttacking && !attackFrame)
+                    ? 16
+                    : 18
+            }
+            cy={
+              attackFrame === 1
+                ? 68
+                : attackFrame === 2
+                  ? 38
+                  : attackFrame === 3 || (isAttacking && !attackFrame)
+                    ? 42
+                    : 77
+            }
+            rx="5.5"
+            ry="3.2"
+            fill="#d4a359"
+            stroke="#1c1308"
+            strokeWidth="1.8"
+          />
+          {/* Navinutá bílá ovečková vlna */}
+          <ellipse
+            cx={
+              attackFrame === 1
+                ? 17
+                : attackFrame === 2
+                  ? 18
+                  : attackFrame === 3 || (isAttacking && !attackFrame)
+                    ? 16
+                    : 18
+            }
+            cy={
+              attackFrame === 1
+                ? 64
+                : attackFrame === 2
+                  ? 33
+                  : attackFrame === 3 || (isAttacking && !attackFrame)
+                    ? 37
+                    : 72
+            }
+            rx="4.2"
+            ry="5.5"
+            fill="#f7f3eb"
+            stroke="#1c1308"
+            strokeWidth="1.6"
+          />
+        </g>
+
+        {/* Zlatá nitka osudu a jiskry při akci / útoku */}
+        {(attackFrame === 3 || attackFrame === 4 || (isAttacking && !attackFrame)) && (
+          <g className="anim-comic-swoosh">
+            <path
+              d="M16 38 C-4 28 6 4 36 12 C52 16 66 32 64 50"
+              fill="none"
+              stroke="#ffd438"
+              strokeWidth="2.8"
+              strokeDasharray="4,2"
+            />
+            <path d="M18 42 C-2 32 8 8 34 16" fill="none" stroke="#ffffff" strokeWidth="1.4" />
+            {/* Jiskřivé hvězdičky */}
+            <circle cx="8" cy="18" r="2.8" fill="#ffd438" stroke="#1c1308" strokeWidth="0.8" />
+            <circle cx="38" cy="10" r="3.2" fill="#ffd438" stroke="#1c1308" strokeWidth="0.8" />
+            <polygon
+              points="24,14 26,19 31,19 27,22 29,27 24,24 19,27 21,22 17,19 22,19"
+              fill="#ffffff"
+              stroke="#1c1308"
+              strokeWidth="0.8"
+            />
+          </g>
+        )}
+      </g>
+
+      {/* 6. Levá ruka s čerstvým pecnem chleba a solničkou */}
+      <g id="babicka-bread-arm">
+        <path
+          d="M52 54 Q58 64 54 74 Q48 76 46 66 Z"
+          fill="#ffffff"
+          stroke="#1c1308"
+          strokeWidth="2.6"
+        />
+        <circle cx="52" cy="74" r="4" fill="#ffd2b8" stroke="#1c1308" strokeWidth="2" />
+        {/* Voňavý pecen chleba s křupavou kůrkou a křížkem */}
+        <ellipse
+          cx="50"
+          cy="79"
+          rx="8.5"
+          ry="6"
+          fill="#a8602a"
+          stroke="#1c1308"
+          strokeWidth="2.2"
+        />
+        <ellipse cx="50" cy="78" rx="7" ry="4.5" fill="#c4793d" />
+        {/* Naříznutý křížek na bochníku */}
+        <line
+          x1="47"
+          y1="78"
+          x2="53"
+          y2="78"
+          stroke="#6e3c15"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+        />
+        <line
+          x1="50"
+          y1="75"
+          x2="50"
+          y2="81"
+          stroke="#6e3c15"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+        />
+        {/* Dřevěná vyřezávaná solnička */}
+        <rect
+          x="42"
+          y="73"
+          width="5"
+          height="7"
+          rx="1.5"
+          fill="#f4ebd0"
+          stroke="#1c1308"
+          strokeWidth="1.4"
+        />
+        <circle cx="44.5" cy="74" r="0.8" fill="#1c1308" />
+      </g>
+
+      {/* 7. Babiččina hlava, bílý čepec a laskavá tvář */}
+      <g id="babicka-head">
+        {/* Bílý šátek - zadní lem */}
+        <path
+          d="M24 38 C22 22 34 14 42 14 C52 14 62 22 60 38 C59 48 53 54 42 54 C31 54 25 48 24 38 Z"
+          fill="#fbf7ee"
+          stroke="#1c1308"
+          strokeWidth="3.2"
+          strokeLinejoin="round"
+        />
+        {/* Sněhobílé vlasy s pěšinkou uprostřed */}
+        <path
+          d="M29 32 Q42 27 55 32 Q54 39 42 37 Q30 39 29 32 Z"
+          fill="#f0ece6"
+          stroke="#1c1308"
+          strokeWidth="1.8"
+        />
+        {/* Laskavá kulatá tvář */}
+        <ellipse
+          cx="42"
+          cy="37"
+          rx="11.5"
+          ry="10"
+          fill="#ffd2b8"
+          stroke="#1c1308"
+          strokeWidth="2.4"
+        />
+        {/* Růžové zdravé tvářičky */}
+        <circle cx="35" cy="40" r="3.2" fill="#f59c8e" opacity="0.65" />
+        <circle cx="49" cy="40" r="3.2" fill="#f59c8e" opacity="0.65" />
+
+        {/* Oči a laskavé vrásky */}
+        {isHit ? (
+          <g>
+            <circle cx="37" cy="35" r="2.8" fill="#ffffff" stroke="#1c1308" strokeWidth="1.8" />
+            <circle cx="37" cy="35" r="1.2" fill="#1c1308" />
+            <circle cx="47" cy="35" r="2.8" fill="#ffffff" stroke="#1c1308" strokeWidth="1.8" />
+            <circle cx="47" cy="35" r="1.2" fill="#1c1308" />
+          </g>
+        ) : (
+          <g>
+            {/* Usměvavé babičkovské oči ve tvaru měsíčků */}
+            <path
+              d="M34 35 Q37 32 40 35"
+              stroke="#1c1308"
+              strokeWidth="2.4"
+              fill="none"
+              strokeLinecap="round"
+            />
+            <path
+              d="M44 35 Q47 32 50 35"
+              stroke="#1c1308"
+              strokeWidth="2.4"
+              fill="none"
+              strokeLinecap="round"
+            />
+            {/* Drobné vrásky štěstí u očí */}
+            <path
+              d="M33 34 L31 35 M33 36 L31 37"
+              stroke="#b07d57"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+            />
+            <path
+              d="M51 34 L53 35 M51 36 L53 37"
+              stroke="#b07d57"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+            />
+          </g>
+        )}
+
+        {/* Ušlechtilý babičkovský nosík */}
+        <path
+          d="M42 34 Q43 38 41 39"
+          stroke="#1c1308"
+          strokeWidth="1.8"
+          fill="none"
+          strokeLinecap="round"
+        />
+
+        {/* Hřejivý babiččin úsměv */}
+        <path
+          d={isHit ? "M38 44 Q42 41 46 44" : "M37 42 Q42 47 47 42"}
+          fill="none"
+          stroke="#1c1308"
+          strokeWidth="2.6"
+          strokeLinecap="round"
+        />
+
+        {/* Uzel bílého šátku pod bradou s cípy */}
+        <g className="anim-scarf-wave">
+          <circle cx="42" cy="49" r="3" fill="#eae4d8" stroke="#1c1308" strokeWidth="2" />
+          <polygon points="40,50 34,58 39,56" fill="#fbf7ee" stroke="#1c1308" strokeWidth="1.8" />
+          <polygon points="44,50 50,58 45,56" fill="#fbf7ee" stroke="#1c1308" strokeWidth="1.8" />
+        </g>
+      </g>
+
+      {/* ===================================================================
+       * B. MLADÁ BARUNKA (Barunka Panklová po boku babičky)
+       * =================================================================== */}
+      <g id="young-barunka">
+        {/* 1. Malé černé botičky s bílými punčoškami */}
+        <g id="barunka-shoes">
+          <path
+            d="M82 115 L80 118 C79 120 76 122 73 122 C71 123 72 124 75 124 C80 124 85 124 86 122 C87 121 86 117 85 115 Z"
+            fill="#1c1308"
+            stroke="#1c1308"
+            strokeWidth="2"
+          />
+          <path
+            d="M93 115 L92 118 C91 120 89 122 87 122 C86 123 87 124 90 124 C94 124 98 124 99 122 C100 121 99 117 98 115 Z"
+            fill="#1c1308"
+            stroke="#1c1308"
+            strokeWidth="2"
+          />
+          {/* Bílé punčošky */}
+          <path d="M81 114 L85 114" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M92 114 L97 114" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" />
+        </g>
+
+        {/* 2. Dívčí žlutá louková sukýnka s květinkami a bílou zástěrkou */}
+        <g id="barunka-dress">
+          <path
+            d="M74 84 Q68 98 70 116 Q85 118 99 116 Q101 98 94 84 Z"
+            fill="#f2c84b"
+            stroke="#1c1308"
+            strokeWidth="2.8"
+            strokeLinejoin="round"
+          />
+          {/* Jemná bílá dětská zástěrka */}
+          <path
+            d="M76 85 C82 85 88 85 92 85 C94 95 93 107 92 114 C86 115 80 115 75 114 C74 107 74 95 76 85 Z"
+            fill="#ffffff"
+            stroke="#1c1308"
+            strokeWidth="2"
+          />
+          {/* Červené kvítky na lemu šatů */}
+          <circle cx="73" cy="113" r="1.4" fill="#c72f1e" />
+          <circle cx="96" cy="113" r="1.4" fill="#c72f1e" />
+        </g>
+
+        {/* 3. Modrá dětská vestička a bílá halenka s nabíranými rukávky */}
+        <g id="barunka-bodice">
+          <path
+            d="M75 70 C72 74 72 80 74 84 C81 85 87 85 94 84 C96 80 96 74 93 70 Z"
+            fill="#3a75a4"
+            stroke="#1c1308"
+            strokeWidth="2.4"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M80 70 L88 70 L86 81 L82 81 Z"
+            fill="#ffffff"
+            stroke="#1c1308"
+            strokeWidth="1.2"
+          />
+        </g>
+
+        {/* 4. Ručky: jedna drží košík s jablíčky, druhá ukazuje nebo mává */}
+        <g id="barunka-basket-arm">
+          {/* Pravá ručka drží proutěný košíček */}
+          <path
+            d="M74 72 Q68 78 70 85"
+            stroke="#ffffff"
+            strokeWidth="2.8"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <circle cx="70" cy="85" r="3" fill="#ffd2b8" stroke="#1c1308" strokeWidth="1.5" />
+          {/* Malý proutěný košíček */}
+          <ellipse
+            cx="68"
+            cy="90"
+            rx="6.5"
+            ry="4.5"
+            fill="#ba8c53"
+            stroke="#1c1308"
+            strokeWidth="1.8"
+          />
+          {/* Oblouk držadla košíku */}
+          <path d="M63 88 Q68 82 73 88" stroke="#8a5e2f" strokeWidth="1.5" fill="none" />
+          {/* Červená jablíčka v košíku */}
+          <circle cx="66" cy="88" r="2.2" fill="#c72f1e" />
+          <circle cx="70" cy="88" r="2" fill="#c72f1e" />
+          <circle cx="68" cy="86" r="1.8" fill="#e8982c" />
+
+          {/* Levá ručka - zvídavě ukazuje nebo mává */}
+          <path
+            d={isAttacking ? "M94 72 Q104 68 106 62" : "M94 72 Q100 78 96 84"}
+            stroke="#ffffff"
+            strokeWidth="2.8"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <circle
+            cx={isAttacking ? 107 : 96}
+            cy={isAttacking ? 61 : 85}
+            r="3"
+            fill="#ffd2b8"
+            stroke="#1c1308"
+            strokeWidth="1.5"
+          />
+        </g>
+
+        {/* 5. Barunčina hlavička, zvídavá tvář a copy s červenými mašlemi */}
+        <g id="barunka-head">
+          {/* Husté kaštanově hnědé vlásky */}
+          <circle cx="84" cy="62" r="10" fill="#543319" stroke="#1c1308" strokeWidth="2.6" />
+          {/* Dívčí tvářička */}
+          <ellipse
+            cx="84"
+            cy="64"
+            rx="8.5"
+            ry="7.5"
+            fill="#ffd2b8"
+            stroke="#1c1308"
+            strokeWidth="2"
+          />
+          {/* Růžový ruměnec děvčátka */}
+          <circle cx="79" cy="66" r="2.6" fill="#f59c8e" opacity="0.75" />
+          <circle cx="89" cy="66" r="2.6" fill="#f59c8e" opacity="0.75" />
+
+          {/* Velké bystré zvídavé očička */}
+          <circle cx="80.5" cy="63" r="2.2" fill="#ffffff" stroke="#1c1308" strokeWidth="1.4" />
+          <circle cx="81" cy="63" r="1.1" fill="#2d170b" />
+          <circle cx="87.5" cy="63" r="2.2" fill="#ffffff" stroke="#1c1308" strokeWidth="1.4" />
+          <circle cx="88" cy="63" r="1.1" fill="#2d170b" />
+          {/* Jiskřička v očích */}
+          <circle cx="81.4" cy="62.4" r="0.4" fill="#ffffff" />
+          <circle cx="88.4" cy="62.4" r="0.4" fill="#ffffff" />
+
+          {/* Drobný zvědavý nosík a usměvavá pusinka */}
+          <path d="M84 63 Q84.5 65 83.5 66" stroke="#1c1308" strokeWidth="1.2" fill="none" />
+          <path
+            d="M81.5 68 Q84 71 86.5 68"
+            stroke="#1c1308"
+            strokeWidth="2"
+            fill="none"
+            strokeLinecap="round"
+          />
+
+          {/* Dva pletené hnědé copy splývající po ramenou */}
+          {/* Levý cop */}
+          <path
+            d="M76 66 Q72 74 74 83 Q73 89 74 93"
+            stroke="#543319"
+            strokeWidth="3.2"
+            fill="none"
+            strokeLinecap="round"
+          />
+          {/* Červená mašle na konci levého copu */}
+          <circle cx="74" cy="94" r="2" fill="#c72f1e" stroke="#1c1308" strokeWidth="1" />
+          <polygon points="72,94 67,91 68,97" fill="#c72f1e" stroke="#1c1308" strokeWidth="0.8" />
+          <polygon points="76,94 81,91 80,97" fill="#c72f1e" stroke="#1c1308" strokeWidth="0.8" />
+
+          {/* Pravý cop s mašlí */}
+          <path
+            d="M92 66 Q98 74 97 84 Q98 90 97 94"
+            stroke="#543319"
+            strokeWidth="3.2"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <circle cx="97" cy="95" r="2" fill="#c72f1e" stroke="#1c1308" strokeWidth="1" />
+          <polygon points="95,95 90,92 91,98" fill="#c72f1e" stroke="#1c1308" strokeWidth="0.8" />
+          <polygon points="99,95 104,92 103,98" fill="#c72f1e" stroke="#1c1308" strokeWidth="0.8" />
+        </g>
       </g>
     </svg>
   );

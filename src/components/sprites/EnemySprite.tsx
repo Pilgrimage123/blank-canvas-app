@@ -14,6 +14,10 @@ export interface EnemySpriteProps {
   type: EnemyTypeId | string;
   isHit?: boolean;
   isAttacking?: boolean;
+  attackFrame?: number; // 1 to 5 pro krokování útočné animace
+  isMoving?: boolean; // přesun z místa na místo
+  moveFrame?: number; // 1 to 4 pro krokování pohybu
+  moveDirection?: "forward" | "backward" | "up" | "down" | "lateral";
   size?: number | string;
   className?: string;
   statusLabel?: string;
@@ -29,6 +33,10 @@ export const EnemySprite: React.FC<EnemySpriteProps> = ({
   type,
   isHit = false,
   isAttacking = false,
+  attackFrame,
+  isMoving = false,
+  moveFrame,
+  moveDirection = "forward",
   size = 140,
   className = "",
   variantIndex,
@@ -301,7 +309,26 @@ export const EnemySprite: React.FC<EnemySpriteProps> = ({
 
   const getMotionClass = () => {
     if (isHit) return "anim-hit";
-    if (isAttacking) return "anim-attack";
+
+    // Krokování útočné animace (1 až 5)
+    if (typeof attackFrame === "number" && attackFrame >= 1 && attackFrame <= 5) {
+      return `pose-enemy-atk-${attackFrame}`;
+    }
+    // Plynulá 5fázová útočná animace
+    if (isAttacking) return "anim-attack-5frame-enemy";
+
+    // Krokování pohybu (1 až 4)
+    if (typeof moveFrame === "number" && moveFrame >= 1 && moveFrame <= 4) {
+      return `pose-enemy-move-${moveFrame}`;
+    }
+    // Plynulý 4fázový pohyb z místa na místo
+    if (isMoving) {
+      if (moveDirection === "forward") return "anim-move-4frame-advance";
+      if (moveDirection === "backward") return "anim-move-4frame-retreat";
+      if (moveDirection === "lateral") return "anim-move-4frame-lateral";
+      return "anim-move-4frame-enemy";
+    }
+
     if (
       resolvedType === "bila" ||
       resolvedType === "bila_pani" ||
@@ -316,24 +343,118 @@ export const EnemySprite: React.FC<EnemySpriteProps> = ({
     return "anim-lada-breathe";
   };
 
+  const showAttackSwoosh = attackFrame === 3 || attackFrame === 4 || (isAttacking && !attackFrame);
+  const showDustPuff = moveFrame === 3 || moveFrame === 4 || (isMoving && !moveFrame);
+
   return (
     <div
-      key={isHit ? "hit" : isAttacking ? "atk" : "idle"}
+      key={
+        isHit
+          ? "hit"
+          : typeof attackFrame === "number"
+            ? `atk-${attackFrame}`
+            : isAttacking
+              ? "atk"
+              : typeof moveFrame === "number"
+                ? `mov-${moveFrame}`
+                : isMoving
+                  ? "mov"
+                  : "idle"
+      }
       className={`relative inline-flex items-center justify-center select-none ${getMotionClass()} ${className}`}
       style={{ width, height }}
     >
       {/* Sprite SVG: Rodina čertů, čertů elegánů a permoníků dostávají zbrusu nové Ladovské sprity s plnou reaktivitou */}
       {resolvedType === "cert_elegan"
-        ? renderLadaCertEleganSprite(resolvedStage, isHit, isAttacking, variantName)
+        ? renderLadaCertEleganSprite(
+            resolvedStage,
+            isHit,
+            isAttacking || !!attackFrame,
+            variantName,
+          )
         : isDevilFamily
-          ? renderLadaCertSprite(resolvedType, resolvedStage, isHit, isAttacking)
+          ? renderLadaCertSprite(resolvedType, resolvedStage, isHit, isAttacking || !!attackFrame)
           : isPermonikFamily
-            ? renderLadaPermonikSprite(resolvedStage, isHit, isAttacking, variantName)
+            ? renderLadaPermonikSprite(
+                resolvedStage,
+                isHit,
+                isAttacking || !!attackFrame,
+                variantName,
+              )
             : renderEnemySvg(resolvedType, resolvedStage, variantName)}
       {/* Doplňky ostatních bubáků (čerti a nové folklórní rodiny mají vše integrované ve vlastních Ladovských spritech) */}
       {!isDevilFamily &&
         !isNewFolkloreFamily &&
         renderVariantAccents(resolvedType, resolvedStage, variantName)}
+
+      {/* Ladovský 5-fázový útočný komický sečný oblouk a Bác! hvězdičky */}
+      {showAttackSwoosh && (
+        <svg
+          viewBox="0 0 120 130"
+          className="pointer-events-none absolute inset-0 w-full h-full overflow-visible z-20 anim-comic-swoosh"
+        >
+          {/* Sečný oblouk zprava doleva směrem na lovce */}
+          <path
+            d="M65 15 C30 25 10 58 20 90"
+            fill="none"
+            stroke="#ffd438"
+            strokeWidth="4.2"
+            strokeLinecap="round"
+          />
+          <path
+            d="M62 18 C34 28 16 56 24 86"
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          />
+          {/* Hvězdičky komického zásahu */}
+          <polygon
+            points="14,32 18,39 25,39 19,44 21,51 14,47 7,51 9,44 3,39 10,39"
+            fill="#e63920"
+            stroke="#1c1308"
+            strokeWidth="1.2"
+          />
+          <circle cx="8" cy="58" r="2.2" fill="#ffd438" stroke="#1c1308" strokeWidth="0.8" />
+          <circle cx="22" cy="72" r="1.8" fill="#ff8c38" stroke="#1c1308" strokeWidth="0.8" />
+        </svg>
+      )}
+
+      {/* Ladovské 4-fázové obláčky prachu při dopadu po skoku / přesunu */}
+      {showDustPuff && (
+        <svg
+          viewBox="0 0 120 130"
+          className="pointer-events-none absolute inset-0 w-full h-full overflow-visible z-10 anim-dust-puff"
+        >
+          {/* Levý obláček prachu pod nohou */}
+          <ellipse
+            cx="34"
+            cy="120"
+            rx="9"
+            ry="4"
+            fill="#d4be94"
+            opacity="0.85"
+            stroke="#1c1308"
+            strokeWidth="0.9"
+          />
+          <circle cx="27" cy="117" r="3.2" fill="#ebd8b5" stroke="#1c1308" strokeWidth="0.8" />
+          <circle cx="41" cy="116" r="3.8" fill="#ebd8b5" stroke="#1c1308" strokeWidth="0.8" />
+
+          {/* Pravý obláček prachu pod nohou */}
+          <ellipse
+            cx="86"
+            cy="120"
+            rx="9"
+            ry="4"
+            fill="#d4be94"
+            opacity="0.85"
+            stroke="#1c1308"
+            strokeWidth="0.9"
+          />
+          <circle cx="79" cy="116" r="3.8" fill="#ebd8b5" stroke="#1c1308" strokeWidth="0.8" />
+          <circle cx="93" cy="117" r="3.2" fill="#ebd8b5" stroke="#1c1308" strokeWidth="0.8" />
+        </svg>
+      )}
     </div>
   );
 };

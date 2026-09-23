@@ -28,3 +28,9 @@ npm run dev
 - **Zápisy do changelogu**: Všechny změny v projektu se zapisují do `src/components/modals/ChangelogModal.tsx` (`CHANGELOG_DATA`).
 - **Míra detailu záznamů**: Záznamy v changelogu se mají dělat **o něco méně detailní než doposud** — stručně, věcně a přehledně se zaměřením na podstatné novinky a opravy bez zbytečných technických podrobností.
 
+## Kanonické časové zasazení (Lada Lore)
+
+- Hra se odehrává přibližně **50 let před narozením Pepíka** (v polovině 19. století).
+- Nevystupuje v ní **Pepík ani jeho kamarádi**, ani **Pulec a Bubáček** (ti se narodí až o generaci později).
+- Starý hastrman **Brčál** i strašidlo **Mulisák** v tomto světě samozřejmě již přebývají a vystupují.
+

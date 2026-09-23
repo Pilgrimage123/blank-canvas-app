@@ -1,4 +1,4 @@
-export type LocationId = 'vesnice' | 'mlyn' | 'les' | 'rybnik' | 'zricenina' | 'hrbitov' | 'boss';
+export type LocationId = "vesnice" | "mlyn" | "les" | "rybnik" | "zricenina" | "hrbitov" | "boss";
 
 export interface LocationDef {
   id: LocationId;
@@ -9,58 +9,58 @@ export interface LocationDef {
 }
 
 export type EnemyTypeId =
-  | 'bubak'
-  | 'certik'
-  | 'rarasek'
-  | 'mrtvak'
-  | 'kostlivec'
-  | 'polednice'
-  | 'helkal'
-  | 'klekanice'
-  | 'hastrman'
-  | 'upir'
-  | 'bila'
-  | 'bila_pani'
-  | 'ohnivy'
-  | 'ohnivy_muz'
-  | 'vodnik'
-  | 'hrobnik'
-  | 'cert'
-  | 'pavouk'
-  | 'pekelne_dudy'
-  | 'svitici_oko'
-  | 'netopyr'
-  | 'certova_babicka'
-  | 'loupeznik'
-  | 'lupic'
-  | 'ropucha'
-  | 'ohnivy_kohout'
-  | 'cerny_pes'
-  | 'divozenka'
-  | 'jeskynka'
-  | 'letajici_rarach'
-  | 'lesni_muz'
-  | 'rusalka'
-  | 'permonik'
-  | 'kmotra_liska'
-  | 'cert_elegan'
-  | 'lotr_intelektual';
+  | "bubak"
+  | "certik"
+  | "rarasek"
+  | "mrtvak"
+  | "kostlivec"
+  | "polednice"
+  | "helkal"
+  | "klekanice"
+  | "hastrman"
+  | "upir"
+  | "bila"
+  | "bila_pani"
+  | "ohnivy"
+  | "ohnivy_muz"
+  | "vodnik"
+  | "hrobnik"
+  | "cert"
+  | "pavouk"
+  | "pekelne_dudy"
+  | "svitici_oko"
+  | "netopyr"
+  | "certova_babicka"
+  | "loupeznik"
+  | "lupic"
+  | "ropucha"
+  | "ohnivy_kohout"
+  | "cerny_pes"
+  | "divozenka"
+  | "jeskynka"
+  | "letajici_rarach"
+  | "lesni_muz"
+  | "rusalka"
+  | "permonik"
+  | "kmotra_liska"
+  | "cert_elegan"
+  | "lotr_intelektual";
 
-export type EnemyRole = 'linie' | 'podpora' | 'delostrelba';
+export type EnemyRole = "linie" | "podpora" | "delostrelba";
 
 export type EnemyActionId =
-  | 'uder'
-  | 'zlovest'
-  | 'ukryt'
-  | 'vabnicka'
-  | 'odveta'
-  | 'zatuhnuti'
-  | 'skrek'
-  | 'puch'
-  | 'vtipek'
-  | 'bafnuti_z_dymky'
-  | 'kouzelna_polivcicka'
-  | 'rybnicni_mlha';
+  | "uder"
+  | "zlovest"
+  | "ukryt"
+  | "vabnicka"
+  | "odveta"
+  | "zatuhnuti"
+  | "skrek"
+  | "puch"
+  | "vtipek"
+  | "bafnuti_z_dymky"
+  | "kouzelna_polivcicka"
+  | "rybnicni_mlha";
 
 export interface EnemyVariantDef {
   level: number;
@@ -115,11 +115,15 @@ export interface EnemyInstance {
   uskokDodge?: boolean;
   isHit?: boolean;
   isAttacking?: boolean;
-  row?: 'front' | 'back';
+  attackFrame?: number;
+  isMoving?: boolean;
+  moveFrame?: number;
+  moveDirection?: "forward" | "backward" | "up" | "down" | "lateral";
+  row?: "front" | "back";
 }
 
-export type CardType = 'attack' | 'defend' | 'prep' | 'junk';
-export type CardIntent = 'single' | 'self' | 'row' | 'splash';
+export type CardType = "attack" | "defend" | "prep" | "junk";
+export type CardIntent = "single" | "self" | "row" | "splash";
 
 export interface CardDef {
   id: string;
@@ -139,7 +143,7 @@ export interface CardDef {
   draw?: number;
   dot?: number;
   stiffen?: number;
-  shop?: 'levna' | 'stred' | 'draha';
+  shop?: "levna" | "stred" | "draha";
 }
 
 export interface CardInstance {
@@ -147,7 +151,7 @@ export interface CardInstance {
   id: string;
 }
 
-export type HeroId = 'pobuda' | 'kostelnik' | 'bylinkarka' | string;
+export type HeroId = "pobuda" | "kostelnik" | "bylinkarka" | "babicka" | string;
 
 export interface HeroDef {
   id: HeroId;
@@ -175,8 +179,8 @@ export interface HeroDef {
 }
 
 export interface NodeDef {
-  polarity: 'kladny' | 'zaporny';
-  timing: 'misto' | 'pred' | 'po';
+  polarity: "kladny" | "zaporny";
+  timing: "misto" | "pred" | "po";
   name: string;
   flavor: string;
   effect: string;
@@ -185,7 +189,7 @@ export interface NodeDef {
 export interface RunOptions {
   scale: number;
   strength: number;
-  density: 'adaptive' | 'samota' | 'hlidka' | 'hejno';
+  density: "adaptive" | "samota" | "hlidka" | "hejno";
   seedOn: boolean;
   seed: string;
 }
@@ -246,7 +250,20 @@ export interface GameState {
   pending: any;
   shopOffer: string[] | null;
   log: string[];
-  phase: 'splash' | 'title' | 'hero' | 'map' | 'node' | 'combat' | 'shop' | 'discard' | 'piles' | 'end' | 'options' | 'tutorial' | 'test';
+  phase:
+    | "splash"
+    | "title"
+    | "hero"
+    | "map"
+    | "node"
+    | "combat"
+    | "shop"
+    | "discard"
+    | "piles"
+    | "end"
+    | "options"
+    | "tutorial"
+    | "test";
   rngStep: number;
   fatigueOut: number;
   path: { locId: LocationId; before: string[]; after: string[]; cleared: boolean }[];

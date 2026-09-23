@@ -563,7 +563,7 @@ function getMemberLore(familyId: string, vidx: number, name: string): string {
     klekanice: [
       "Nenápadná stařenka v šerém fialovém šátku s proutěným košíkem na zbloudilá lesní jablka.",
       "S puntíkovaným šátkem a hůlkou obchází vesnice, jakmile na zvonici odbije večerní klekání.",
-      "Hrbatá postava s nůší na zlobivé děti, co nechtěly jít včas domů z návsi na teplou večeři.",
+      "Hrbatá postava s nůší na zbloudilé pocestné a neposluchy, co nechtěli jít včas domů z návsi na teplou večeři.",
       "Zahalená v nočním šátku posetém hvězdami, na hůlce jí sedí havran a z nůše svítí žlutá lucerna.",
     ],
     hastrman: [
@@ -597,7 +597,7 @@ function getMemberLore(familyId: string, vidx: number, name: string): string {
       "Vroucí infernální běs se zářící ohnivou korunou a obíhajícími plamennými koulemi.",
     ],
     vodnik: [
-      "Mladý správce rákosí s proutěnou píšťalkou a vodnickou čepicí, co hlídá líhně pulců.",
+      "Mladý správce rákosí s proutěnou píšťalkou a vodnickou čepicí, co hlídá líhně kapřího potěru.",
       "Sbírá dušičky do malovaných hrnečků pod starou vrbou u temného hlubokého jezu.",
       "Legendární vládce tůně s mosaznými knoflíky, leknínovým cylindrem a chladivou vodní mlhou.",
       "Pravý král všech českých rybníků se zlatou korunou z leknínů a posvátným zlatým kaprem po boku.",
