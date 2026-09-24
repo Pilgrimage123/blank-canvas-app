@@ -90,6 +90,26 @@ class SoundManager {
     osc.stop(now + 0.1);
   }
 
+  playCardDraw() {
+    this.playCardSlide();
+  }
+
+  playWhoosh() {
+    this.playPipeSmoke();
+  }
+
+  playWoodpeckerPeck() {
+    this.playBlock();
+  }
+
+  playFireCrackle() {
+    this.playSneezePuff();
+  }
+
+  playRavenCroak() {
+    this.playCroak();
+  }
+
   // Water Splash ("ŠPLOUCH!") for Hastrman
   playSplash() {
     if (!this.enabled) return;

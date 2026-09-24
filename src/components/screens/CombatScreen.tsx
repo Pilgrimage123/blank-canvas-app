@@ -349,8 +349,6 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   const dolniRadaEnemies = combat.enemies.filter((e) => !isEnemyUpperRow(e));
 
   const horniRadaAlive = horniRadaEnemies.filter((e) => e.alive);
-  const horniRadaDefeated = horniRadaEnemies.filter((e) => !e.alive);
-
   const dolniRadaAlive = dolniRadaEnemies.filter((e) => e.alive);
   const defeatedEnemies = combat.enemies.filter((e) => !e.alive);
 

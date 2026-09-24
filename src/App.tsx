@@ -756,7 +756,7 @@ export function App() {
   const isCombatActive =
     state?.phase === "combat" &&
     Boolean(state.combat) &&
-    !state.combat.pauseTime &&
+    !state.combat?.pauseTime &&
     (state.hp ?? 0) > 0;
   const playerTimer = state?.combat?.playerTimer ?? 0;
   const pendingCard = state?.combat?.pendingCard;

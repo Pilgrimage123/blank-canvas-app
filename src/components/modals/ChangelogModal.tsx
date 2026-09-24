@@ -41,6 +41,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
           "Vyřazení bubáci už nejsou vázáni na horní ani dolní řadu a využívají volný prostor krajiny.",
           "Jejich rozestupy, měřítko a výška se přizpůsobují hloubce terénu; nohy zůstávají ukotvené na zemi.",
           "Poražení zůstávají před kulisami a žádný prvek pozadí jim nezakrývá hlavu ani vlajku.",
+          "Opraveny kontroly bojového stavu a chybějící zvukové odezvy krajiny.",
         ],
       },
     ],
