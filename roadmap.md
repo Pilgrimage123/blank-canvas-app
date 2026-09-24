@@ -4,3 +4,5 @@
 - [x] Create distinct illustrated sprites for every family member.
 - [x] Add family lore and a dedicated test-arena encounter.
 - [x] Verify the game and new bestiary entries in the preview.
+- [ ] Free defeated bogeys from combat rows and place them visibly on the landscape.
+- [ ] Verify defeated bogey spacing, grounding, and foreground visibility.

@@ -352,27 +352,38 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   const horniRadaDefeated = horniRadaEnemies.filter((e) => !e.alive);
 
   const dolniRadaAlive = dolniRadaEnemies.filter((e) => e.alive);
-  const dolniRadaDefeated = dolniRadaEnemies.filter((e) => !e.alive);
+  const defeatedEnemies = combat.enemies.filter((e) => !e.alive);
 
-  // Určení náhodného, ale stabilního rozesazení vzdávajících se bubáků kolem prvního
-  // Vzdávající se bubáci zaujmou místo náhodně kolem prvního, vpravo a bezpečně mimo prostor bojujících
+  // Poražení už nerespektují bojové řady. Stabilně se rozsadí po volném terénu,
+  // přičemž každý bod značí úroveň země pod nohama daného bubáka.
   const getSurrenderedClusterOffset = (enemyUid: string, idx: number) => {
-    if (idx === 0) return { x: 0, y: 0, rot: 0, z: 10 };
     let hash = 0;
     for (let i = 0; i < enemyUid.length; i++) {
       hash = (hash << 5) - hash + enemyUid.charCodeAt(i);
       hash |= 0;
     }
     const absHash = Math.abs(hash);
-    const col = (idx - 1) % 3;
-    const row = Math.floor((idx - 1) / 3);
-    const jitterX = (absHash % 13) - 6;
-    const jitterY = ((absHash >> 2) % 11) - 5;
-    const x = 24 + col * 24 + jitterX;
-    const y = (row === 0 ? -6 : 8) + jitterY;
-    const rot = ((absHash % 9) - 4) * 0.7;
-    const z = 10 + (idx % 6);
-    return { x, y, rot, z };
+    const places = [
+      { right: 8, bottom: 3, scale: 1 },
+      { right: 92, bottom: 12, scale: 0.96 },
+      { right: 174, bottom: 5, scale: 1.02 },
+      { right: 38, bottom: 82, scale: 0.9 },
+      { right: 126, bottom: 94, scale: 0.87 },
+      { right: 216, bottom: 76, scale: 0.92 },
+      { right: 4, bottom: 157, scale: 0.82 },
+      { right: 90, bottom: 164, scale: 0.8 },
+    ];
+    const place = places[idx % places.length];
+    const layer = Math.floor(idx / places.length);
+    const jitterX = (absHash % 11) - 5;
+    const jitterY = ((absHash >> 3) % 7) - 3;
+    return {
+      right: place.right + jitterX + layer * 12,
+      bottom: place.bottom + jitterY,
+      scale: Math.max(0.72, place.scale - layer * 0.05),
+      rot: ((absHash % 9) - 4) * 0.55,
+      z: 42 + Math.round(180 - place.bottom),
+    };
   };
 
   const renderEnemyItem = (
@@ -835,7 +846,28 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
               </div>
             </div>
 
-            {/* === BUBÁCI FORMATION (Horní řada na břehu a Dolní řada na cestě, za nimi o velikost bubáka vzadu shluk vzdávajících se) === */}
+            {/* Poražení jsou nad všemi kulisami, volně rozesazení po viditelném terénu. */}
+            <div className="absolute inset-y-0 right-1 sm:right-3 w-[42%] min-w-[250px] pointer-events-none z-40 overflow-visible">
+              {defeatedEnemies.map((enemy, defIdx) => {
+                const offset = getSurrenderedClusterOffset(enemy.uid, defIdx);
+                return (
+                  <div
+                    key={`surrendered-${enemy.uid}`}
+                    className="absolute origin-bottom transition-all duration-700 pointer-events-auto"
+                    style={{
+                      right: `${offset.right}px`,
+                      bottom: `${offset.bottom}px`,
+                      transform: `rotate(${offset.rot}deg) scale(${offset.scale})`,
+                      zIndex: offset.z,
+                    }}
+                  >
+                    {renderEnemyItem(enemy, defIdx, "dolni", true)}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* === BUBÁCI FORMATION (bojovníci nadále drží horní a dolní řadu) === */}
             <div className="flex-1 flex flex-col justify-end items-start gap-0 pl-2 sm:pl-4 md:pl-8 pr-1 sm:pr-2 overflow-x-auto overflow-y-visible py-1 min-w-0">
               {/* HORNÍ ŘADA (Vyvýšený břeh) */}
               {horniRadaEnemies.length > 0 && (
@@ -889,37 +921,6 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                     })}
                   </div>
 
-                  {/* Mezera o velikosti jednoho celého bubáka, aby vzdávající se byli o velikost bubáka víc vzadu */}
-                  <div className="w-16 sm:w-20 md:w-24 flex-none select-none pointer-events-none" />
-
-                  {/* 2. Vyhrazený prostor pro vzdávající se bubáky v horní řadě (shluknutí kolem prvního) */}
-                  <div className="relative flex items-end justify-start min-w-[130px] sm:min-w-[170px] min-h-[95px] pl-2 sm:pl-3 border-l-2 border-dashed border-[#1c1308]/20 py-1">
-                    {horniRadaDefeated.length === 0 ? (
-                      <div className="hidden sm:flex items-center gap-1.5 text-[0.58rem] sm:text-[0.62rem] font-bold text-[#8c5614]/40 italic select-none self-center whitespace-nowrap">
-                        <span>🏳️</span>
-                        <span>Místo pro poražené</span>
-                      </div>
-                    ) : (
-                      horniRadaDefeated.map((enemy, defIdx) => {
-                        const offset = getSurrenderedClusterOffset(enemy.uid, defIdx);
-                        return (
-                          <div
-                            key={enemy.uid}
-                            className="transition-all duration-700"
-                            style={{
-                              position: defIdx === 0 ? "relative" : "absolute",
-                              left: defIdx === 0 ? 0 : `${offset.x}px`,
-                              bottom: defIdx === 0 ? 0 : `${offset.y}px`,
-                              transform: `rotate(${offset.rot}deg)`,
-                              zIndex: offset.z,
-                            }}
-                          >
-                            {renderEnemyItem(enemy, defIdx, "horni", true)}
-                          </div>
-                        );
-                      })
-                    )}
-                  </div>
                 </div>
               )}
 
@@ -976,37 +977,6 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                   })}
                 </div>
 
-                {/* Mezera o velikosti jednoho celého bubáka, aby vzdávající se byli o velikost bubáka víc vzadu */}
-                <div className="w-16 sm:w-20 md:w-24 flex-none select-none pointer-events-none" />
-
-                {/* 2. Vyhrazený prostor pro vzdávající se bubáky v dolní řadě (shluknutí kolem prvního) */}
-                <div className="relative flex items-end justify-start min-w-[130px] sm:min-w-[170px] min-h-[110px] pl-2 sm:pl-3 border-l-2 border-dashed border-[#1c1308]/20 py-1">
-                  {dolniRadaDefeated.length === 0 ? (
-                    <div className="hidden sm:flex items-center gap-1.5 text-[0.58rem] sm:text-[0.62rem] font-bold text-[#8c5614]/40 italic select-none self-center whitespace-nowrap">
-                      <span>🏳️</span>
-                      <span>Místo pro poražené</span>
-                    </div>
-                  ) : (
-                    dolniRadaDefeated.map((enemy, defIdx) => {
-                      const offset = getSurrenderedClusterOffset(enemy.uid, defIdx);
-                      return (
-                        <div
-                          key={enemy.uid}
-                          className="transition-all duration-700"
-                          style={{
-                            position: defIdx === 0 ? "relative" : "absolute",
-                            left: defIdx === 0 ? 0 : `${offset.x}px`,
-                            bottom: defIdx === 0 ? 0 : `${offset.y}px`,
-                            transform: `rotate(${offset.rot}deg)`,
-                            zIndex: offset.z,
-                          }}
-                        >
-                          {renderEnemyItem(enemy, defIdx, "dolni", true)}
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
               </div>
             </div>
           </div>
