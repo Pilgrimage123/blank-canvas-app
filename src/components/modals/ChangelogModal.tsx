@@ -25,8 +25,30 @@ interface VersionEntry {
 // Záznamy v changelogu se mají dělat o něco méně detailní než doposud (stručnější, výstižné body zaměřené na podstatu).
 const CHANGELOG_DATA: VersionEntry[] = [
   {
-    version: "v0.8.1",
+    version: "v0.8.2",
     tag: "Aktuální verze",
+    date: "24. září",
+    title: "Volné rozesazení poražených bubáků v krajině",
+    badge: "Přehledné bojiště",
+    flavorQuote:
+      "„Kdo složil tlapy, může si najít pohodlný kus meze — hlavně ať mu kouká klobouk i špičky bot!“",
+    flavorAuthor: "starý hastrman Brčál",
+    highlights: [
+      {
+        category: "Poražení bubáci",
+        icon: "🏳️",
+        items: [
+          "Vyřazení bubáci už nejsou vázáni na horní ani dolní řadu a využívají volný prostor krajiny.",
+          "Jejich rozestupy, měřítko a výška se přizpůsobují hloubce terénu; nohy zůstávají ukotvené na zemi.",
+          "Poražení zůstávají před kulisami a žádný prvek pozadí jim nezakrývá hlavu ani vlajku.",
+          "Opraveny kontroly bojového stavu a chybějící zvukové odezvy krajiny.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.8.1",
+    tag: "Předchozí verze",
     date: "24. září",
     title: "Trvalé ukotvení zóny pro poražené — žádný posun blíže při vyřazování",
     badge: "Stabilní bojiště & Fixní zóna",
