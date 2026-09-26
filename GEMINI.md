@@ -47,6 +47,14 @@ When given a gameplay concept, topic, or system request, format your response us
 
 ---
 
+**Zásada designu hrdinů (Hero Design Principle - No Card Hardcoding):**
+
+- **Bonusy a pasivní schopnosti postav NESMÍ být vázány na konkrétní karty**:
+  - Je zakázáno vázat pasivní výhody postav na konkrétní názvy nebo úzké tagy jednotlivých karet (např. žádné bonusy typu „+X k Bloku pro karty Kříž“, „pokud zahrajete Hozenou sůl“ apod.).
+  - Schopnosti hrdinů musí být **vždy obecné a systémové**: např. ovlivňovat obecné kategorie karet (`defend`, `attack`, `prep`), práci s časem a odpočtem (Augenblicky), základní zdroje (Životy, Únava, Akce, Nádech, Spánek, Krejcary) nebo systémové bojové stavy (počáteční Blok, počáteční Úhyb, počet karet v ruce, zpoždění nepřátel).
+
+---
+
 **Povinné systémové pravidlo vývoje (Changelog Discipline):**
 
 - **VŠECHNY ZMĚNY MUSÍ BÝT VŽDY ZAPSÁNY DO CHANGELOGU (`src/components/modals/ChangelogModal.tsx`)**:

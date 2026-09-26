@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { RunOptions } from "../../types";
+import { downloadGameHtml } from "../../utils/downloadGameHtml";
 
 interface OptionsScreenProps {
   options: RunOptions;
@@ -14,6 +15,19 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
   onBack,
   onOpenChangelog,
 }) => {
+  const [downloadMsg, setDownloadMsg] = useState<{
+    status: "loading" | "success" | "error";
+    text: string;
+  } | null>(null);
+
+  const handleDownload = () => {
+    downloadGameHtml((status, message) => {
+      setDownloadMsg({ status, text: message || "" });
+      if (status === "success" || status === "error") {
+        setTimeout(() => setDownloadMsg(null), 4000);
+      }
+    });
+  };
   const handleScaleChange = (val: number) => {
     onChangeOptions({ ...options, scale: val });
   };
@@ -168,6 +182,44 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
             </button>
           </div>
         </div>
+
+        {/* 5. Standalone Single-file HTML Export */}
+        <div className="space-y-2 pt-4 border-t border-[#dfcb9a]">
+          <div className="flex items-center justify-between">
+            <h3 className="font-title text-lg font-bold text-[#1c1308]">
+              Offline hraní & stažení hry (.html)
+            </h3>
+            <span className="bg-[#eaf4dc] px-2.5 py-0.5 rounded-full border border-[#1c1308] font-bold text-xs text-[#2e6629]">
+              1 samostatný soubor
+            </span>
+          </div>
+          <p className="text-xs font-semibold text-[#543b24]">
+            Stáhněte si kompletní hru v jediném HTML souboru (veškeré karty, bubáci, animace i syntetizované zvuky jsou uvnitř). Funguje na jakémkoliv zařízení i bez internetu.
+          </p>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 pt-1">
+            <button
+              type="button"
+              onClick={handleDownload}
+              className="lada-button text-sm py-2.5 px-4 bg-[#eaf4dc] hover:bg-[#d8edbe] border-2 border-[#1c1308] font-black text-[#1c1308] flex items-center gap-2 shadow-[0_3px_0_#1c1308] cursor-pointer"
+            >
+              <span>📥</span>
+              <span>Stáhnout celou hru (1 soubor HTML)</span>
+            </button>
+            {downloadMsg && (
+              <span
+                className={`text-xs font-bold px-3 py-1.5 rounded-lg border ${
+                  downloadMsg.status === "loading"
+                    ? "bg-[#fff8d4] border-[#d69818] text-[#7a4e0a]"
+                    : downloadMsg.status === "success"
+                      ? "bg-[#e2f7d8] border-[#2e6629] text-[#1c5017]"
+                      : "bg-[#fde2de] border-[#c23318] text-[#8a1a08]"
+                }`}
+              >
+                {downloadMsg.text}
+              </span>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
@@ -178,7 +230,7 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
             className="lada-button text-sm py-2 px-4 bg-[#f2e2be]"
             title="Otevřít kroniku změn a verzí"
           >
-            📜 Kronika změn (v0.3.5)
+            📜 Kronika změn (v0.9.6)
           </button>
         )}
         <button

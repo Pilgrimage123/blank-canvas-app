@@ -53,7 +53,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   onEliminateEnemy,
   onRestartTestFight,
 }) => {
-  const [hoveredCardDef, setHoveredCardDef] = useState<CardDef | null>(null);
+  const [hoveredCard, setHoveredCard] = useState<CardInstance | null>(null);
   const [selectedHandIdx, setSelectedHandIdx] = useState<number | null>(null);
   const [handFullText, setHandFullText] = useState(false);
   const [handHidden, setHandHidden] = useState(false);
@@ -229,11 +229,12 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   const incomingThroughBlock = combat.dodge > 0 ? 0 : Math.max(0, incomingDamage - combat.block);
 
   // Active previewed card: either hovered in hand or selected
-  const activePreviewCardDef =
-    hoveredCardDef ||
+  const activePreviewCard =
+    hoveredCard ||
     (selectedHandIdx !== null && combat.hand[selectedHandIdx]
-      ? CARD_DB[combat.hand[selectedHandIdx].id]
+      ? combat.hand[selectedHandIdx]
       : null);
+  const activePreviewCardDef = activePreviewCard ? CARD_DB[activePreviewCard.id] : null;
 
   // First playable attack card index in hand (for quick attack action directly on enemy)
   const firstPlayableAttackIdx = combat.hand.findIndex((c) => {
@@ -312,6 +313,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   // Helper to calculate damage on a specific enemy for card preview
   const getPreviewDamageForEnemy = (enemy: EnemyInstance) => {
     if (!activePreviewCardDef || !activePreviewCardDef.dmg || !enemy.alive) return 0;
+    const cardStars = activePreviewCard?.stars || 0;
 
     const isMainTarget = enemy.uid === focusEnemy?.uid;
     if (activePreviewCardDef.intent === "row") {
@@ -322,17 +324,17 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
         (e) => (e.row === "back" || (!e.row && combat.enemies.indexOf(e) >= 4)) && e.alive,
       );
       if (hasBackRow) {
-        return enemyRow === targetRow ? cardDamageCalc(activePreviewCardDef, enemy) : 0;
+        return enemyRow === targetRow ? cardDamageCalc(activePreviewCardDef, enemy, cardStars) : 0;
       }
-      return cardDamageCalc(activePreviewCardDef, enemy);
+      return cardDamageCalc(activePreviewCardDef, enemy, cardStars);
     }
     if (activePreviewCardDef.intent === "splash") {
       return isMainTarget
-        ? cardDamageCalc(activePreviewCardDef, enemy)
-        : Math.round(cardDamageCalc(activePreviewCardDef, enemy) * 0.4);
+        ? cardDamageCalc(activePreviewCardDef, enemy, cardStars)
+        : Math.round(cardDamageCalc(activePreviewCardDef, enemy, cardStars) * 0.4);
     }
     if (isMainTarget) {
-      return cardDamageCalc(activePreviewCardDef, enemy);
+      return cardDamageCalc(activePreviewCardDef, enemy, cardStars);
     }
     return 0;
   };
@@ -350,45 +352,63 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
 
   const horniRadaAlive = horniRadaEnemies.filter((e) => e.alive);
   const dolniRadaAlive = dolniRadaEnemies.filter((e) => e.alive);
-  const defeatedEnemies = combat.enemies.filter((e) => !e.alive);
+  const allDefeatedEnemies = combat.enemies.filter((e) => !e.alive);
 
-  // Poražení už nerespektují bojové řady. Stabilně se rozsadí po volném terénu,
-  // přičemž každý bod značí úroveň země pod nohama daného bubáka.
-  const getSurrenderedClusterOffset = (enemyUid: string, idx: number) => {
+  // Vyřazení bubáci nerespektují žádné řady, rozprostřou se na volné ploše terénu a uvelebí se
+  // v přirozených, rozmanitých výškách (stojí nohama pevně na zemi na cestě či břehu,
+  // nezasahují nahoru do nebe/chalup a všechny jejich prvky včetně bílých vlaječek zůstávají nezakryté).
+  const getSurrenderedBogeyPosition = (enemyUid: string, idx: number, totalDefeated: number) => {
     let hash = 0;
     for (let i = 0; i < enemyUid.length; i++) {
       hash = (hash << 5) - hash + enemyUid.charCodeAt(i);
       hash |= 0;
     }
     const absHash = Math.abs(hash);
-    const places = [
-      { right: 8, bottom: 3, scale: 1 },
-      { right: 92, bottom: 12, scale: 0.96 },
-      { right: 174, bottom: 5, scale: 1.02 },
-      { right: 38, bottom: 82, scale: 0.9 },
-      { right: 126, bottom: 94, scale: 0.87 },
-      { right: 216, bottom: 76, scale: 0.92 },
-      { right: 4, bottom: 157, scale: 0.82 },
-      { right: 90, bottom: 164, scale: 0.8 },
-    ];
-    const place = places[idx % places.length];
-    const layer = Math.floor(idx / places.length);
-    const jitterX = (absHash % 11) - 5;
-    const jitterY = ((absHash >> 3) % 7) - 3;
-    return {
-      right: place.right + jitterX + layer * 12,
-      bottom: place.bottom + jitterY,
-      scale: Math.max(0.72, place.scale - layer * 0.05),
-      rot: ((absHash % 9) - 4) * 0.55,
-      z: 42 + Math.round(180 - place.bottom),
-    };
+
+    // Krok roztažení podle volného místa a počtu vyřazených bubáků
+    // Když je málo bubáků, rozprostřou se doširoka; když jich přibude, rozestoupí se do střídavých hloubek
+    const stepX = totalDefeated <= 2 ? 88 : totalDefeated <= 4 ? 68 : totalDefeated <= 6 ? 56 : 48;
+    const jitterX = (absHash % 13) - 6;
+    const x = Math.max(0, idx * stepX + jitterX);
+
+    // Přirozené výšky na ladovském terénu (od polní cesty 4px po vyvýšený travnatý břeh 38px)
+    // Všechny výšky stojí bezpečně nohama na zemi a nezasahují do horní části pozadí
+    const groundHeights = [4, 28, 12, 38, 8, 22, 34, 16];
+    const baseBottom = groundHeights[idx % groundHeights.length];
+    const jitterY = ((absHash >> 2) % 7) - 3;
+    const bottom = Math.max(2, Math.min(42, baseBottom + jitterY));
+
+    // Mírná rotace pro uvolněný, odpočinkový ladovský posez
+    const rot = ((absHash % 9) - 4) * 0.7;
+
+    // Vizuální vrstvení: ti níže na cestě stojí více vepředu (vyšší z-index)
+    const zIndex = 25 - Math.round((bottom / 42) * 10) + (idx % 3);
+
+    // Jemné měřítko podle hloubky terénu
+    const scaleClass = bottom > 26 ? "scale-90 sm:scale-95" : "scale-95 sm:scale-100";
+
+    return { x, bottom, rot, zIndex, scaleClass, stepX };
   };
+
+  const surrenderedStepX =
+    allDefeatedEnemies.length <= 2
+      ? 88
+      : allDefeatedEnemies.length <= 4
+        ? 68
+        : allDefeatedEnemies.length <= 6
+          ? 56
+          : 48;
+  const surrenderedAreaWidth =
+    allDefeatedEnemies.length === 0
+      ? 140
+      : Math.max(160, (allDefeatedEnemies.length - 1) * surrenderedStepX + 115);
 
   const renderEnemyItem = (
     enemy: EnemyInstance,
     rowIdx: number,
     rowType: "horni" | "dolni" | "front" | "back",
     isClusterItem = false,
+    customRetreatStartX?: number,
   ) => {
     const isFocused = enemy.uid === focusEnemy?.uid;
     const isDefeated = !enemy.alive;
@@ -407,7 +427,8 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
     // Vzdálenost v px z bojové linie do prostoru poražených (o velikost bubáka víc vzadu)
     const originalSlot = pendingRowShifts[enemy.uid]?.defIdx ?? Math.max(0, 3 - rowIdx);
     const slotsFromEnd = Math.max(0, 3 - originalSlot);
-    const retreatStartX = -(140 + slotsFromEnd * 88);
+    const retreatStartX =
+      customRetreatStartX !== undefined ? customRetreatStartX : -(140 + slotsFromEnd * 88);
 
     const itemWidth = isClusterItem ? undefined : isLower ? "96px" : "86px";
 
@@ -538,7 +559,10 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                   {enemy.hp}
                 </span>
                 {enemy.block > 0 && (
-                  <span className="text-[#1c4b7d] text-[0.5rem] font-bold mt-0.5 leading-none bg-[#c9e1f7] px-0.5 rounded border border-[#1c4b7d]/40 whitespace-nowrap tabular-nums">
+                  <span
+                    className="text-[#1c4b7d] text-[0.5rem] font-bold mt-0.5 leading-none bg-[#c9e1f7] px-0.5 rounded border border-[#1c4b7d]/40 whitespace-nowrap tabular-nums"
+                    title={`Blok nepřítele: ${enemy.block} (každý Aug klesá o 15 %, min. o 1)`}
+                  >
                     +{enemy.block}
                   </span>
                 )}
@@ -734,7 +758,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
           className={screenWobble ? "anim-screen-wobble" : ""}
         >
           {/* MAIN STAGE FIELD: Hunter stands on the left, Bubáci lined up on the right along the rustic path */}
-          <div className="flex-1 w-full flex items-end justify-between px-2 sm:px-8 pb-3 sm:pb-6 relative min-h-0">
+          <div className="flex-1 w-full flex items-end justify-between px-2 sm:px-8 pt-6 sm:pt-8 pb-3 sm:pb-6 relative min-h-0">
             {/* === HUNTER PLATFORM (Left side of the path) === */}
             <div className="flex flex-col items-center relative z-20 max-w-[160px] sm:max-w-[210px] flex-none">
               {/* Hunter State Bubble (Nápřah, Připraven, Au!) */}
@@ -809,7 +833,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                     {combat.block > 0 && (
                       <span
                         className="bg-[#c9e1f7] px-1.5 py-0.2 rounded border border-[#1c4b7d] text-[0.65rem] font-black text-[#1c4b7d]"
-                        title="Blok zachytí poškození"
+                        title="Blok zachytí poškození. Každý Augenblick klesá o 15 % (min. o 1)."
                       >
                         🛡️ {combat.block}
                       </span>
@@ -844,51 +868,49 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
               </div>
             </div>
 
-            {/* Poražení jsou nad všemi kulisami, volně rozesazení po viditelném terénu. */}
-            <div className="absolute inset-y-0 right-1 sm:right-3 w-[42%] min-w-[250px] pointer-events-none z-40 overflow-visible">
-              {defeatedEnemies.map((enemy, defIdx) => {
-                const offset = getSurrenderedClusterOffset(enemy.uid, defIdx);
-                return (
-                  <div
-                    key={`surrendered-${enemy.uid}`}
-                    className="absolute origin-bottom transition-all duration-700 pointer-events-auto"
-                    style={{
-                      right: `${offset.right}px`,
-                      bottom: `${offset.bottom}px`,
-                      transform: `rotate(${offset.rot}deg) scale(${offset.scale})`,
-                      zIndex: offset.z,
-                    }}
-                  >
-                    {renderEnemyItem(enemy, defIdx, "dolni", true)}
-                  </div>
-                );
-              })}
-            </div>
+            {/* === BUBÁCI FORMATION: Aktivní linie bojovníků a volná zóna pro vyřazené bubáky === */}
+            <div className="flex-1 flex items-end justify-start gap-3 sm:gap-4 md:gap-6 pl-2 sm:pl-4 md:pl-8 pr-1 sm:pr-2 overflow-x-auto overflow-y-visible pt-12 sm:pt-14 pb-1 min-w-0">
+              {/* 1. AKTIVNÍ BOJOVÁ FORMACE (Horní a Dolní řada bojujících bubáků) */}
+              <div className="flex flex-col justify-end items-start gap-0 relative flex-none">
+                {/* HORNÍ ŘADA (Vyvýšený břeh) */}
+                {horniRadaEnemies.length > 0 && (
+                  <div className="flex items-end justify-start gap-2 sm:gap-3 relative z-10 pr-1 sm:pr-2 mb-1 sm:mb-2 md:mb-3">
+                    <div className="hidden md:flex items-center text-[0.6rem] font-black text-[#523e2a] bg-[#ebdcb9]/85 border border-[#1c1308] px-1.5 py-0.5 rounded-full select-none shadow-xs whitespace-nowrap self-center mb-2 mr-1">
+                      🌾 Horní řada ({horniRadaAlive.length})
+                    </div>
 
-            {/* === BUBÁCI FORMATION (bojovníci nadále drží horní a dolní řadu) === */}
-            <div className="flex-1 flex flex-col justify-end items-start gap-0 pl-2 sm:pl-4 md:pl-8 pr-1 sm:pr-2 overflow-x-auto overflow-y-visible py-1 min-w-0">
-              {/* HORNÍ ŘADA (Vyvýšený břeh) */}
-              {horniRadaEnemies.length > 0 && (
-                <div className="flex items-end justify-start gap-2 sm:gap-3 relative z-10 pr-1 sm:pr-2 mb-1 sm:mb-2 md:mb-3">
-                  <div className="hidden md:flex items-center text-[0.6rem] font-black text-[#523e2a] bg-[#ebdcb9]/85 border border-[#1c1308] px-1.5 py-0.5 rounded-full select-none shadow-xs whitespace-nowrap self-center mb-2 mr-1">
-                    🌾 Horní řada ({horniRadaAlive.length})
-                  </div>
-
-                  {/* 1. Neporažení bojující bubáci v horní řadě s trvalou délkou řady */}
-                  <div
-                    className="flex items-end justify-start gap-2 sm:gap-3.5 transition-all duration-500"
-                    style={{
-                      minWidth: `${horniRadaEnemies.length * 96}px`,
-                    }}
-                  >
-                    {horniRadaEnemies.map((enemy, rowIdx) => {
-                      if (enemy.alive) {
-                        return renderEnemyItem(enemy, rowIdx, "horni");
-                      }
-                      if (pendingRowShifts[enemy.uid]) {
+                    {/* Neporažení bojující bubáci v horní řadě s trvalou délkou řady */}
+                    <div
+                      className="flex items-end justify-start gap-2 sm:gap-3.5 transition-all duration-500"
+                      style={{
+                        minWidth: `${horniRadaEnemies.length * 96}px`,
+                      }}
+                    >
+                      {horniRadaEnemies.map((enemy, rowIdx) => {
+                        if (enemy.alive) {
+                          return renderEnemyItem(enemy, rowIdx, "horni");
+                        }
+                        if (pendingRowShifts[enemy.uid]) {
+                          return (
+                            <div
+                              key={`reserved-horni-slot-${enemy.uid}`}
+                              className="relative flex flex-col items-center justify-end select-none pointer-events-none transition-all duration-500"
+                              style={{
+                                minWidth: "66px",
+                                maxWidth: "105px",
+                                width: "86px",
+                                height: "95px",
+                              }}
+                            >
+                              {/* Prázdný stín uvolněného místa držící pozici řady před posunem */}
+                              <div className="w-14 sm:w-16 h-2.5 bg-[#1c1308]/15 rounded-full blur-[1px] mb-1" />
+                            </div>
+                          );
+                        }
+                        // Již vyřazený a odsunutý bubák - drží prázdné místo na konci řady
                         return (
                           <div
-                            key={`reserved-horni-slot-${enemy.uid}`}
+                            key={`empty-horni-slot-${enemy.uid}`}
                             className="relative flex flex-col items-center justify-end select-none pointer-events-none transition-all duration-500"
                             style={{
                               minWidth: "66px",
@@ -896,55 +918,54 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                               width: "86px",
                               height: "95px",
                             }}
-                          >
-                            {/* Prázdný stín uvolněného místa držící pozici řady před posunem */}
-                            <div className="w-14 sm:w-16 h-2.5 bg-[#1c1308]/15 rounded-full blur-[1px] mb-1" />
-                          </div>
+                            aria-hidden="true"
+                          />
                         );
-                      }
-                      // Již vyřazený a odsunutý bubák - drží prázdné místo na konci řady, aby se zóna poražených nikdy neposunula blíže k hrdinovi
-                      return (
-                        <div
-                          key={`empty-horni-slot-${enemy.uid}`}
-                          className="relative flex flex-col items-center justify-end select-none pointer-events-none transition-all duration-500"
-                          style={{
-                            minWidth: "66px",
-                            maxWidth: "105px",
-                            width: "86px",
-                            height: "95px",
-                          }}
-                          aria-hidden="true"
-                        />
-                      );
-                    })}
-                  </div>
-
-                </div>
-              )}
-
-              {/* DOLNÍ ŘADA (Polní cesta) */}
-              <div className="flex items-end justify-start gap-2 sm:gap-3 relative z-20 pr-1 sm:pr-2">
-                {horniRadaEnemies.length > 0 && (
-                  <div className="hidden md:flex items-center text-[0.6rem] font-black text-[#523e2a] bg-[#ebdcb9]/85 border border-[#1c1308] px-1.5 py-0.5 rounded-full select-none shadow-xs whitespace-nowrap self-center mb-4 mr-1">
-                    🛤️ Dolní řada ({dolniRadaAlive.length})
+                      })}
+                    </div>
                   </div>
                 )}
 
-                {/* 1. Neporažení bojující bubáci v dolní řadě s trvalou délkou řady */}
-                <div
-                  className="flex items-end justify-start gap-2 sm:gap-3.5 transition-all duration-500"
-                  style={{
-                    minWidth: `${dolniRadaEnemies.length * 106}px`,
-                  }}
-                >
-                  {dolniRadaEnemies.map((enemy, rowIdx) => {
-                    if (enemy.alive) {
-                      return renderEnemyItem(enemy, rowIdx, "dolni");
-                    }
-                    if (pendingRowShifts[enemy.uid]) {
+                {/* DOLNÍ ŘADA (Polní cesta) */}
+                <div className="flex items-end justify-start gap-2 sm:gap-3 relative z-20 pr-1 sm:pr-2">
+                  {horniRadaEnemies.length > 0 && (
+                    <div className="hidden md:flex items-center text-[0.6rem] font-black text-[#523e2a] bg-[#ebdcb9]/85 border border-[#1c1308] px-1.5 py-0.5 rounded-full select-none shadow-xs whitespace-nowrap self-center mb-4 mr-1">
+                      🛤️ Dolní řada ({dolniRadaAlive.length})
+                    </div>
+                  )}
+
+                  {/* Neporažení bojující bubáci v dolní řadě s trvalou délkou řady */}
+                  <div
+                    className="flex items-end justify-start gap-2 sm:gap-3.5 transition-all duration-500"
+                    style={{
+                      minWidth: `${dolniRadaEnemies.length * 106}px`,
+                    }}
+                  >
+                    {dolniRadaEnemies.map((enemy, rowIdx) => {
+                      if (enemy.alive) {
+                        return renderEnemyItem(enemy, rowIdx, "dolni");
+                      }
+                      if (pendingRowShifts[enemy.uid]) {
+                        return (
+                          <div
+                            key={`reserved-dolni-slot-${enemy.uid}`}
+                            className="relative flex flex-col items-center justify-end select-none pointer-events-none transition-all duration-500"
+                            style={{
+                              minWidth: "74px",
+                              maxWidth: "115px",
+                              width: "96px",
+                              height: "105px",
+                            }}
+                          >
+                            {/* Prázdný stín uvolněného místa držící pozici řady před posunem */}
+                            <div className="w-16 sm:w-20 h-3 bg-[#1c1308]/15 rounded-full blur-[1.5px] mb-1" />
+                          </div>
+                        );
+                      }
+                      // Již vyřazený a odsunutý bubák - drží prázdné místo na konci řady
                       return (
                         <div
-                          key={`reserved-dolni-slot-${enemy.uid}`}
+                          key={`empty-dolni-slot-${enemy.uid}`}
                           className="relative flex flex-col items-center justify-end select-none pointer-events-none transition-all duration-500"
                           style={{
                             minWidth: "74px",
@@ -952,29 +973,56 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                             width: "96px",
                             height: "105px",
                           }}
-                        >
-                          {/* Prázdný stín uvolněného místa držící pozici řady před posunem */}
-                          <div className="w-16 sm:w-20 h-3 bg-[#1c1308]/15 rounded-full blur-[1.5px] mb-1" />
-                        </div>
+                          aria-hidden="true"
+                        />
                       );
-                    }
-                    // Již vyřazený a odsunutý bubák - drží prázdné místo na konci řady, aby se zóna poražených nikdy neposunula blíže k hrdinovi
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. SPOLEČNÝ VYHRAZENÝ PROSTOR PRO VYŘAZENÉ BUBÁKY (Nerespektují řady, rozprostřeni na zemi terénu) */}
+              <div
+                className="relative flex items-end justify-start min-h-[145px] sm:min-h-[160px] pl-3 sm:pl-4 border-l-2 border-dashed border-[#1c1308]/25 py-1 self-end transition-all duration-500 flex-none"
+                style={{
+                  minWidth: `${surrenderedAreaWidth}px`,
+                  width: `${surrenderedAreaWidth}px`,
+                }}
+              >
+                {allDefeatedEnemies.length === 0 ? (
+                  <div className="hidden sm:flex items-center gap-1.5 text-[0.58rem] sm:text-[0.62rem] font-bold text-[#8c5614]/40 italic select-none self-center whitespace-nowrap mb-6">
+                    <span>🏳️</span>
+                    <span>Místo pro poražené</span>
+                  </div>
+                ) : (
+                  allDefeatedEnemies.map((enemy, defIdx) => {
+                    const pos = getSurrenderedBogeyPosition(
+                      enemy.uid,
+                      defIdx,
+                      allDefeatedEnemies.length,
+                    );
+                    const originalSlot =
+                      pendingRowShifts[enemy.uid]?.defIdx ?? Math.max(0, 3 - defIdx);
+                    const slotsFromEnd = Math.max(0, 3 - originalSlot);
+                    const retreatStartX = -(140 + slotsFromEnd * 88 + pos.x);
+
                     return (
                       <div
-                        key={`empty-dolni-slot-${enemy.uid}`}
-                        className="relative flex flex-col items-center justify-end select-none pointer-events-none transition-all duration-500"
+                        key={enemy.uid}
+                        className={`transition-all duration-700 ${pos.scaleClass}`}
                         style={{
-                          minWidth: "74px",
-                          maxWidth: "115px",
-                          width: "96px",
-                          height: "105px",
+                          position: "absolute",
+                          left: `${pos.x}px`,
+                          bottom: `${pos.bottom}px`,
+                          transform: `rotate(${pos.rot}deg)`,
+                          zIndex: pos.zIndex,
                         }}
-                        aria-hidden="true"
-                      />
+                      >
+                        {renderEnemyItem(enemy, defIdx, "dolni", true, retreatStartX)}
+                      </div>
                     );
-                  })}
-                </div>
-
+                  })
+                )}
               </div>
             </div>
           </div>
@@ -1140,7 +1188,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
               </div>
             ) : (
               combat.hand.map((card, idx) => {
-                const def = CARD_DB[card.id] || CARD_DB.sul;
+                const def = CARD_DB[card.id] || CARD_DB.metla || CARD_DB.kuraz || CARD_DB.sul;
                 const canAfford = combat.actions >= def.cost;
                 const isSelected = selectedHandIdx === idx;
 
@@ -1176,8 +1224,8 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                       canAfford={canAfford}
                       disabled={!isPlayerTurn || !canAfford}
                       showFullTextDefault={handFullText}
-                      onHoverEnter={() => setHoveredCardDef(def)}
-                      onHoverLeave={() => setHoveredCardDef(null)}
+                      onHoverEnter={() => setHoveredCard(card)}
+                      onHoverLeave={() => setHoveredCard(null)}
                     />
                   </div>
                 );

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { CardDef, CardInstance } from "../types";
-import { CARD_DB } from "../data/gameData";
+import { CARD_DB, starEmoji, starValueMult } from "../data/gameData";
 
 interface CardViewProps {
   card: CardInstance | string;
+  stars?: number;
   onClick?: () => void;
   disabled?: boolean;
   canAfford?: boolean;
@@ -17,6 +18,7 @@ interface CardViewProps {
 
 export const CardView: React.FC<CardViewProps> = ({
   card,
+  stars,
   onClick,
   disabled = false,
   canAfford = true,
@@ -29,7 +31,17 @@ export const CardView: React.FC<CardViewProps> = ({
 }) => {
   const [showInfo, setShowInfo] = useState(false);
   const cardId = typeof card === "string" ? card : card.id;
-  const def: CardDef = CARD_DB[cardId] || CARD_DB.sul;
+  const def: CardDef = CARD_DB[cardId] || CARD_DB.metla || CARD_DB.kuraz || CARD_DB.sul;
+
+  const rawStars = stars !== undefined ? stars : typeof card === "object" ? card.stars || 0 : 0;
+  const starCount = Math.min(5, Math.max(0, rawStars));
+  const mult = starValueMult(starCount);
+
+  const effectiveDmg = def.dmg ? Math.round(def.dmg * mult) : undefined;
+  const effectiveBlock = def.block ? Math.round(def.block * mult) : undefined;
+  const effectiveDodge = def.dodge;
+  const effectiveDraw = def.draw;
+  const effectiveFatigue = def.fatigue ? Math.round(def.fatigue * mult) : undefined;
 
   const getBorderColor = () => {
     if (def.type === "attack") return "border-[#942718] bg-[#fff3ec]";
@@ -84,39 +96,65 @@ export const CardView: React.FC<CardViewProps> = ({
       {/* Card Emblem Art Icon in Josef Lada style */}
       <div className="flex items-center justify-center my-1 h-9">{renderCardIcon(def.id)}</div>
 
-      {/* Card Title */}
+      {/* Card Title & Quality Stars */}
       <div className="text-center">
         <h4 className="font-title text-[0.82rem] font-bold leading-tight text-[#1c1308]">
           {def.name}
         </h4>
+        {starCount > 0 && (
+          <div
+            className="text-[0.68rem] font-black leading-none text-[#b36b00] mt-0.5 tracking-tight flex items-center justify-center gap-0.5"
+            title={`Jakost ${starCount}★ (+${Math.round(starCount * 10)} % síla účinku)`}
+          >
+            <span>{starEmoji(starCount)}</span>
+          </div>
+        )}
       </div>
 
       {/* Action Chips */}
       {!isFullOpen && (
         <div className="flex flex-wrap items-center justify-center gap-1 my-1">
-          {def.dmg && (
-            <span className="inline-flex items-center gap-0.5 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full bg-[#fce0d8] border border-[#942718] text-[#942718]">
-              ⚔️ {def.dmg}
+          {effectiveDmg !== undefined && (
+            <span
+              className={`inline-flex items-center gap-0.5 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full ${
+                starCount > 0
+                  ? "bg-[#ffece4] border-2 border-[#b8331d] text-[#942718] shadow-[0_1px_2px_rgba(184,51,29,0.25)]"
+                  : "bg-[#fce0d8] border border-[#942718] text-[#942718]"
+              }`}
+            >
+              ⚔️ {effectiveDmg}
             </span>
           )}
-          {def.block && (
-            <span className="inline-flex items-center gap-0.5 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full bg-[#d8e8fc] border border-[#1b4372] text-[#1b4372]">
-              🛡️ {def.block}
+          {effectiveBlock !== undefined && (
+            <span
+              className={`inline-flex items-center gap-0.5 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full ${
+                starCount > 0
+                  ? "bg-[#e5f0fc] border-2 border-[#15467e] text-[#1b4372] shadow-[0_1px_2px_rgba(27,67,114,0.25)]"
+                  : "bg-[#d8e8fc] border border-[#1b4372] text-[#1b4372]"
+              }`}
+            >
+              🛡️ {effectiveBlock}
             </span>
           )}
-          {def.dodge && (
+          {effectiveDodge !== undefined && (
             <span className="inline-flex items-center gap-0.5 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full bg-[#ecdcd0] border border-[#593d25] text-[#593d25]">
-              💨 {def.dodge}
+              💨 {effectiveDodge}
             </span>
           )}
-          {def.draw && (
+          {effectiveDraw !== undefined && (
             <span className="inline-flex items-center gap-0.5 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full bg-[#e4f4d8] border border-[#2d6328] text-[#2d6328]">
-              🃏 +{def.draw}
+              🃏 +{effectiveDraw}
             </span>
           )}
-          {def.fatigue && (
-            <span className="inline-flex items-center gap-0.5 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full bg-[#fff0d0] border border-[#d69818] text-[#825406]">
-              😴 {def.fatigue}
+          {effectiveFatigue !== undefined && (
+            <span
+              className={`inline-flex items-center gap-0.5 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full ${
+                starCount > 0
+                  ? "bg-[#fff2d2] border-2 border-[#a66d0c] text-[#825406] shadow-[0_1px_2px_rgba(166,109,12,0.25)]"
+                  : "bg-[#fff0d0] border border-[#d69818] text-[#825406]"
+              }`}
+            >
+              😴 {effectiveFatigue}
             </span>
           )}
         </div>
@@ -126,6 +164,12 @@ export const CardView: React.FC<CardViewProps> = ({
       {isFullOpen && (
         <div className="text-[0.72rem] leading-tight my-1 font-semibold text-[#1c1308] bg-[#fff8ea] p-1.5 rounded-lg border border-[#1c1308]">
           <div>{def.text}</div>
+          {starCount > 0 && (
+            <div className="text-[0.62rem] font-black text-[#8c5614] mt-1 bg-[#fffae8] px-1.5 py-0.5 rounded-md border border-[#d68b0e]/50 flex items-center justify-between">
+              <span>Jakost: {starEmoji(starCount)}</span>
+              <span>+{Math.round(starCount * 10)} % účinku</span>
+            </div>
+          )}
           {def.flavor && (
             <div className="text-[0.64rem] italic text-[#594432] mt-1 border-t border-[#dfcb9a] pt-1">
               "{def.flavor}"
@@ -167,6 +211,106 @@ export const CardView: React.FC<CardViewProps> = ({
 
 function renderCardIcon(cardId: string) {
   switch (cardId) {
+    case "kuraz":
+    case "velkakuraz":
+      return (
+        <svg viewBox="0 0 36 36" className="w-8 h-8">
+          {/* Folk courage emblem: sturdy wooden shield with radiant folk heart */}
+          <path
+            d="M18 4 L30 8 C30 20 18 31 18 31 C18 31 6 20 6 8 Z"
+            fill="#ddb370"
+            stroke="#1c1308"
+            strokeWidth="2.4"
+          />
+          <path
+            d="M18 7 L27 10.5 C27 19.5 18 28 18 28 C18 28 9 19.5 9 10.5 Z"
+            fill="#fae8c8"
+            stroke="#1c1308"
+            strokeWidth="1.2"
+          />
+          {/* Radiant folk heart in center */}
+          <path
+            d="M18 13 C15.5 10 12.5 12.5 18 19 C23.5 12.5 20.5 10 18 13 Z"
+            fill="#b8331d"
+            stroke="#1c1308"
+            strokeWidth="1.6"
+          />
+          {/* Spark of courage */}
+          <circle cx="18" cy="15" r="1.2" fill="#ffe39e" />
+        </svg>
+      );
+
+    case "metla":
+    case "ostra_metla":
+      return (
+        <svg viewBox="0 0 36 36" className="w-8 h-8">
+          {/* Birch broom handle */}
+          <line
+            x1="8"
+            y1="29"
+            x2="22"
+            y2="15"
+            stroke="#e0d0b8"
+            strokeWidth="3.2"
+            strokeLinecap="round"
+          />
+          {/* Birch bark markings */}
+          <line
+            x1="12"
+            y1="24"
+            x2="14"
+            y2="25"
+            stroke="#1c1308"
+            strokeWidth="1"
+            strokeLinecap="round"
+          />
+          <line
+            x1="16"
+            y1="20"
+            x2="17"
+            y2="22"
+            stroke="#1c1308"
+            strokeWidth="1"
+            strokeLinecap="round"
+          />
+          {/* Twig bundle / broom head */}
+          <path
+            d="M20 17 C22 13 26 7 32 4 C31 10 27 15 23 19 Z"
+            fill="#a67c48"
+            stroke="#1c1308"
+            strokeWidth="1.8"
+          />
+          <path
+            d="M19 16 C23 12 28 9 33 8 C30 14 25 18 21 20 Z"
+            fill="#8a6132"
+            stroke="#1c1308"
+            strokeWidth="1.8"
+          />
+          {/* Tied red cord/ribbon binding twigs */}
+          <line
+            x1="20"
+            y1="18"
+            x2="23"
+            y2="15"
+            stroke="#b8331d"
+            strokeWidth="2.8"
+            strokeLinecap="round"
+          />
+          {/* Birch leaves / switches */}
+          <circle cx="28" cy="6" r="1.6" fill="#6ba644" stroke="#1c1308" strokeWidth="0.8" />
+          <circle cx="33" cy="11" r="1.4" fill="#6ba644" stroke="#1c1308" strokeWidth="0.8" />
+          <circle cx="24" cy="10" r="1.3" fill="#6ba644" stroke="#1c1308" strokeWidth="0.8" />
+          {/* Motion swoosh lines */}
+          <path
+            d="M5 24 Q3 20 7 17"
+            fill="none"
+            stroke="#1c1308"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+          />
+        </svg>
+      );
+
     case "sul":
     case "ostra":
       return (

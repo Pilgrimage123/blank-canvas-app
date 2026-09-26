@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { EnemySprite } from "../sprites/EnemySprite";
+import { downloadGameHtml } from "../../utils/downloadGameHtml";
 
 interface TitleScreenProps {
   onNewRun: () => void;
@@ -26,6 +27,19 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
   onTest,
   onBestiary,
 }) => {
+  const [downloadMsg, setDownloadMsg] = useState<{
+    status: "loading" | "success" | "error";
+    text: string;
+  } | null>(null);
+
+  const handleDownload = () => {
+    downloadGameHtml((status, message) => {
+      setDownloadMsg({ status, text: message || "" });
+      if (status === "success" || status === "error") {
+        setTimeout(() => setDownloadMsg(null), 4000);
+      }
+    });
+  };
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-parchment-pattern p-4 select-none relative overflow-y-auto">
       {/* Wooden Signboard Menu Card */}
@@ -148,7 +162,34 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           >
             📜 Kronika novinek (Changelog)
           </button>
+
+          {/* Download Standalone Single-file Game Button */}
+          <button
+            type="button"
+            onClick={handleDownload}
+            className="lada-button text-sm py-2.5 bg-[#eaf4dc] hover:bg-[#d8edbe] border-2 border-[#1c1308] font-black text-[#1c1308] shadow-[0_3px_0_#1c1308] flex items-center justify-center gap-2 sm:col-span-2 cursor-pointer transition-colors"
+            title="Stáhnout celou hru v jediném HTML souboru (hraje i offline bez internetu)"
+          >
+            <span className="text-lg">📥</span>
+            <span>Stáhnout celou hru (1 samostatný HTML soubor)</span>
+          </button>
         </div>
+
+        {/* Download notification */}
+        {downloadMsg && (
+          <div
+            className={`w-full max-w-md mb-3 py-2 px-3 rounded-xl border-2 text-xs font-black text-center flex items-center justify-center gap-2 transition-all ${
+              downloadMsg.status === "loading"
+                ? "bg-[#fff8d4] border-[#d69818] text-[#7a4e0a]"
+                : downloadMsg.status === "success"
+                  ? "bg-[#e2f7d8] border-[#2e6629] text-[#1c5017]"
+                  : "bg-[#fde2de] border-[#c23318] text-[#8a1a08]"
+            }`}
+          >
+            <span>{downloadMsg.status === "loading" ? "⏳" : downloadMsg.status === "success" ? "✅" : "⚠️"}</span>
+            <span>{downloadMsg.text}</span>
+          </div>
+        )}
 
         {/* Small folk footer */}
         <div className="flex items-center gap-4 text-xs font-bold text-[#694825] mt-2 border-t border-[#d8c498] pt-3 w-full justify-center">
@@ -163,7 +204,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
             onClick={onChangelog}
             className="underline hover:text-[#1c1308] cursor-pointer"
           >
-            v0.3.5
+            v0.9.6
           </button>
         </div>
       </div>

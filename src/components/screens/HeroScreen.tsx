@@ -83,13 +83,20 @@ export const HeroScreen: React.FC<HeroScreenProps> = ({ onSelectHero, onBack }) 
                       +{h.breath} Akcí / −{h.sleepFat} Únavy
                     </span>
                   </div>
-                  {h.krizBonus && (
-                    <div className="flex justify-between text-[#1c4b7d]">
-                      <span>✝️ Křížový bonus:</span>
-                      <span className="font-black">+{h.krizBonus} Blok navíc</span>
-                    </div>
-                  )}
                 </div>
+
+                {/* Passive Hero Gift */}
+                {h.passiveName && (
+                  <div className="bg-[#eef5fc] p-2.5 rounded-lg border border-[#1b4372] text-xs font-bold mb-3">
+                    <div className="text-[#1b4372] uppercase tracking-wider text-[0.65rem] font-black mb-0.5 flex items-center gap-1">
+                      <span>✨</span> Pasivní dar hrdiny
+                    </div>
+                    <div className="text-[#1c1308] font-black">{h.passiveName}</div>
+                    <div className="text-[0.7rem] text-[#2d496a] font-semibold mt-0.5 leading-snug">
+                      {h.passiveDesc}
+                    </div>
+                  </div>
+                )}
 
                 {/* Special Ability Pill */}
                 <div className="bg-[#fdeed6] p-2.5 rounded-lg border border-[#d69818] text-xs font-bold mb-3">

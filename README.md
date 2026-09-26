@@ -23,6 +23,11 @@ npm i
 npm run dev
 ```
 
+## Zásada designu hrdinů (Hero Design Principle)
+
+- **Žádná vazba na konkrétní karty**: Bonusy a pasivní schopnosti postav NESMÍ být vázány na konkrétní karty (žádné bonusy typu „+X k Bloku pro karty Kříž“).
+- Schopnosti hrdinů jsou výhradně **obecné a systémové** (ovlivňují obecné kategorie karet jako `defend`/`prep`, začátek souboje jako počáteční Blok či Úhyb, dech a spánek, počet karet na startu nebo odklad nepřátel).
+
 ## Pravidla vývoje (Changelog Discipline)
 
 - **Zápisy do changelogu**: Všechny změny v projektu se zapisují do `src/components/modals/ChangelogModal.tsx` (`CHANGELOG_DATA`).

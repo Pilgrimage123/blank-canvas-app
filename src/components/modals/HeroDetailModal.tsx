@@ -30,8 +30,9 @@ const HERO_LORE: Record<string, HeroLoreInfo> = {
       "Před žádným raráškem ani hejkalem neuteče — raději se rozkročí, vezme do ruky dubovou hůl a s klidem vymete strašidlo zpátky do močálu.",
     ],
     strengths: [
-      "Nejvyšší zásoba životů (40 HP) zaručuje přežití i nečekaných úderů od silných bossů.",
-      "Vyřezávaná slánka mimo ruku udělí okamžitých 5 HP a naloží 2 vrstvy Soli na kůži, která pálí každé 3 Aug.",
+      "Nejvyšší zásoba životů (80 HP) zaručuje přežití i nečekaných úderů od silných bossů.",
+      "Pasivní dar Otrlá obratnost: Začíná každý souboj s +1 Úhybem, který zcela anuluje první příchozí útok.",
+      "Vyřezávaná slánka mimo ruku udělí okamžitých 10 HP poškození a naloží 2 vrstvy Soli na kůži, která pálí každé 3 Aug.",
       "Skvělý proti vodníkům a hastrmanům, na které sůl působí se zvýšenou účinností (+50 % poškození).",
     ],
     weaknesses: [
@@ -51,8 +52,8 @@ const HERO_LORE: Record<string, HeroLoreInfo> = {
     ],
     strengths: [
       "Vynikající Připravenost 28 — začíná souboj s nejmenším zpožděním (nástup již za 22 Aug oproti 28 Aug u Bylinkářky).",
-      "Pasivní dar: +1 Blok ke všem křížovým kartám (Kříž na hruď dává 5 Bloku, Velký kříž 8 Bloku).",
-      "Farní požehnání mimo ruku poskytne okamžitý štít +6 Bloku přesně ve chvíli, kdy hrozí drtivý úder.",
+      "Pasivní dar Posvěcený štít: Začíná každý souboj s +8 Blokem a jakákoliv obranná karta mu poskytuje +2 Blok navíc (obecně bez vazby na konkrétní kartu).",
+      "Farní požehnání mimo ruku poskytne okamžitý štít +12 Bloku přesně ve chvíli, kdy hrozí drtivý úder.",
     ],
     weaknesses: [
       "Začíná pouze s 8 krejcary v měšci, takže si v první hospodě může dovolit méně nákupů.",
@@ -71,12 +72,12 @@ const HERO_LORE: Record<string, HeroLoreInfo> = {
     ],
     strengths: [
       "Nejbohatší hrdina na startu (12 krejcarů) — v prvním šenku může okamžitě vylepšovat nebo kupovat.",
-      "Plný košík bylin: v počátečním balíčku má rovnou 4× Bylinkový odvar pro neustálé dobírání karet.",
+      "Pasivní dar Plná brašna býlí: Začíná každý souboj se 4 kartami v ruce (místo 3) pro bleskovou kombinatoriku od prvního okamžiku.",
       "Hluboké dýchání (Nádech dává +7 Akcí) a vydatný Spánek (odstraní rovnou −9 Únavy).",
       "Čerstvý odvar mimo ruku má bleskové ochlazení pouhých 6 Aug a lízne 2 karty s úlevou od Únavy (−2).",
     ],
     weaknesses: [
-      "Nejnižší základní životy (36 HP) vyžadují opatrnost a včasné vyklízení ruky od škodlivých karet.",
+      "Nižší základní životy (72 HP) vyžadují opatrnost a včasné vyklízení ruky od škodlivých karet.",
       "Připravenost 22 znamená rozvážnější start (nástup za 28 Aug) — rychlejší nepřátelé mohou v úvodu jednat o chvilku dřív.",
     ],
     tactics:
@@ -91,10 +92,11 @@ const HERO_LORE: Record<string, HeroLoreInfo> = {
       "Na zlé bubáky, mlsné vodníky i samolibé čerty neplatí jen sukovice a kříž, ale především čisté srdce, poctivý pecen chleba se solí a vřetánko, jehož předení vrací do světa klid a řád.",
     ],
     strengths: [
-      "Nejvyšší základní Životy (42 HP) a mimořádná vyrovnanost i proti těm nejstrašidelnějším potvorám.",
-      "Pecen chleba se solí v balíčku dává okamžitý Blok (+5) a uleví od Únavy (−3) zcela bez nápřahu.",
-      "Mimo ruku má připravenou posilu: Chléb se solí a vlídné slovo (+7 Blok, −3 Únava, lízne 1 kartu).",
-      "Zlaté vřetánko zasahuje za 6 poškození a odmotává nit nepřátelského záměru.",
+      "Nejvyšší základní Životy (84 HP) a mimořádná vyrovnanost i proti těm nejstrašidelnějším potvorám.",
+      "Pasivní dar Pokojná mysl & Ostražitost: Každá zahraná přípravná karta jí uleví od další −1 Únavy navíc, a vnučka Barunka včasným zrakem oddálí nástup všech bubáků o +2 Aug.",
+      "Pecen chleba se solí v balíčku dává okamžitý Blok (+10) a uleví od Únavy (−3) zcela bez nápřahu.",
+      "Mimo ruku má připravenou posilu: Chléb se solí a vlídné slovo (+14 Blok, −3 Únava, lízne 1 kartu).",
+      "Zlaté vřetánko zasahuje za 12 poškození a odmotává nit nepřátelského záměru.",
     ],
     weaknesses: [
       "Střední Připravenost 24 (start za 26 Aug) vyžaduje rozvážný úvodní tah a včasné krytí.",
@@ -113,7 +115,7 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
 
   // Deck list with counts
   const starterDeckCards = Object.entries(hero.deck).map(([cardId, count]) => {
-    const def: CardDef = CARD_DB[cardId] || CARD_DB.sul;
+    const def: CardDef = CARD_DB[cardId] || CARD_DB.metla || CARD_DB.kuraz || CARD_DB.sul;
     return {
       cardId,
       count,
@@ -267,6 +269,24 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
                   </div>
                 </div>
               </div>
+
+              {/* Passive Hero Gift Box */}
+              {hero.passiveName && (
+                <div className="bg-[#edf5fd] p-3.5 rounded-xl border-2 border-[#1b4372] shadow-[3px_3px_0_#1b4372]">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-lg">✨</span>
+                    <span className="text-[0.7rem] uppercase font-black tracking-wider text-[#1b4372]">
+                      Trvalý pasivní dar postavy
+                    </span>
+                  </div>
+                  <h4 className="font-title text-base font-black text-[#1c1308]">
+                    {hero.passiveName}
+                  </h4>
+                  <p className="text-xs sm:text-sm font-semibold text-[#294668] mt-1 leading-snug">
+                    {hero.passiveDesc}
+                  </p>
+                </div>
+              )}
 
               {/* Unique Special Ability Box */}
               <div className="bg-[#fffaf0] p-4 rounded-xl border-3 border-[#1c1308] shadow-[4px_4px_0_#1c1308]">

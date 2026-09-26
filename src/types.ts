@@ -151,6 +151,12 @@ export interface CardDef {
 export interface CardInstance {
   inst: string;
   id: string;
+  stars?: number;
+}
+
+export interface ShopOfferItem {
+  id: string;
+  stars?: number;
 }
 
 export type HeroId = "pobuda" | "kostelnik" | "bylinkarka" | "babicka" | string;
@@ -160,11 +166,19 @@ export interface HeroDef {
   name: string;
   desc: string;
   stats: string;
+  passiveName: string;
+  passiveDesc: string;
   hp: number;
   ready: number;
   salt: number;
   breath: number;
   sleepFat: number;
+  defendBonus?: number;
+  prepFatigueBonus?: number;
+  startBlock?: number;
+  startDodge?: number;
+  extraStartCards?: number;
+  enemyStartDelay?: number;
   krizBonus?: number;
   deck: Record<string, number>;
   special: {
@@ -250,7 +264,7 @@ export interface GameState {
   stats: RunStats;
   options: RunOptions;
   pending: any;
-  shopOffer: string[] | null;
+  shopOffer: (ShopOfferItem | string)[] | null;
   log: string[];
   phase:
     | "splash"

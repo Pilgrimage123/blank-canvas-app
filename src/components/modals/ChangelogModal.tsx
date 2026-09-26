@@ -25,23 +25,217 @@ interface VersionEntry {
 // Záznamy v changelogu se mají dělat o něco méně detailní než doposud (stručnější, výstižné body zaměřené na podstatu).
 const CHANGELOG_DATA: VersionEntry[] = [
   {
-    version: "v0.8.2",
+    version: "v0.9.6",
     tag: "Aktuální verze",
     date: "24. září",
-    title: "Volné rozesazení poražených bubáků v krajině",
-    badge: "Přehledné bojiště",
+    title: "Samostatný export do 1 HTML souboru",
+    badge: "Jediný HTML soubor & Offline hraní",
     flavorQuote:
-      "„Kdo složil tlapy, může si najít pohodlný kus meze — hlavně ať mu kouká klobouk i špičky bot!“",
-    flavorAuthor: "starý hastrman Brčál",
+      "„Sbalil jsem celou hospodu, křížky i hastrmana do jednoho ranečku z papíru a můžu s tím putovat po celých Čechách i bez drátů!“",
+    flavorAuthor: "vysloužilec s fajfkou",
     highlights: [
       {
-        category: "Poražení bubáci",
-        icon: "🏳️",
+        category: "Kompletní hra v jediném souboru",
+        icon: "📥",
         items: [
-          "Vyřazení bubáci už nejsou vázáni na horní ani dolní řadu a využívají volný prostor krajiny.",
-          "Jejich rozestupy, měřítko a výška se přizpůsobují hloubce terénu; nohy zůstávají ukotvené na zemi.",
-          "Poražení zůstávají před kulisami a žádný prvek pozadí jim nezakrývá hlavu ani vlajku.",
-          "Opraveny kontroly bojového stavu a chybějící zvukové odezvy krajiny.",
+          "Plně soběstačný 1 HTML soubor obsahující celou hru (veškerý herní kód, styly, syntetizované zvuky i vektorové ilustrace).",
+          "Možnost stažení přímo z úvodní obrazovky a z nabídky Voleb pro okamžité offline hraní.",
+          "Automatizovaný build proces a export balíčku lovec-bubaku-hra.html.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.9.5",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Hvězdičkový systém jakosti karet (Hnát)",
+    badge: "Jakost karet & Hvězdičkový systém",
+    flavorQuote:
+      "„Pěkně vyleštěná a v šenku za pár krejcarů okutá metla či odvar se třpytí hvězdičkami a hned rázem štípe o poznání víc!“",
+    flavorAuthor: "kovář a šenkýř z Hrusic",
+    highlights: [
+      {
+        category: "Hvězdičková jakost karet (0 až 5★)",
+        icon: "⭐",
+        items: [
+          "Karty mohou mít 0 až 5 hvězdiček jakosti; každá hvězdička trvale posiluje číselné hodnoty karty o +10 % (Zranění, Blok, úleva od Únavy).",
+          "Náklady na Akce i čas nápřahu (Augenblicky) zůstávají neměnné.",
+        ],
+      },
+      {
+        category: "Šenk U Černého kocoura & Brašna",
+        icon: "✨",
+        items: [
+          "Řemeslné vylepšování: v šenku lze libovolnou kartu z brašny povýšit na další hvězdičku za progresivní cenu v krejcarech.",
+          "Nákup karet se šancí na náhodnou jakost: v šenku se mohou objevit karty s hvězdičkou jakosti už v nabídce.",
+          "Zobrazení jakosti v boji, brašně i odhazování s dynamickým přepočtem hodnot přímo na kartě.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.9.4",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Ponechání původních karet ve hře: Šenk a nabídka karet",
+    badge: "Karty ve hře & Hospodská nabídka",
+    flavorQuote:
+      "„Kdo hledá svěcenou sůl nebo starý křížek po dědovi, ten si na ně v šenku rád pár krejcarů připlatí.“",
+    flavorAuthor: "hospodský od Černého kocoura",
+    highlights: [
+      {
+        category: "Dostupnost karet Hozená sůl a Kříž na hruď",
+        icon: "🧂",
+        items: [
+          "Původní karty Hozená sůl (i vylepšení Ostřejší sůl) a Kříž na hruď (i Velký kříž) zůstávají plnohodnotnou součástí hry se všemi mechanikami (solný efekt, svatokrádež, vodní slabost).",
+          "Karty nefigurují ve startovních balíčcích, ale lze je zakoupit v šenku a rozšiřovat jimi brašnu.",
+        ],
+      },
+      {
+        category: "Dynamická nabídka v Hospodě U Černého kocoura",
+        icon: "🍺",
+        items: [
+          "Hospoda nyní generuje pestrou nabídku karet napříč celou kolekcí (levné, střední i vzácné kousky včetně původní soli a kříže).",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.9.3",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Obměna základního balíčku: Březová metla a Kuráž",
+    badge: "Základní karty & Folklórní výbava",
+    flavorQuote:
+      "„Na strašidla a hastrmany netřeba brát těžký kříž – stačí mít v srdci poctivou kuráž a v ruce pořádnou březovou metlu!“",
+    flavorAuthor: "Pobuda z Hrusic",
+    highlights: [
+      {
+        category: "Nové základní karty v balíčcích hrdinů",
+        icon: "🧹",
+        items: [
+          "Březová metla nahrazuje Hozenou sůl: základní útok (8 zranění, 2 Akce, 2 Aug) s vylepšením na Ostrou metlu (14 zranění).",
+          "Kuráž nahrazuje Kříž na hruď: základní obrana (8 Blok, 2 Akce, 2 Aug) s vylepšením na Nezlomnou kuráž (14 Blok).",
+          "Aktualizovány startovní balíčky všech 4 hrdinů (Pobuda, Kostelník, Bylinkářka, Babička s Barunkou) i cvičné a testovací arény.",
+        ],
+      },
+      {
+        category: "Grafika karet & Šenk",
+        icon: "🎨",
+        items: [
+          "Originální ladovské emblémy pro Březovou metlu (svazek proutí s lýkovým úvazem) i Kuráž (ochranný štítek s lidovým srdcem).",
+          "V Hospodě U Černého kocoura je možné Březovou metlu i Kuráž řádně vylepšit za krejcary.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.9.2",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Zásada designu hrdinů: Systémové pasivní dary bez vazby na konkrétní karty",
+    badge: "Archetypy postav & Systémové pasivky",
+    flavorQuote:
+      "„Pravý venkovský hrdina se nepozná podle toho, jaký papír drží zrovna v ruce, ale podle pevného kroku, čistého srdce a klidné mysli.“",
+    flavorAuthor: "stará babička Magdalena",
+    highlights: [
+      {
+        category: "Zavedení zásady designu hrdinů",
+        icon: "📜",
+        items: [
+          "Zakotveno základní pravidlo: bonusy a pasivní schopnosti postav nesmí být vázány na konkrétní karty ani specifické tagy.",
+          "Všechny výhody postav jsou nyní plně systémové a ovlivňují obecné mechaniky (obecný typ karty defend/prep, začátek boje, úhyby, tahy a únavu).",
+        ],
+      },
+      {
+        category: "Nové pasivní dary všech postav",
+        icon: "✨",
+        items: [
+          "Pobuda z Hrusic: Otrlá obratnost (+1 Úhyb na začátku každého souboje).",
+          "Pobožný kostelník: Posvěcený štít (+8 Blok na startu, +2 Blok ke všem obranným kartám bez ohledu na název).",
+          "Moudrá bylinkářka: Plná brašna býlí (začíná souboj se 4 kartami v ruce místo 3).",
+          "Babička a Barunka: Pokojná mysl & Ostražitost (−1 Únava navíc při každé přípravě, bubáci mají na startu +2 Aug odklad).",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.9.1",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Přepracovaný balanční vzorec pro karty hráče (Power Budget Formula)",
+    badge: "Vyvážení karet & Rozpočet akcí",
+    flavorQuote:
+      "„Když bubáci zvednou pěsti a mají silnější facky, musí i naše sůl štípat dvakrát tolik a hůl dopadat jako kovářské kladivo!“",
+    flavorAuthor: "Pobuda z Hrusic s vyřezávanou slánkou",
+    highlights: [
+      {
+        category: "Nový rozpočet síly karet (Action Budget)",
+        icon: "⚖️",
+        items: [
+          "Definován oficiální balanční vzorec sladěný s 80 HP hrdiny a dvojnásobnými útoky: Cena 2 Akce = 8 bodů síly (4 b./Akce), Cena 3 Akce = 14 bodů síly (4.67 b./Akce).",
+          "Zaveden modul CARD_BALANCE_FORMULA s penalizací okamžitého tempa, koeficienty pro plošné zásahy (Splash 1.4x, Řada 2.33x) a výpočtem odkladu zásahu (calculateStaggerDelay).",
+        ],
+      },
+      {
+        category: "Přepracování útočných karet a schopností",
+        icon: "🧂",
+        items: [
+          "Hozená sůl upravena na 8 poškození (dříve 4), Ostřejší sůl na 14 poškození (dříve 7) a Hůl na čerta na 14 poškození.",
+          "Plošné karty přepočítány: Kropáč svěcenky (8 do cíle + 40 % okolí), Sůl do větru (6 do všech v řadě), Zlaté vřetánko (12 poškození).",
+          "Pohodlný šlofík nově uleví od −5 Únavy a Vyřezávaná slánka hrdiny zasahuje za 10 poškození.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.9.0",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Velké vyvážení: Dvojnásobné životy, mocnější bloky & rozpad obrany",
+    badge: "Bojové vyvážení & Úbytek bloku",
+    flavorQuote:
+      "„Když pořádně přitiskneš dubový kříž na hruď, žádný bubák tě nesfoukne jako svíčku. Ale pamatuj — pevný postoj nevydrží věčně a štít s každým mrknutím oka trochu povolí!“",
+    flavorAuthor: "starý vysloužilec z Hrusic",
+    highlights: [
+      {
+        category: "Dvojnásobné životy & útoky",
+        icon: "⚔️",
+        items: [
+          "Zdvojnásobeny základní životy hrdinů (ze 40 na 80 HP) pro taktičtější a napínavější průběh střetů.",
+          "Zdvojnásobena síla útoků všech bubáků a jejich variant v celém bestiáři.",
+        ],
+      },
+      {
+        category: "Dvojnásobný blok & rozpad obrany",
+        icon: "🛡️",
+        items: [
+          "Zdvojnásobeny hodnoty Bloku na obranných kartách (Kříž na hruď 8, Velký kříž 14, Pecen se solí 10) i zvláštních schopnostech a událostech (Záplata +8).",
+          "Zaveden dynamický úbytek Bloku: každým Augenblickem klesá stávající Blok o 15 % (minimálně o 1 jednotku).",
+          "Pravidlo úbytku platí symetricky pro hrdinu i bubáky s přehlednou nápovědou v rozhraní.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.8.2",
+    tag: "Předchozí verze",
+    date: "24. září",
+    title: "Uvolněné rozestavění vyřazených bubáků & ladovský terén bojiště",
+    badge: "Poražení bubáci & Volnost terénu",
+    flavorQuote:
+      "„Když je po boji a padne facka, není důvod stát v lajně! Každý bubák si lehne do trávy tam, kde je mu blaze a kde má pevnou zem pod nohama.“",
+    flavorAuthor: "strašidlo Mulisák ze zříceniny",
+    highlights: [
+      {
+        category: "Volné rozprostření poražených",
+        icon: "🌾",
+        items: [
+          "Vyřazení bubáci nerespektují žádné řady a shromažďují se společně v přirozené zóně na pravé straně bojiště.",
+          "Při dostatku místa se rozprostřou více do šířky namísto těsného mačkání v jednom chumlu.",
+          "Uvelebí se v rozmanitých výškách terénu od polní cesty až po travnatý břeh, s nohama vždy pevně na zemi.",
+          "Odstraněno zakrývání a ořezávání prvků bubáků (bílé vlaječky, terčíky, reakce) v horní části scény díky velkorysému hornímu prostoru.",
         ],
       },
     ],

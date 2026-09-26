@@ -14,7 +14,9 @@ import {
   makeCard,
   rollEnemyAction,
   cardDamageCalc,
+  calculateStaggerDelay,
   generateUid,
+  generateShopOffer,
 } from "./utils/gameEngine";
 import {
   HEROES,
@@ -34,6 +36,10 @@ import {
   ESC_THRESHOLD,
   ESC_EVERY,
   AUG_MS,
+  MAX_CARD_STARS,
+  starEmoji,
+  starValueMult,
+  getCardUpgradeCost,
 } from "./data/gameData";
 
 import { SplashScreen } from "./components/screens/SplashScreen";
@@ -142,7 +148,7 @@ export function App() {
         const nextState = {
           ...state,
           phase: "shop" as const,
-          shopOffer: state.shopOffer || ["sul", "kriz", "odvar"],
+          shopOffer: state.shopOffer || generateShopOffer(state.rand),
         };
         setState(nextState);
         saveGame(nextState);
@@ -165,7 +171,7 @@ export function App() {
 
     if (node.timing === "pred") {
       const mods: any = { ...(state.combatMods || {}) };
-      if (nodeId === "zalata") mods.startBlock = (mods.startBlock || 0) + 4;
+      if (nodeId === "zalata") mods.startBlock = (mods.startBlock || 0) + 8;
       if (nodeId === "zkratka") mods.enemyReadyDelta = (mods.enemyReadyDelta || 0) - 8;
       if (nodeId === "pripraveny") mods.bossReadyDelta = (mods.bossReadyDelta || 0) + 8;
       if (nodeId === "hejno") mods.extraEnemy = 1;
@@ -205,7 +211,7 @@ export function App() {
           nextHp = Math.max(1, nextHp - dmg);
           showToast(`Pytlácké železo: −${dmg} životů!`);
         } else if (nodeId === "babicka_setkani") {
-          const maxHp = HEROES[state.hero]?.hp || 40;
+          const maxHp = HEROES[state.hero]?.hp || 80;
           const heal = 6;
           nextHp = Math.min(maxHp, nextHp + heal);
           nextFatigue = Math.max(0, nextFatigue - 5);
@@ -252,12 +258,15 @@ export function App() {
   const startCombat = (baseState: GameState) => {
     const curLoc = LOCATIONS[baseState.locIndex] || LOCATIONS[0];
     const hero = HEROES[baseState.hero] || HEROES.pobuda;
-    const enemies = createCombatEnemies(
+    let enemies = createCombatEnemies(
       curLoc,
       baseState.options,
       baseState.combatMods || {},
       hero.ready,
     );
+    if (hero.enemyStartDelay) {
+      enemies = enemies.map((e) => ({ ...e, timer: e.timer + hero.enemyStartDelay! }));
+    }
 
     // Initial pre-combat delay for the hero: (50 - hero.ready)
     const heroPreCombatDelay = Math.max(1, 50 - hero.ready);
@@ -270,9 +279,10 @@ export function App() {
       [deckCopy[i], deckCopy[j]] = [deckCopy[j], deckCopy[i]];
     }
 
+    const startDrawCount = START_DRAW + (hero.extraStartCards || 0);
     const hand: any[] = [];
     const draw = [...deckCopy];
-    for (let i = 0; i < START_DRAW && draw.length > 0; i++) {
+    for (let i = 0; i < startDrawCount && draw.length > 0; i++) {
       hand.push(draw.shift());
     }
 
@@ -283,8 +293,8 @@ export function App() {
         locId: curLoc.id,
         time: 0,
         actions: (hero.breath || BREATH_BASE) * 2,
-        block: baseState.combatMods?.startBlock || 0,
-        dodge: 0,
+        block: (baseState.combatMods?.startBlock || 0) + (hero.startBlock || 0),
+        dodge: hero.startDodge || 0,
         fatigue: baseState.fatigueOut || 0,
         handCap: HAND_CAP_BASE + (baseState.combatMods?.handCapDelta || 0),
         breathPen: baseState.combatMods?.breathPenalty || 0,
@@ -337,17 +347,31 @@ export function App() {
       const cdIdea = Math.max(0, c.cdIdea - 1);
       const cdScenery = Math.max(0, c.cdScenery - 1);
 
-      // Salt DOTs on enemies every 3 Aug (and reset transient hit flag from previous tick)
+      // Block decay: Blok klesá o 15 %, minimálně o 1 jednotku za každý Augenblick
+      let playerBlock = c.block;
+      if (playerBlock > 0) {
+        const pDecay = Math.max(1, Math.round(playerBlock * 0.15));
+        playerBlock = Math.max(0, playerBlock - pDecay);
+      }
+
+      // Salt DOTs & Block decay on enemies every Aug (lowered by 15%, min 1 unit per Aug)
       let enemies = c.enemies.map((e) => {
+        let blk = e.block;
+        if (e.alive && blk > 0) {
+          const eDecay = Math.max(1, Math.round(blk * 0.15));
+          blk = Math.max(0, blk - eDecay);
+        }
+
         const isSaltTick = e.alive && e.saltDot > 0 && newTime % 3 === 0;
         if (!isSaltTick) {
           return {
             ...e,
+            block: blk,
             isHit: false,
           };
         }
         const dmg = e.saltDot;
-        const blocked = Math.min(e.block, dmg);
+        const blocked = Math.min(blk, dmg);
         const through = dmg - blocked;
         const newHp = Math.max(0, e.hp - through);
         stats.dmgDealt += through;
@@ -356,7 +380,7 @@ export function App() {
         const tookSaltHit = through > 0;
         return {
           ...e,
-          block: e.block - blocked,
+          block: blk - blocked,
           hp: newHp,
           saltDot: Math.max(0, e.saltDot - 1),
           alive: newHp > 0,
@@ -370,23 +394,34 @@ export function App() {
       let hand = [...c.hand];
       let discard = [...c.discard];
       let draw = [...c.draw];
-      let playerBlock = c.block;
       let playerDodge = c.dodge;
       let playerFatigue = c.fatigue;
       let extraPost = c.extraPost || 0;
       let playerBusy = c.playerBusy === "hit" ? null : c.playerBusy;
 
       if (pending && newPlayerTimer <= 0) {
-        const def: CardDef = CARD_DB[pending.card.id] || CARD_DB.sul;
+        const def: CardDef =
+          CARD_DB[pending.card.id] || CARD_DB.metla || CARD_DB.kuraz || CARD_DB.sul;
         const pendingTargetUid = pending.target;
         const target =
           enemies.find((e) => e.uid === pendingTargetUid) || enemies.find((e) => e.alive);
 
-        if (def.block)
-          playerBlock +=
-            def.block + (def.tags.includes("kriz") ? HEROES[prevState.hero]?.krizBonus || 0 : 0);
+        const cardStars = pending.card.stars || 0;
+        const cardMult = starValueMult(cardStars);
+
+        const heroDef = HEROES[prevState.hero];
+        if (def.block) {
+          const defendBonus = def.type === "defend" ? heroDef?.defendBonus || 0 : 0;
+          playerBlock += Math.round(def.block * cardMult) + defendBonus;
+        }
+        if (def.type === "prep" && heroDef?.prepFatigueBonus) {
+          playerFatigue = Math.max(0, playerFatigue - heroDef.prepFatigueBonus);
+        }
         if (def.dodge) playerDodge += def.dodge;
-        if (def.fatigue) playerFatigue = Math.max(0, playerFatigue + def.fatigue);
+        if (def.fatigue) {
+          const fatigueVal = def.fatigue < 0 ? Math.round(def.fatigue * cardMult) : def.fatigue;
+          playerFatigue = Math.max(0, playerFatigue + fatigueVal);
+        }
 
         if (def.draw) {
           for (let i = 0; i < def.draw; i++) {
@@ -421,13 +456,17 @@ export function App() {
             if (def.intent === "row") {
               const eRow = e.row || (enemies.indexOf(e) < 4 ? "front" : "back");
               if (hasMultipleRows) {
-                d = eRow === targetRow ? cardDamageCalc(def, e) : 0;
+                d = eRow === targetRow ? cardDamageCalc(def, e, cardStars) : 0;
               } else {
-                d = cardDamageCalc(def, e);
+                d = cardDamageCalc(def, e, cardStars);
               }
-            } else if (def.intent === "splash")
-              d = isMain ? cardDamageCalc(def, e) : Math.round(cardDamageCalc(def, e) * 0.4);
-            else if (isMain) d = cardDamageCalc(def, e);
+            } else if (def.intent === "splash") {
+              d = isMain
+                ? cardDamageCalc(def, e, cardStars)
+                : Math.round(cardDamageCalc(def, e, cardStars) * 0.4);
+            } else if (isMain) {
+              d = cardDamageCalc(def, e, cardStars);
+            }
 
             if (d <= 0) return e;
 
@@ -443,7 +482,7 @@ export function App() {
             stats.dmgDealt += through;
 
             // Wound delay: delay = through * (1 - odolnost/100)
-            const delay = Math.max(0, Math.round(through * (1 - e.odolnost / 100)));
+            const delay = calculateStaggerDelay(through, e.odolnost);
             const newTimer = e.timer + delay;
 
             if (def.tags.includes("sul") && through > 0) {
@@ -1147,7 +1186,7 @@ export function App() {
     const c = state.combat;
     const card = c.hand[cardIdx];
     if (!card) return;
-    const def: CardDef = CARD_DB[card.id] || CARD_DB.sul;
+    const def: CardDef = CARD_DB[card.id] || CARD_DB.metla || CARD_DB.kuraz || CARD_DB.sul;
 
     if (c.actions < def.cost) {
       showToast("Nemáte dostatek Akcí na zahrání této karty!");
@@ -1169,12 +1208,22 @@ export function App() {
         let playerDodge = combatState.dodge;
         let playerFatigue = combatState.fatigue;
 
+        const cardStars = card.stars || 0;
+        const cardMult = starValueMult(cardStars);
+
+        const heroDef = HEROES[prev.hero];
         if (def.block) {
-          playerBlock +=
-            def.block + (def.tags?.includes("kriz") ? HEROES[prev.hero]?.krizBonus || 0 : 0);
+          const defendBonus = def.type === "defend" ? heroDef?.defendBonus || 0 : 0;
+          playerBlock += Math.round(def.block * cardMult) + defendBonus;
+        }
+        if (def.type === "prep" && heroDef?.prepFatigueBonus) {
+          playerFatigue = Math.max(0, playerFatigue - heroDef.prepFatigueBonus);
         }
         if (def.dodge) playerDodge += def.dodge;
-        if (def.fatigue) playerFatigue = Math.max(0, playerFatigue + def.fatigue);
+        if (def.fatigue) {
+          const fatigueVal = def.fatigue < 0 ? Math.round(def.fatigue * cardMult) : def.fatigue;
+          playerFatigue = Math.max(0, playerFatigue + fatigueVal);
+        }
 
         if (def.draw) {
           for (let i = 0; i < def.draw; i++) {
@@ -1188,7 +1237,7 @@ export function App() {
 
         const pauseTime = hand.length > combatState.handCap;
         const logs = addLog(
-          `${def.name}: zahráno okamžitě bez nápřahu! ${def.draw ? `Líznuto ${def.draw} karet.` : ""}`,
+          `${def.name}${cardStars > 0 ? ` (${starEmoji(cardStars)})` : ""}: zahráno okamžitě bez nápřahu! ${def.draw ? `Líznuto ${def.draw} karet.` : ""}`,
           prev.log,
         );
 
@@ -1262,12 +1311,18 @@ export function App() {
   };
 
   // Tavern Handlers
-  const handleBuyShopCard = (cardId: string, price: number, offerIdx: number) => {
+  const handleBuyShopCard = (
+    cardId: string,
+    price: number,
+    offerIdx: number,
+    stars: number = 0,
+  ) => {
     if (!state || state.salt < price) return;
-    const nextDeck = [...state.deckAll, makeCard(cardId)];
+    const nextDeck = [...state.deckAll, makeCard(cardId, stars)];
     const nextOffer = [...(state.shopOffer || [])];
     nextOffer.splice(offerIdx, 1);
 
+    const starStr = stars > 0 ? ` (${starEmoji(stars)})` : "";
     const nextState: GameState = {
       ...state,
       salt: state.salt - price,
@@ -1278,45 +1333,52 @@ export function App() {
         saltSpent: state.stats.saltSpent + price,
         buys: state.stats.buys + 1,
       },
-      log: addLog(`Koupena karta: ${CARD_DB[cardId]?.name} za ${price} k.`, state.log),
+      log: addLog(`Koupena karta: ${CARD_DB[cardId]?.name}${starStr} za ${price} k.`, state.log),
     };
     setState(nextState);
     saveGame(nextState);
-    showToast(`Do brašny přidána: ${CARD_DB[cardId]?.name}`);
+    showToast(`Do brašny přidána: ${CARD_DB[cardId]?.name}${starStr}`);
   };
 
-  const handleUpgradeCard = (fromId: string) => {
-    if (!state || state.salt < UPGRADE_COST) return;
-    const toId = UPGRADE_MAP[fromId];
-    if (!toId) return;
+  const handleUpgradeCard = (cardId: string, currentStars: number = 0) => {
+    if (!state) return;
+    const cost = getCardUpgradeCost(currentStars);
+    if (state.salt < cost) return;
+    if (currentStars >= MAX_CARD_STARS) return;
 
     const deck = [...state.deckAll];
-    const idx = deck.findIndex((c) => c.id === fromId);
+    const idx = deck.findIndex((c) => c.id === cardId && (c.stars || 0) === currentStars);
     if (idx < 0) return;
-    deck[idx] = makeCard(toId);
+
+    const nextStars = currentStars + 1;
+    deck[idx] = { ...deck[idx], stars: nextStars };
 
     const nextState: GameState = {
       ...state,
-      salt: state.salt - UPGRADE_COST,
+      salt: state.salt - cost,
       deckAll: deck,
       stats: {
         ...state.stats,
-        saltSpent: state.stats.saltSpent + UPGRADE_COST,
+        saltSpent: state.stats.saltSpent + cost,
       },
-      log: addLog(`Vylepšeno: ${CARD_DB[fromId]?.name} ➔ ${CARD_DB[toId]?.name}.`, state.log),
+      log: addLog(
+        `Karta ${CARD_DB[cardId]?.name} vylepšena na jakost ${starEmoji(nextStars)} (+${nextStars * 10} % účinku) za ${cost} k.`,
+        state.log,
+      ),
     };
     setState(nextState);
     saveGame(nextState);
-    showToast(`Karta vylepšena na: ${CARD_DB[toId]?.name}!`);
+    showToast(`Karta ${CARD_DB[cardId]?.name} vylepšena na ${starEmoji(nextStars)}!`);
   };
 
-  const handleRemoveShopCard = (cardId: string) => {
+  const handleRemoveShopCard = (cardId: string, currentStars: number = 0) => {
     if (!state || state.salt < REMOVE_COST) return;
     const deck = [...state.deckAll];
-    const idx = deck.findIndex((c) => c.id === cardId);
+    const idx = deck.findIndex((c) => c.id === cardId && (c.stars || 0) === currentStars);
     if (idx < 0) return;
     deck.splice(idx, 1);
 
+    const starStr = currentStars > 0 ? ` (${starEmoji(currentStars)})` : "";
     const nextState: GameState = {
       ...state,
       salt: state.salt - REMOVE_COST,
@@ -1325,11 +1387,11 @@ export function App() {
         ...state.stats,
         saltSpent: state.stats.saltSpent + REMOVE_COST,
       },
-      log: addLog(`Karta vyhozena: ${CARD_DB[cardId]?.name}.`, state.log),
+      log: addLog(`Karta vyhozena: ${CARD_DB[cardId]?.name}${starStr}.`, state.log),
     };
     setState(nextState);
     saveGame(nextState);
-    showToast(`Karta ${CARD_DB[cardId]?.name} vyhozena z brašny.`);
+    showToast(`Z brašny vyhozena: ${CARD_DB[cardId]?.name}`);
   };
 
   const handleShopRest = () => {
@@ -1385,7 +1447,7 @@ export function App() {
       role: "linie",
       hp: 18,
       maxHp: 18,
-      dmg: 4,
+      dmg: 8,
       interval: 16,
       ready: 20,
       odolnost: 45,
@@ -1406,15 +1468,15 @@ export function App() {
       locIndex: 0,
       hero: "pobuda",
       salt: 10,
-      hp: 40,
-      maxHp: 40,
+      hp: 80,
+      maxHp: 80,
       playerReady: 25,
       deckAll: [
-        makeCard("sul"),
-        makeCard("kriz"),
+        makeCard("metla"),
+        makeCard("kuraz"),
         makeCard("odvar"),
-        makeCard("sul"),
-        makeCard("kriz"),
+        makeCard("metla"),
+        makeCard("kuraz"),
       ],
       stats: {
         fights: 0,
@@ -1456,9 +1518,9 @@ export function App() {
         pauseTime: false,
         enemies: [dummyEnemy],
         focus: dummyEnemy.uid,
-        draw: [makeCard("sul"), makeCard("kriz")],
+        draw: [makeCard("metla"), makeCard("kuraz")],
         discard: [],
-        hand: [makeCard("sul"), makeCard("kriz"), makeCard("odvar")],
+        hand: [makeCard("metla"), makeCard("kuraz"), makeCard("odvar")],
         escApplied: 0,
         waitingInput: true,
       },
@@ -1480,8 +1542,8 @@ export function App() {
     const enemies = createTestEightEnemies(options, heroDef.ready, locId);
 
     const testDeck = [
-      makeCard("sul"),
-      makeCard("kriz"),
+      makeCard("metla"),
+      makeCard("kuraz"),
       makeCard("kosa"), // Plošný útok na celou řadu
       makeCard("odvar"),
       makeCard("lucerna"), // Splash útok
@@ -1489,8 +1551,8 @@ export function App() {
       makeCard("dymka"),
       makeCard("retez"),
       makeCard("kadidlo"),
-      makeCard("sul"),
-      makeCard("kriz"),
+      makeCard("metla"),
+      makeCard("kuraz"),
     ];
 
     const testState: GameState = {
@@ -1787,12 +1849,12 @@ export function App() {
     }
 
     const testDeck = [
-      makeCard("sul"),
-      makeCard("kriz"),
+      makeCard("metla"),
+      makeCard("kuraz"),
       makeCard("kosa"),
       makeCard("odvar"),
-      makeCard("sul"),
-      makeCard("kriz"),
+      makeCard("metla"),
+      makeCard("kuraz"),
     ];
 
     const testState: GameState = {

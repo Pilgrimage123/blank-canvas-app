@@ -11,6 +11,8 @@ import {
   EnemyVariantDef,
   RunOptions,
   EnemyActionId,
+  CardIntent,
+  ShopOfferItem,
 } from "../types";
 import {
   LOCATIONS,
@@ -27,6 +29,8 @@ import {
   ESC_THRESHOLD,
   ESC_EVERY,
   AI_WEIGHT,
+  starValueMult,
+  rollShopCardStars,
 } from "../data/gameData";
 
 export function mulberry32(a: number) {
@@ -108,8 +112,8 @@ export function generateUid(): string {
   return "c_" + Date.now().toString(36) + "_" + uidCounter;
 }
 
-export function makeCard(id: string): CardInstance {
-  return { inst: generateUid(), id };
+export function makeCard(id: string, stars: number = 0): CardInstance {
+  return { inst: generateUid(), id, stars: stars || 0 };
 }
 
 export function starterDeck(heroId: string, rand: () => number): CardInstance[] {
@@ -117,7 +121,7 @@ export function starterDeck(heroId: string, rand: () => number): CardInstance[] 
   const list: CardInstance[] = [];
   Object.entries(h.deck).forEach(([cardId, count]) => {
     for (let i = 0; i < count; i++) {
-      list.push(makeCard(cardId));
+      list.push(makeCard(cardId, 0));
     }
   });
   return shuffleArray(list, rand);
@@ -130,6 +134,38 @@ export function shuffleArray<T>(arr: T[], rand: () => number): T[] {
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
+}
+
+export function normalizeShopOffer(item: string | ShopOfferItem): { id: string; stars: number } {
+  if (typeof item === "string") return { id: item, stars: 0 };
+  return { id: item.id, stars: item.stars || 0 };
+}
+
+export function generateShopOffer(rand?: () => number): ShopOfferItem[] {
+  const r = rand || Math.random;
+  const cheapPool = ["sul", "kriz", "metla", "kuraz", "ukrok", "slofik"];
+  const midPool = [
+    "odvar",
+    "ostra",
+    "velkykriz",
+    "ostra_metla",
+    "velkakuraz",
+    "kropac",
+    "vretanko",
+    "chleb_sul",
+  ];
+  const rarePool = ["kosik", "rada", "hole", "barunka_rada"];
+
+  const c = shuffleArray(cheapPool, r)[0];
+  const m = shuffleArray(midPool, r)[0];
+  const combined = shuffleArray([...midPool, ...rarePool], r).filter((x) => x !== m);
+  const third = combined[0] || "kriz";
+
+  return [
+    { id: c, stars: rollShopCardStars(r) },
+    { id: m, stars: rollShopCardStars(r) },
+    { id: third, stars: rollShopCardStars(r) },
+  ];
 }
 
 export function buildRunPath(rand: () => number) {
@@ -497,7 +533,7 @@ export function createCombatEnemies(
       const firstVar = (firstTpl.variants && firstTpl.variants[2]) || {
         level: 10,
         hp: 20,
-        dmg: 5,
+        dmg: 10,
         name: firstTpl.name,
       };
       validTeams.push([{ tpl: firstTpl, variant: firstVar }]);
@@ -568,8 +604,87 @@ export function createTestEightEnemies(
   });
 }
 
-export function cardDamageCalc(def: CardDef, enemy: EnemyInstance): number {
-  let d = def.dmg || 0;
+/**
+ * Josef Lada Fairytale Deckbuilder — Reworked Player Card Balance Formula
+ *
+ * Sladěno s velkým vyvážením:
+ * 1. 2x Životy hrdiny (Základ 80 HP)
+ * 2. 2x Útoky nepřátel (Bubáci útočí za 4–20 DMG)
+ * 3. 2x Hodnoty Bloku (8 / 14 / 10) s 15% dynamickým rozpadem (min 1/Aug)
+ *
+ * Vzorec rozpočtu síly karty (Card Power Budget):
+ * - Cena 2 Akce: 8 bodů síly (4.0 bodu / Akce) -> např. 8 poškození nebo 8 bloku
+ * - Cena 3 Akce: 14 bodů síly (4.67 bodu / Akce) -> např. 14 poškození nebo 14 bloku
+ * - Cena 4 Akce: 20–24 bodů síly (5.0–6.0 bodu / Akce) -> např. 6 poškození do celé řady až 4 nepřátel
+ *
+ * Modifikátory:
+ * - Nápřah (pre: 2): Standardní hodnota (1.0x)
+ * - Okamžitá karta (pre: 0): Daň za okamžité tempo (-2 body síly nebo kompenzace únavou)
+ * - Cílení Splash (Kropáč): 1.0x hlavní cíl + 0.4x sousedé (celkem ~1.4x–1.8x ekvivalent)
+ * - Cílení Řada / AoE (Sůl do větru): rozděleno mezi až 4 cíle v řadě (koeficient dělení ~2.33)
+ * - Rozpad bloku: Vzhledem k úbytku 15 %/Aug má karta bloku s 8 body reálnou absorpci ~6 po 2 Aug
+ */
+export const CARD_BALANCE_FORMULA = {
+  BASE_POWER_PER_COST: {
+    1: 4,
+    2: 8,
+    3: 14,
+    4: 20,
+  } as Record<number, number>,
+  INSTANT_TEMPO_PENALTY: 2,
+  SPLASH_TARGET_FACTOR: 1.4,
+  ROW_AOE_TARGET_FACTOR: 2.33,
+  BLOCK_DECAY_RATE: 0.15,
+  MIN_BLOCK_DECAY: 1,
+  STAGGER_BASE_RATIO: 1.0,
+};
+
+export function calculateCardPowerBudget(
+  cost: number,
+  pre: number,
+  intent: CardIntent,
+  tags: string[] = [],
+): number {
+  let budget = CARD_BALANCE_FORMULA.BASE_POWER_PER_COST[cost] || cost * 4;
+  if (pre === 0) {
+    budget = Math.max(2, budget - CARD_BALANCE_FORMULA.INSTANT_TEMPO_PENALTY);
+  }
+  if (intent === "splash") {
+    budget = Math.round(budget / CARD_BALANCE_FORMULA.SPLASH_TARGET_FACTOR);
+  } else if (intent === "row") {
+    budget = Math.round(budget / CARD_BALANCE_FORMULA.ROW_AOE_TARGET_FACTOR);
+  }
+  return budget;
+}
+
+export function evaluateCardBalance(card: CardDef): {
+  budget: number;
+  actualPower: number;
+  balanceRatio: number;
+  isBalanced: boolean;
+} {
+  const budget = calculateCardPowerBudget(card.cost, card.pre, card.intent, card.tags);
+  let actualPower = 0;
+  if (card.dmg) actualPower += card.dmg;
+  if (card.block) actualPower += card.block;
+  if (card.draw) actualPower += card.draw * 4;
+  if (card.dodge) actualPower += card.dodge * 6;
+  if (card.fatigue && card.fatigue < 0) actualPower += Math.abs(card.fatigue) * 1.5;
+
+  const balanceRatio = budget > 0 ? actualPower / budget : 1;
+  const isBalanced = balanceRatio >= 0.85 && balanceRatio <= 1.25;
+
+  return { budget, actualPower, balanceRatio, isBalanced };
+}
+
+export function calculateStaggerDelay(throughDmg: number, odolnost: number): number {
+  if (throughDmg <= 0) return 0;
+  const effectiveRatio = Math.max(0, 1 - (odolnost || 0) / 100);
+  return Math.max(0, Math.round(throughDmg * effectiveRatio));
+}
+
+export function cardDamageCalc(def: CardDef, enemy: EnemyInstance, stars: number = 0): number {
+  let d = Math.round((def.dmg || 0) * starValueMult(stars));
   if (def.tags.includes("kriz") && enemy.traits.includes("svatokrad")) d = Math.round(d * 0.75);
   if (def.tags.includes("sul") && enemy.traits.includes("vodni")) d = Math.round(d * 1.5);
   return d;
