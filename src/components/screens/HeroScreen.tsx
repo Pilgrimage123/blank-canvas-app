@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { HEROES } from "../../data/gameData";
 import { HunterSprite } from "../sprites/HunterSprite";
 import { HeroDetailModal } from "../modals/HeroDetailModal";
+import { LadaThematicIcon } from "../sprites/LadaThematicIcon";
 
 interface HeroScreenProps {
   onSelectHero: (heroId: string) => void;
@@ -21,8 +22,9 @@ export const HeroScreen: React.FC<HeroScreenProps> = ({ onSelectHero, onBack }) 
             Klikněte na libovolnou kartu pro kompletní informace, rozpis balíčku a taktické rady.
           </p>
         </div>
-        <button type="button" onClick={onBack} className="lada-button text-sm py-2 px-4">
-          ⬅️ Zpět
+        <button type="button" onClick={onBack} className="lada-button text-sm py-2 px-4 inline-flex items-center gap-1.5">
+          <LadaThematicIcon name="back" size={16} />
+          <span>Zpět</span>
         </button>
       </div>
 
@@ -39,14 +41,16 @@ export const HeroScreen: React.FC<HeroScreenProps> = ({ onSelectHero, onBack }) 
                 {/* Hero Header & Sprite - Interactive Expandable Box */}
                 <div className="relative flex flex-col items-center bg-[#f0dfb6] rounded-xl p-3 border-2 border-[#1c1308] mb-4 group-hover:bg-[#ebd39e] transition-colors shadow-xs">
                   <span className="absolute -top-2.5 right-2 bg-[#ffd438] text-[#1c1308] text-[0.62rem] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border border-[#1c1308] shadow-xs flex items-center gap-1">
-                    <span>🔍</span> Podrobnosti
+                    <LadaThematicIcon name="search" size={13} animated />
+                    <span>Podrobnosti</span>
                   </span>
                   <HunterSprite heroId={h.id} size={110} />
                   <h3 className="font-title text-xl font-bold text-[#1c1308] mt-1 text-center">
                     {h.name}
                   </h3>
                   <span className="text-[0.68rem] text-[#694825] font-bold mt-0.5 flex items-center gap-1">
-                    <span>📖</span> Klikněte pro rozkliknutí
+                    <LadaThematicIcon name="book" size={12} animated />
+                    <span>Klikněte pro rozkliknutí</span>
                   </span>
                 </div>
 
@@ -57,15 +61,21 @@ export const HeroScreen: React.FC<HeroScreenProps> = ({ onSelectHero, onBack }) 
 
                 {/* Combat Stats Breakdown */}
                 <div className="bg-[#f6ebd0] p-3 rounded-lg border border-[#1c1308] text-xs font-bold text-[#2a1c10] space-y-1.5 mb-3">
-                  <div className="flex justify-between">
-                    <span>❤️ Životy:</span>
+                  <div className="flex justify-between items-center">
+                    <span className="flex items-center gap-1">
+                      <LadaThematicIcon name="hp" size={14} animated />
+                      <span>Životy:</span>
+                    </span>
                     <span className="font-black text-[#b8331d]">{h.hp} HP</span>
                   </div>
                   <div
-                    className="flex justify-between"
+                    className="flex justify-between items-center"
                     title="Nástup před bojem: 50 − Připravenost (vyšší = dřívější tah!)"
                   >
-                    <span>⚡ Připravenost:</span>
+                    <span className="flex items-center gap-1">
+                      <LadaThematicIcon name="speed" size={14} animated />
+                      <span>Připravenost:</span>
+                    </span>
                     <span className="font-black text-[#1c4b7d]">
                       {h.ready}{" "}
                       <span className="text-[0.68rem] text-[#4d3621] font-normal">
@@ -73,12 +83,18 @@ export const HeroScreen: React.FC<HeroScreenProps> = ({ onSelectHero, onBack }) 
                       </span>
                     </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>🪙 Počáteční krejcary:</span>
+                  <div className="flex justify-between items-center">
+                    <span className="flex items-center gap-1">
+                      <LadaThematicIcon name="coin" size={14} animated />
+                      <span>Počáteční krejcary:</span>
+                    </span>
                     <span className="font-black text-[#d69818]">{h.salt}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>😮‍💨 Nádech / Spánek:</span>
+                  <div className="flex justify-between items-center">
+                    <span className="flex items-center gap-1">
+                      <LadaThematicIcon name="breath" size={14} animated />
+                      <span>Nádech / Spánek:</span>
+                    </span>
                     <span>
                       +{h.breath} Akcí / −{h.sleepFat} Únavy
                     </span>
@@ -89,7 +105,8 @@ export const HeroScreen: React.FC<HeroScreenProps> = ({ onSelectHero, onBack }) 
                 {h.passiveName && (
                   <div className="bg-[#eef5fc] p-2.5 rounded-lg border border-[#1b4372] text-xs font-bold mb-3">
                     <div className="text-[#1b4372] uppercase tracking-wider text-[0.65rem] font-black mb-0.5 flex items-center gap-1">
-                      <span>✨</span> Pasivní dar hrdiny
+                      <LadaThematicIcon name="star" size={13} animated />
+                      <span>Pasivní dar hrdiny</span>
                     </div>
                     <div className="text-[#1c1308] font-black">{h.passiveName}</div>
                     <div className="text-[0.7rem] text-[#2d496a] font-semibold mt-0.5 leading-snug">
@@ -124,10 +141,11 @@ export const HeroScreen: React.FC<HeroScreenProps> = ({ onSelectHero, onBack }) 
                     e.stopPropagation();
                     setDetailHeroId(h.id);
                   }}
-                  className="lada-button py-2 px-3 text-xs font-bold flex-1 bg-[#fff8e8] hover:bg-[#ffefc2]"
+                  className="lada-button py-2 px-3 text-xs font-bold flex-1 bg-[#fff8e8] hover:bg-[#ffefc2] inline-flex items-center justify-center gap-1"
                   title="Rozkliknout kompletní informace o postavě"
                 >
-                  🔍 Podrobnosti
+                  <LadaThematicIcon name="search" size={14} animated />
+                  <span>Podrobnosti</span>
                 </button>
                 <button
                   type="button"
@@ -135,9 +153,10 @@ export const HeroScreen: React.FC<HeroScreenProps> = ({ onSelectHero, onBack }) 
                     e.stopPropagation();
                     onSelectHero(h.id);
                   }}
-                  className="lada-button lada-button-primary py-2 px-3 text-xs font-black shadow-[0_2px_0_#1c1308] flex-1"
+                  className="lada-button lada-button-primary py-2 px-3 text-xs font-black shadow-[0_2px_0_#1c1308] flex-1 inline-flex items-center justify-center gap-1"
                 >
-                  ⚔️ Vybrat
+                  <LadaThematicIcon name="attack" size={14} animated />
+                  <span>Vybrat</span>
                 </button>
               </div>
             </div>

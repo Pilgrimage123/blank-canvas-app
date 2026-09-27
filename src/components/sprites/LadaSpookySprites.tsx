@@ -1241,7 +1241,7 @@ function renderPekelneDudy(stage: number): React.ReactNode {
         />
       </g>
 
-      {/* Barevné tancující noty ♪ ♫ ♬ */}
+      {/* Barevné tancující noty */}
       <g transform="translate(108, 88)">
         <text
           x="0"

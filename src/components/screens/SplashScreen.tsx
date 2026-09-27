@@ -1,6 +1,7 @@
 import React from "react";
 import { EnemySprite } from "../sprites/EnemySprite";
 import { HunterSprite } from "../sprites/HunterSprite";
+import { LadaThematicIcon } from "../sprites/LadaThematicIcon";
 
 interface SplashScreenProps {
   onPlay: () => void;
@@ -17,11 +18,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onPlay, onOptions })
       <div className="lada-card max-w-xl w-full p-8 flex flex-col items-center relative z-10 border-4 shadow-[8px_10px_0_rgba(28,19,8,0.4)]">
         {/* Top Folk Header Ribbons */}
         <div className="flex items-center gap-3 mb-3">
-          <span className="text-xl">🍂</span>
+          <LadaThematicIcon name="leaf" size={20} animated />
           <span className="text-xs font-black uppercase tracking-[0.2em] text-[#734f24] bg-[#ebd5a0] px-3 py-1 rounded-full border border-[#1c1308]">
             Staročeské pověsti a vymítání
           </span>
-          <span className="text-xl">🍂</span>
+          <LadaThematicIcon name="leaf" size={20} animated />
         </div>
 
         {/* Big Book Title */}
@@ -78,16 +79,18 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onPlay, onOptions })
           <button
             type="button"
             onClick={onPlay}
-            className="lada-button lada-button-primary text-lg sm:text-xl py-3 px-8 shadow-[0_5px_0_#1c1308]"
+            className="lada-button lada-button-primary text-lg sm:text-xl py-3 px-8 shadow-[0_5px_0_#1c1308] inline-flex items-center gap-2.5"
           >
-            ▶️ Otevřít knížku & Hrát
+            <LadaThematicIcon name="book" size={24} animated />
+            <span>Otevřít knížku & Hrát</span>
           </button>
           <button
             type="button"
             onClick={onOptions}
-            className="lada-button text-base py-3 px-5 shadow-[0_4px_0_#1c1308]"
+            className="lada-button text-base py-3 px-5 shadow-[0_4px_0_#1c1308] inline-flex items-center gap-2"
           >
-            ⚙️ Volby běhu
+            <LadaThematicIcon name="settings" size={20} animated />
+            <span>Volby běhu</span>
           </button>
         </div>
       </div>

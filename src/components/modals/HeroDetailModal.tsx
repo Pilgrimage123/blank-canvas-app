@@ -3,6 +3,7 @@ import { HeroDef, CardDef } from "../../types";
 import { CARD_DB } from "../../data/gameData";
 import { HunterSprite } from "../sprites/HunterSprite";
 import { CardView } from "../CardView";
+import { LadaThematicIcon } from "../sprites/LadaThematicIcon";
 
 interface HeroDetailModalProps {
   hero: HeroDef;
@@ -158,10 +159,11 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
           <button
             type="button"
             onClick={onClose}
-            className="lada-button text-xs py-1.5 px-3 hover:bg-[#e0c080]"
+            className="lada-button text-xs py-1.5 px-3 hover:bg-[#e0c080] flex items-center gap-1"
             title="Zavřít podrobnosti"
           >
-            ✕ Zavřít
+            <LadaThematicIcon name="close" size={12} />
+            <span>Zavřít</span>
           </button>
         </div>
 
@@ -170,35 +172,38 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
           <button
             type="button"
             onClick={() => setActiveTab("info")}
-            className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all border-2 ${
+            className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all border-2 inline-flex items-center gap-1.5 ${
               activeTab === "info"
                 ? "bg-[#ffd438] text-[#1c1308] border-[#1c1308] shadow-[2px_3px_0_#1c1308]"
                 : "bg-[#f4ebd0] text-[#593d25] border-transparent hover:bg-[#eedcae]"
             }`}
           >
-            📜 Příběh a statistiky
+            <LadaThematicIcon name="scroll" size={14} />
+            <span>Příběh a statistiky</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("deck")}
-            className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all border-2 ${
+            className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all border-2 inline-flex items-center gap-1.5 ${
               activeTab === "deck"
                 ? "bg-[#ffd438] text-[#1c1308] border-[#1c1308] shadow-[2px_3px_0_#1c1308]"
                 : "bg-[#f4ebd0] text-[#593d25] border-transparent hover:bg-[#eedcae]"
             }`}
           >
-            🃏 Počáteční balíček ({totalCardsInDeck} karet)
+            <LadaThematicIcon name="draw" size={14} />
+            <span>Počáteční balíček ({totalCardsInDeck} karet)</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("tactics")}
-            className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all border-2 ${
+            className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all border-2 inline-flex items-center gap-1.5 ${
               activeTab === "tactics"
                 ? "bg-[#ffd438] text-[#1c1308] border-[#1c1308] shadow-[2px_3px_0_#1c1308]"
                 : "bg-[#f4ebd0] text-[#593d25] border-transparent hover:bg-[#eedcae]"
             }`}
           >
-            ⚔️ Taktika a rady
+            <LadaThematicIcon name="attack" size={14} />
+            <span>Taktika a rady</span>
           </button>
         </div>
 
@@ -274,7 +279,7 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
               {hero.passiveName && (
                 <div className="bg-[#edf5fd] p-3.5 rounded-xl border-2 border-[#1b4372] shadow-[3px_3px_0_#1b4372]">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-lg">✨</span>
+                    <LadaThematicIcon name="star" size={20} animated />
                     <span className="text-[0.7rem] uppercase font-black tracking-wider text-[#1b4372]">
                       Trvalý pasivní dar postavy
                     </span>
@@ -292,7 +297,7 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
               <div className="bg-[#fffaf0] p-4 rounded-xl border-3 border-[#1c1308] shadow-[4px_4px_0_#1c1308]">
                 <div className="flex items-center justify-between border-b border-[#dfcb9a] pb-2 mb-2.5">
                   <div className="flex items-center gap-2">
-                    <span className="text-xl">✨</span>
+                    <LadaThematicIcon name="star" size={20} />
                     <div>
                       <span className="text-[0.68rem] uppercase font-black tracking-wider text-[#8a5624] block">
                         Unikátní speciál mimo ruku
@@ -302,8 +307,9 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
                       </h4>
                     </div>
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-[#eedcae] border border-[#1c1308] text-xs font-black text-[#1c1308]">
-                    ⏱️ Ochlazení: {hero.special.cd} Aug
+                  <span className="px-2.5 py-1 rounded-full bg-[#eedcae] border border-[#1c1308] text-xs font-black text-[#1c1308] inline-flex items-center gap-1">
+                    <LadaThematicIcon name="hourglass" size={12} />
+                    <span>Ochlazení: {hero.special.cd} Aug</span>
                   </span>
                 </div>
 
@@ -314,31 +320,37 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
 
                 <div className="flex flex-wrap gap-2 text-xs font-bold">
                   {hero.special.dmg && (
-                    <span className="bg-[#fce0d8] border border-[#942718] text-[#942718] px-2.5 py-1 rounded-lg">
-                      ⚔️ Zásah {hero.special.dmg} HP
+                    <span className="bg-[#fce0d8] border border-[#942718] text-[#942718] px-2.5 py-1 rounded-lg inline-flex items-center gap-1">
+                      <LadaThematicIcon name="attack" size={12} />
+                      <span>Zásah {hero.special.dmg} HP</span>
                     </span>
                   )}
                   {hero.special.dot && (
-                    <span className="bg-[#fff0d0] border border-[#d69818] text-[#825406] px-2.5 py-1 rounded-lg">
-                      🧂 +{hero.special.dot} vrstvy Soli na kůži
+                    <span className="bg-[#fff0d0] border border-[#d69818] text-[#825406] px-2.5 py-1 rounded-lg inline-flex items-center gap-1">
+                      <LadaThematicIcon name="salt" size={12} />
+                      <span>+{hero.special.dot} vrstvy Soli na kůži</span>
                     </span>
                   )}
                   {hero.special.block && (
-                    <span className="bg-[#d8e8fc] border border-[#1b4372] text-[#1b4372] px-2.5 py-1 rounded-lg">
-                      🛡️ +{hero.special.block} Okamžitý Blok
+                    <span className="bg-[#d8e8fc] border border-[#1b4372] text-[#1b4372] px-2.5 py-1 rounded-lg inline-flex items-center gap-1">
+                      <LadaThematicIcon name="block" size={12} />
+                      <span>+{hero.special.block} Okamžitý Blok</span>
                     </span>
                   )}
                   {hero.special.draw && (
-                    <span className="bg-[#e4f4d8] border border-[#2d6328] text-[#2d6328] px-2.5 py-1 rounded-lg">
-                      🃏 Lízne +{hero.special.draw} karty
+                    <span className="bg-[#e4f4d8] border border-[#2d6328] text-[#2d6328] px-2.5 py-1 rounded-lg inline-flex items-center gap-1">
+                      <LadaThematicIcon name="draw" size={12} />
+                      <span>Lízne +{hero.special.draw} karty</span>
                     </span>
                   )}
                   {hero.special.fat !== undefined && hero.special.fat < 0 && (
-                    <span className="bg-[#eaf4ff] border border-[#3b78ba] text-[#1f4e82] px-2.5 py-1 rounded-lg">
-                      😴 {hero.special.fat} Únava
+                    <span className="bg-[#eaf4ff] border border-[#3b78ba] text-[#1f4e82] px-2.5 py-1 rounded-lg inline-flex items-center gap-1">
+                      <LadaThematicIcon name="fatigue" size={12} />
+                      <span>{hero.special.fat} Únava</span>
                     </span>
                   )}
                 </div>
+
               </div>
 
               {/* Lore Narrative Paragraphs */}
@@ -411,12 +423,13 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="bg-[#f0f8ec] p-4 rounded-xl border-2 border-[#2d6328] shadow-xs">
                   <h4 className="font-title text-sm font-black text-[#204e1c] flex items-center gap-1.5 mb-2.5">
-                    <span>🌟</span> Přednosti a silné stránky
+                    <LadaThematicIcon name="star" size={15} />
+                    <span>Přednosti a silné stránky</span>
                   </h4>
                   <ul className="space-y-2 text-xs font-semibold text-[#1a4016]">
                     {lore.strengths.map((s, idx) => (
                       <li key={idx} className="flex items-start gap-1.5">
-                        <span className="text-[#2d6328] font-black">✓</span>
+                        <LadaThematicIcon name="check" size={13} />
                         <span>{s}</span>
                       </li>
                     ))}
@@ -425,12 +438,13 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
 
                 <div className="bg-[#fff3ec] p-4 rounded-xl border-2 border-[#942718] shadow-xs">
                   <h4 className="font-title text-sm font-black text-[#942718] flex items-center gap-1.5 mb-2.5">
-                    <span>⚠️</span> Úskalí a na co si dát pozor
+                    <LadaThematicIcon name="warning" size={15} />
+                    <span>Úskalí a na co si dát pozor</span>
                   </h4>
                   <ul className="space-y-2 text-xs font-semibold text-[#541e15]">
                     {lore.weaknesses.map((w, idx) => (
                       <li key={idx} className="flex items-start gap-1.5">
-                        <span className="text-[#942718] font-black">✗</span>
+                        <LadaThematicIcon name="cross_mark" size={13} />
                         <span>{w}</span>
                       </li>
                     ))}
@@ -441,7 +455,8 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
               {/* Tactical Walkthrough */}
               <div className="bg-[#fffaf0] p-4 rounded-xl border-3 border-[#1c1308] shadow-[4px_4px_0_#1c1308]">
                 <h4 className="font-title text-base font-black text-[#1c1308] flex items-center gap-2 mb-2">
-                  <span>🎯</span> Doporučená strategie
+                  <LadaThematicIcon name="target" size={16} />
+                  <span>Doporučená strategie</span>
                 </h4>
                 <p className="text-xs sm:text-sm font-semibold text-[#382614] leading-relaxed">
                   {lore.tactics}
@@ -460,16 +475,18 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
             <button
               type="button"
               onClick={onClose}
-              className="lada-button py-2.5 px-4 text-xs font-bold flex-1 sm:flex-none"
+              className="lada-button py-2.5 px-4 text-xs font-bold flex-1 sm:flex-none inline-flex items-center gap-1.5"
             >
-              ⬅️ Zpět
+              <LadaThematicIcon name="back" size={14} />
+              <span>Zpět</span>
             </button>
             <button
               type="button"
               onClick={() => onSelect(hero.id)}
-              className="lada-button lada-button-primary py-2.5 px-6 text-sm font-black shadow-[0_4px_0_#1c1308] flex-1 sm:flex-none"
+              className="lada-button lada-button-primary py-2.5 px-6 text-sm font-black shadow-[0_4px_0_#1c1308] flex-1 sm:flex-none inline-flex items-center gap-2"
             >
-              ⚔️ Vyrazit na cestu za {hero.name.split(" ")[0]}
+              <LadaThematicIcon name="attack" size={15} />
+              <span>Vyrazit na cestu za {hero.name.split(" ")[0]}</span>
             </button>
           </div>
         </div>
@@ -477,3 +494,4 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
     </div>
   );
 };
+

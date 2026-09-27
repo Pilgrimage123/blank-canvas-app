@@ -1149,7 +1149,7 @@ export const HEROES: Record<string, HeroDef> = {
     deck: { metla: 4, kuraz: 4, odvar: 2 },
     special: {
       id: "slanika",
-      name: "🧂 Vyřezávaná slánka",
+      name: "Vyřezávaná slánka",
       label: "Slánka",
       cd: 8,
       dmg: 10,
@@ -1172,7 +1172,7 @@ export const HEROES: Record<string, HeroDef> = {
     startBlock: 8,
     defendBonus: 2,
     deck: { metla: 3, kuraz: 5, odvar: 2 },
-    special: { id: "pozehnani", name: "✝️ Farní požehnání", label: "Požehnání", cd: 7, block: 12 },
+    special: { id: "pozehnani", name: "Farní požehnání", label: "Požehnání", cd: 7, block: 12 },
   },
   bylinkarka: {
     id: "bylinkarka",
@@ -1189,7 +1189,7 @@ export const HEROES: Record<string, HeroDef> = {
     sleepFat: 9,
     extraStartCards: 1,
     deck: { metla: 3, kuraz: 3, odvar: 4 },
-    special: { id: "cerstvy", name: "🌿 Čerstvý odvar", label: "Odvar", cd: 6, draw: 2, fat: -2 },
+    special: { id: "cerstvy", name: "Čerstvý odvar", label: "Odvar", cd: 6, draw: 2, fat: -2 },
   },
   babicka: {
     id: "babicka",
@@ -1210,7 +1210,7 @@ export const HEROES: Record<string, HeroDef> = {
     deck: { metla: 3, kuraz: 3, odvar: 2, vretanko: 1, chleb_sul: 1 },
     special: {
       id: "chleb_a_laska",
-      name: "🍞 Chléb se solí a vlídné slovo",
+      name: "Chléb se solí a vlídné slovo",
       label: "Chléb a sůl",
       cd: 7,
       block: 14,
@@ -1373,7 +1373,7 @@ export function starEmoji(stars?: number): string {
   if (!stars || stars <= 0) return "";
   const full = Math.floor(stars);
   const half = stars - full >= 0.5 ? 1 : 0;
-  return "⭐".repeat(full) + (half ? "✨" : "");
+  return "★".repeat(full) + (half ? "½" : "");
 }
 
 export function getCardUpgradeCost(currentStars: number = 0): number {

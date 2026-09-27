@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { RunOptions } from "../../types";
 import { downloadGameHtml } from "../../utils/downloadGameHtml";
+import { LadaThematicIcon } from "../sprites/LadaThematicIcon";
 
 interface OptionsScreenProps {
   options: RunOptions;
@@ -58,13 +59,17 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
       {/* Top Bar */}
       <div className="flex items-center justify-between border-b-2 border-[#1c1308] pb-4 mb-6">
         <div>
-          <h2 className="font-title text-3xl font-black text-[#1c1308]">⚙️ Volby běhu</h2>
+          <h2 className="font-title text-3xl font-black text-[#1c1308] flex items-center gap-2">
+            <LadaThematicIcon name="settings" size={30} animated />
+            <span>Volby běhu</span>
+          </h2>
           <p className="text-xs sm:text-sm font-bold text-[#694825]">
             Přizpůsobte si obtížnost, chování bubáků a pevný seed putování.
           </p>
         </div>
-        <button type="button" onClick={onBack} className="lada-button text-sm py-2 px-4">
-          ⬅️ Zpět
+        <button type="button" onClick={onBack} className="lada-button text-sm py-2 px-4 inline-flex items-center gap-1.5">
+          <LadaThematicIcon name="back" size={16} />
+          <span>Zpět</span>
         </button>
       </div>
 
@@ -177,8 +182,9 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
               placeholder="např. Hrusice1848"
               className="bg-[#fff8e8] border-2 border-[#1c1308] rounded-xl px-3 py-2 text-sm font-bold text-[#1c1308] flex-1 disabled:opacity-50"
             />
-            <button type="button" onClick={rollNewSeed} className="lada-button text-xs py-2 px-3">
-              🎲 Nový
+            <button type="button" onClick={rollNewSeed} className="lada-button text-xs py-2 px-3 inline-flex items-center gap-1">
+              <LadaThematicIcon name="reset" size={14} animated />
+              <span>Nový</span>
             </button>
           </div>
         </div>
@@ -202,7 +208,7 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
               onClick={handleDownload}
               className="lada-button text-sm py-2.5 px-4 bg-[#eaf4dc] hover:bg-[#d8edbe] border-2 border-[#1c1308] font-black text-[#1c1308] flex items-center gap-2 shadow-[0_3px_0_#1c1308] cursor-pointer"
             >
-              <span>📥</span>
+              <LadaThematicIcon name="download" size={18} animated />
               <span>Stáhnout celou hru (1 soubor HTML)</span>
             </button>
             {downloadMsg && (
@@ -227,10 +233,11 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
           <button
             type="button"
             onClick={onOpenChangelog}
-            className="lada-button text-sm py-2 px-4 bg-[#f2e2be]"
+            className="lada-button text-sm py-2 px-4 bg-[#f2e2be] inline-flex items-center gap-2"
             title="Otevřít kroniku změn a verzí"
           >
-            📜 Kronika změn (v0.9.6)
+            <LadaThematicIcon name="scroll" size={18} animated />
+            <span>Kronika změn (v0.9.7)</span>
           </button>
         )}
         <button

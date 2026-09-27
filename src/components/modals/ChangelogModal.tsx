@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { EnemySprite } from "../sprites/EnemySprite";
+import { LadaThematicIcon, renderLadaText } from "../sprites/LadaThematicIcon";
 
 interface ChangelogModalProps {
   onClose: () => void;
@@ -25,8 +26,37 @@ interface VersionEntry {
 // Záznamy v changelogu se mají dělat o něco méně detailní než doposud (stručnější, výstižné body zaměřené na podstatu).
 const CHANGELOG_DATA: VersionEntry[] = [
   {
-    version: "v0.9.6",
+    version: "v0.9.7",
     tag: "Aktuální verze",
+    date: "27. září",
+    title: "Ladovské 2-fázové animované sprity namísto emotikonů",
+    badge: "2-fázové Ladovské ikony",
+    flavorQuote:
+      "„Všechny cizokrajné emoji značky jsme z knížky vyhnali a namísto nich pan malíř Lada nakreslil poctivé dřevěné a inkoustové obrázky s veselým poskakováním!“",
+    flavorAuthor: "obecní písař z Hrusic",
+    highlights: [
+      {
+        category: "Autentické 2-fázové animované sprity",
+        icon: "picture",
+        items: [
+          "Kompletní nahrazení všech emotikonů v celém uživatelském rozhraní za na míru vytvořené Ladovské vektorové sprity.",
+          "Jemná dvoufázová animace (krokovaný mikro-pohyb) inspirovaná ručně kreslenými pohádkami Josefa Lady.",
+          "Tematické ikony pro bojové akce, suroviny (sůl, krejcary, nádech, spánek), krajiny, události a záměry bubáků.",
+        ],
+      },
+      {
+        category: "Vizuální sjednocení napříč hrou",
+        icon: "scroll",
+        items: [
+          "Sjednocené zobrazení v kartách, bojovém doku, pop-upech scenerie, mapě, bestiáři i zkušebním studiu.",
+          "Automatická transformace textových symbolů na animované sprity pomocí nového komponentu LadaThematicIcon.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.9.6",
+    tag: "Předchozí verze",
     date: "24. září",
     title: "Samostatný export do 1 HTML souboru",
     badge: "Jediný HTML soubor & Offline hraní",
@@ -36,7 +66,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Kompletní hra v jediném souboru",
-        icon: "📥",
+        icon: "download",
         items: [
           "Plně soběstačný 1 HTML soubor obsahující celou hru (veškerý herní kód, styly, syntetizované zvuky i vektorové ilustrace).",
           "Možnost stažení přímo z úvodní obrazovky a z nabídky Voleb pro okamžité offline hraní.",
@@ -57,7 +87,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Hvězdičková jakost karet (0 až 5★)",
-        icon: "⭐",
+        icon: "star",
         items: [
           "Karty mohou mít 0 až 5 hvězdiček jakosti; každá hvězdička trvale posiluje číselné hodnoty karty o +10 % (Zranění, Blok, úleva od Únavy).",
           "Náklady na Akce i čas nápřahu (Augenblicky) zůstávají neměnné.",
@@ -65,7 +95,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Šenk U Černého kocoura & Brašna",
-        icon: "✨",
+        icon: "star",
         items: [
           "Řemeslné vylepšování: v šenku lze libovolnou kartu z brašny povýšit na další hvězdičku za progresivní cenu v krejcarech.",
           "Nákup karet se šancí na náhodnou jakost: v šenku se mohou objevit karty s hvězdičkou jakosti už v nabídce.",
@@ -86,7 +116,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Dostupnost karet Hozená sůl a Kříž na hruď",
-        icon: "🧂",
+        icon: "salt",
         items: [
           "Původní karty Hozená sůl (i vylepšení Ostřejší sůl) a Kříž na hruď (i Velký kříž) zůstávají plnohodnotnou součástí hry se všemi mechanikami (solný efekt, svatokrádež, vodní slabost).",
           "Karty nefigurují ve startovních balíčcích, ale lze je zakoupit v šenku a rozšiřovat jimi brašnu.",
@@ -94,7 +124,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Dynamická nabídka v Hospodě U Černého kocoura",
-        icon: "🍺",
+        icon: "beer",
         items: [
           "Hospoda nyní generuje pestrou nabídku karet napříč celou kolekcí (levné, střední i vzácné kousky včetně původní soli a kříže).",
         ],
@@ -113,7 +143,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Nové základní karty v balíčcích hrdinů",
-        icon: "🧹",
+        icon: "broom",
         items: [
           "Březová metla nahrazuje Hozenou sůl: základní útok (8 zranění, 2 Akce, 2 Aug) s vylepšením na Ostrou metlu (14 zranění).",
           "Kuráž nahrazuje Kříž na hruď: základní obrana (8 Blok, 2 Akce, 2 Aug) s vylepšením na Nezlomnou kuráž (14 Blok).",
@@ -122,7 +152,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Grafika karet & Šenk",
-        icon: "🎨",
+        icon: "picture",
         items: [
           "Originální ladovské emblémy pro Březovou metlu (svazek proutí s lýkovým úvazem) i Kuráž (ochranný štítek s lidovým srdcem).",
           "V Hospodě U Černého kocoura je možné Březovou metlu i Kuráž řádně vylepšit za krejcary.",
@@ -142,7 +172,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Zavedení zásady designu hrdinů",
-        icon: "📜",
+        icon: "scroll",
         items: [
           "Zakotveno základní pravidlo: bonusy a pasivní schopnosti postav nesmí být vázány na konkrétní karty ani specifické tagy.",
           "Všechny výhody postav jsou nyní plně systémové a ovlivňují obecné mechaniky (obecný typ karty defend/prep, začátek boje, úhyby, tahy a únavu).",
@@ -150,7 +180,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Nové pasivní dary všech postav",
-        icon: "✨",
+        icon: "star",
         items: [
           "Pobuda z Hrusic: Otrlá obratnost (+1 Úhyb na začátku každého souboje).",
           "Pobožný kostelník: Posvěcený štít (+8 Blok na startu, +2 Blok ke všem obranným kartám bez ohledu na název).",
@@ -172,7 +202,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Nový rozpočet síly karet (Action Budget)",
-        icon: "⚖️",
+        icon: "balance",
         items: [
           "Definován oficiální balanční vzorec sladěný s 80 HP hrdiny a dvojnásobnými útoky: Cena 2 Akce = 8 bodů síly (4 b./Akce), Cena 3 Akce = 14 bodů síly (4.67 b./Akce).",
           "Zaveden modul CARD_BALANCE_FORMULA s penalizací okamžitého tempa, koeficienty pro plošné zásahy (Splash 1.4x, Řada 2.33x) a výpočtem odkladu zásahu (calculateStaggerDelay).",
@@ -180,7 +210,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Přepracování útočných karet a schopností",
-        icon: "🧂",
+        icon: "salt",
         items: [
           "Hozená sůl upravena na 8 poškození (dříve 4), Ostřejší sůl na 14 poškození (dříve 7) a Hůl na čerta na 14 poškození.",
           "Plošné karty přepočítány: Kropáč svěcenky (8 do cíle + 40 % okolí), Sůl do větru (6 do všech v řadě), Zlaté vřetánko (12 poškození).",
@@ -201,7 +231,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Dvojnásobné životy & útoky",
-        icon: "⚔️",
+        icon: "attack",
         items: [
           "Zdvojnásobeny základní životy hrdinů (ze 40 na 80 HP) pro taktičtější a napínavější průběh střetů.",
           "Zdvojnásobena síla útoků všech bubáků a jejich variant v celém bestiáři.",
@@ -209,7 +239,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Dvojnásobný blok & rozpad obrany",
-        icon: "🛡️",
+        icon: "block",
         items: [
           "Zdvojnásobeny hodnoty Bloku na obranných kartách (Kříž na hruď 8, Velký kříž 14, Pecen se solí 10) i zvláštních schopnostech a událostech (Záplata +8).",
           "Zaveden dynamický úbytek Bloku: každým Augenblickem klesá stávající Blok o 15 % (minimálně o 1 jednotku).",
@@ -230,7 +260,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Volné rozprostření poražených",
-        icon: "🌾",
+        icon: "field",
         items: [
           "Vyřazení bubáci nerespektují žádné řady a shromažďují se společně v přirozené zóně na pravé straně bojiště.",
           "Při dostatku místa se rozprostřou více do šířky namísto těsného mačkání v jednom chumlu.",
@@ -252,7 +282,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Fixní poloha zóny poražených",
-        icon: "🏳️",
+        icon: "surrender",
         items: [
           "Bojové řady si po celou dobu souboje udržují plnou délku vyhrazených pozic.",
           "Vyřazováním bubáků se zóna pro poražené již nikdy neposunuje blíže k hrdinovi ani do středu bojiště.",
@@ -273,7 +303,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Ukotvení čela formace",
-        icon: "🛡️",
+        icon: "block",
         items: [
           "Bojové linie horní i dolní řady jsou nově pevně ukotveny od čela řady (směrem k hrdinovi).",
           "Při vyřazení kteréhokoliv bubáka se celá řada ani přední bojovníci již nikdy neposunou dozadu.",
@@ -295,7 +325,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Tlačítko Vyřaď bubáka",
-        icon: "🏳️",
+        icon: "surrender",
         items: [
           "V testovacích soubojích přidáno tlačítko „Vyřaď bubáka“ v horní liště i v dolním panelu akcí.",
           "Po aktivaci stačí kliknout na libovolného bubáka na bojišti — ten je ihned vyřazen a spustí se jeho ústupová animace.",
@@ -304,7 +334,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Pohodlné opakování testů",
-        icon: "🔄",
+        icon: "reset",
         items: [
           "Možnost opakovaně vyřazovat bubáky na různých pozicích horní i dolní řady pro detailní kontrolu chování následovníků a 3sekundového časování.",
           "Přidáno tlačítko pro okamžitý restart testovacího střetu přímo z bojiště.",
@@ -324,7 +354,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Rozdělení a chování řad",
-        icon: "🛤️",
+        icon: "field",
         items: [
           "Řady oficiálně přejmenovány na „Horní řada“ (břeh) a „Dolní řada“ (cesta) napříč celou hrou.",
           "Bubáci z horní nebo dolní řady se při úprku bubáka z druhé řady vůbec nepohybují.",
@@ -333,7 +363,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Prostor pro vzdávající se",
-        icon: "🏳️",
+        icon: "surrender",
         items: [
           "Vzdávající se bubák je umístěn o jednu celou velikost bubáka více vzadu.",
           "Další vzdávající se bubáci zaujímají místa náhodně kolem něj v přirozeném shluku, netlačí se na bojující a zůstávají dobře v obraze.",
@@ -353,7 +383,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Střídání a pohyb v řadách",
-        icon: "🐾",
+        icon: "paw",
         items: [
           "Bojovníci stojící za poraženým bubákem přesně po 3 sekundách od začátku jeho ústupu animovaným skokem obsadí jeho uvolněné místo.",
           "Během 3sekundového ústupu zůstává místo v přední řadě rezervované a ostatní bojovníci v řadě se vůbec nehýbou.",
@@ -374,7 +404,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Pohyb bubáků z místa na místo",
-        icon: "🐾",
+        icon: "paw",
         items: [
           "Přesun bubáků je zpomalen o 150 % (2,5× delší čas trvání) pro klidnější a přehlednější tempo scény.",
           "Nahrazeny skokové mezifáze za plynulé křivky zhoupnutí, vrcholu poskoku a měkkého došlápnutí.",
@@ -395,7 +425,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Chování poražených bubáků",
-        icon: "🏳️",
+        icon: "surrender",
         items: [
           "Poražení bubáci se plynulým klouzavým ústupem (gliding retreat) fyzicky přesunou z bojové linie doprava do prostoru pro vzdávající se.",
           "Během pohybu se přikrčí, poskočí s odklonem a dopadnou na své nové místo bez jakéhokoli trhnutí či skoku.",
@@ -405,7 +435,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Rozestavení bojiště",
-        icon: "⚔️",
+        icon: "attack",
         items: [
           "Všichni neporažení bubáci jsou posunuti o velikost dvou bubáků dopředu blíže k lovci.",
           "Vzadu za bojující linií vznikl velkorysý vyhrazený prostor pro poražené a vzdávající se potvůrky.",
@@ -426,7 +456,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Oprava animací & Bojová odezva",
-        icon: "💥",
+        icon: "hit",
         items: [
           "Odstraněno nechtěné nulování příznaku zásahu v herním cyklu při řešení karet, díky čemuž se nyní zásahy bubáků ihned a spolehlivě zobrazují.",
           "Zásahy kartami, solí i schopnostmi nyní viditelně spouští 3-fázový otřes bubáka, komickou bublinu (Bác! / Sssst!), Ladovské částice i aureolu hvězdiček.",
@@ -447,7 +477,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Bojová odezva & Animace",
-        icon: "💥",
+        icon: "hit",
         items: [
           "Běžná zranění (útok kartou, sůl na kůži i speciální schopnosti hrdiny) spolehlivě spouštějí plnou 3-fázovou animaci zásahu i otřes postavy.",
           "Zavedeno počítadlo zásahů (hitNonce) pro okamžitý restart animace, bubliny (Bác! / Sssst!) a částic při rychlých následných úderech.",
@@ -468,7 +498,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Bojový rytmus & Animace",
-        icon: "🎭",
+        icon: "theater",
         items: [
           "Běžné zranění (útok kartou, sůl, schopnosti) již nespouští plnou reakci na zásah.",
           "Kompletní 3-fázová animace zásahu, komický nápis (Bác! / Sssst!), částice i točící se aureola hvězdiček se spouští výhradně při vyřazení bubáka (pokles HP na 0).",
@@ -489,7 +519,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Průhlednost a zarovnání částic",
-        icon: "✨",
+        icon: "star",
         items: [
           "Odstraněn neprůhledný centrální obláček zakrývající obličej a reaktivní prvky postavy.",
           "Nahrazeno dutým rázovým prstencem a akčními paprsky směřujícími vně do volného prostoru.",
@@ -498,7 +528,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Plynulá synchronizace 3 fází",
-        icon: "⏱️",
+        icon: "hourglass",
         items: [
           "Zaveden automatický plynulý přechod fází 1 -> 2 -> 3 při zásahu v boji i zkušebně.",
           "Plná viditelnost mimiky, odletujících fajfek, cylindrů i deformace těla po celou dobu trvání zásahu.",
@@ -518,7 +548,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "3-fázový animační cyklus zásahu (10–12 FPS, ~280–300 ms)",
-        icon: "💥",
+        icon: "hit",
         items: [
           "Fáze 1 (Hitstop): Bleskový komický záblesk a stlačení siluety (squash) s pevným kontaktním bodem k zemi.",
           "Fáze 2 (Vrchol záklonu): Výrazné odmrštění vzad s odletujícími proprietami (fajfky, cylindry, sláma, pentle, kapky vody).",
@@ -527,7 +557,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Plná integrace pro všech 33 bubáků a zkušebna",
-        icon: "🎬",
+        icon: "film",
         items: [
           "Unikátní vizuální reakce a SVG deformace pro každou z 33 nestvůr v LadaEnemyHitReactions.",
           "Animační zkušebna rozšířena o krokování fází 1–3 s výpisem detailního popisu a všech 33 postav.",
@@ -548,7 +578,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Kanonické vymezení postav (polovina 19. století)",
-        icon: "📜",
+        icon: "scroll",
         items: [
           "Důsledně odstraněny jmenovité anachronické postavy (Pepík Ševců, kocour Mikeš, Pašík, Bobeš, Brčálův syn Pulec, Mulisákův syn Bubáček).",
           "Interaktivní zvířátko na plotě sjednoceno na obecného hrusického černého kocoura.",
@@ -569,7 +599,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Oprava animací kola a vodního víru",
-        icon: "⚙️",
+        icon: "settings",
         items: [
           "Mlýnské kolo v Klapáčově mlýně se nyní otáčí přesně kolem středu své osy bez vyosení.",
           "Vodní vír v Černé tůni získal symetrická ramena a perspektivní zploštění pro plynulou rotaci.",
@@ -577,7 +607,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Plná viditelnost a odkrytí scenerií",
-        icon: "👁️",
+        icon: "search",
         items: [
           "Odstraněna neprůhledná překrývací vrstva cesty, která zakrývala spodní část bitevních krajin.",
           "Všechny prvky, domečky, stromy i vodní hladiny jsou nyní stoprocentně viditelné.",
@@ -585,7 +615,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Přidání nových chalup, stromů a detailů",
-        icon: "🏡",
+        icon: "village",
         items: [
           "Vesnice Hrusice obohacena o druhou roubenku, stodolu, mohutnou lípu, jabloň a studnu.",
           "Do mlýna přibyl špejchar, pekařství, řada vrb, bříza, dřevěná lávka a žebřiňák.",
@@ -607,7 +637,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Přehledné rozdělení zkušebny na 3 podčásti",
-        icon: "📑",
+        icon: "book",
         items: [
           "Navigace pomocí záložek: Testovací souboje, Animace bubáků a Pozadí boje.",
           "Čisté oddělení funkcí pro pohodlné zkoušení bez nutnosti scrollovat celou stránkou.",
@@ -615,7 +645,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Animační studio: Animace bubáků",
-        icon: "👹",
+        icon: "devil",
         items: [
           "Katalog bubáků rozdělený do rodin (Strašidla, Vodní havěť, Pekelníci, Hvozd a lovci).",
           "Testování podle typu animace: klidový střeh, 5-fázový útok, 4-fázový pohyb (vpřed, vzad, do strany) a zásah.",
@@ -624,7 +654,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Galerie: Pozadí boje bez postav",
-        icon: "🏞️",
+        icon: "picture",
         items: [
           "Všech 7 bitevních scenerií zobrazených čistě bez bubáků a lovce.",
           "Režim velkého detailu s interaktivními velikonočními vajíčky i přehledová mozaika všech 7 pozadí najednou.",
@@ -643,18 +673,18 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Autentické Ladovské částice při zásahu",
-        icon: "✨",
+        icon: "star",
         items: [
           "Čtyřcípé komické hvězdičky s tučnou černou tušovou konturou a teplými žlutými tóny.",
           "Obláčky prachu a dýmu s ladovským vykrojeným tvarem při úderu holí či pěstí.",
-          "Krystalky soli s jiskřením při solení bubáků („Sssst! 🧂“).",
-          "Vodní kapky a šplíchance pro vodníky a rusalky („Šplouch! 💦“) i pekelné saze pro čerty.",
+          "Krystalky soli s jiskřením při solení bubáků („Sssst!“).",
+          "Vodní kapky a šplíchance pro vodníky a rusalky („Šplouch!“) i pekelné saze pro čerty.",
           "Specifické částice pro hrdiny (pírka pro Pobudu, bylinky pro Bylinkářku, chléb pro Babičku, svěcená voda pro Kostelníka).",
         ],
       },
       {
         category: "Komická aureola hvězdiček & herní šťavnatost",
-        icon: "💫",
+        icon: "star",
         items: [
           "Točící se komické hvězdičky (Dizzy Halo) nad hlavou zasaženého lovce či omráčeného bubáka.",
           "Měkký teplý otřes bojiště (anim-screen-wobble) při každém úspěšném zásahu.",
@@ -663,7 +693,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Testovací studio animací",
-        icon: "🧪",
+        icon: "flask",
         items: [
           "V testovací aréně přidána tlačítka pro okamžité vyzkoušení všech typů částic (Hvězdičky, Sůl, Voda, Pekelné saze, Hrdina).",
         ],
@@ -681,7 +711,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Nová hratelná dvojice: Babička a mladá Barunka",
-        icon: "👵",
+        icon: "party",
         items: [
           "Plnohodnotný hrdina v souladu s historickým kánonem (polovina 19. století).",
           "Základní statistiky: 42 HP, Připravenost 24, 11 krejcarů, hluboké dýchání (7 Akcí z Nádechu) a silný Spánek (−8 Únavy).",
@@ -690,7 +720,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Originální Ladovský vizuál a animace",
-        icon: "🎨",
+        icon: "picture",
         items: [
           "Autentický vektorový sprite Babičky s bílým čepcem, modrotiskovou zástěrou, dřevěným vřetánkem a voňavým pecnem chleba.",
           "Věrná společnice Barunka s copánky s červenými mašlemi a košíkem jablíček, reagující na dění i útoky.",
@@ -699,7 +729,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Nové karty a událost na mapě",
-        icon: "🃏",
+        icon: "draw",
         items: [
           "Zlaté vřetánko (útok za 6, zranění +Aug 1:1, odmotání nitě nepřátelského záměru).",
           "Pecen chleba se solí (okamžitý Blok +5 a úleva −3 Únavy zcela bez nápřahu).",
@@ -721,7 +751,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "5-fázové animace útoků (lovci i bubáci)",
-        icon: "⚔️",
+        icon: "attack",
         items: [
           "Promyšlený pětifázový cyklus úderu: Nápřah vzad, vrchol nápřahu, bleskový úder se sečným obloukem a Bác! hvězdičkami, setrvačný dojezd a návrat do střahu.",
           "Specifické vizuály pro všechny lovce: sukovice Pobudy, svěcená voda Kostelníka i horký bylinkový odvar Bylinkářky reagují v každé fázi.",
@@ -729,7 +759,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "4-fázový pohyb bubáků z místa na místo",
-        icon: "🐾",
+        icon: "paw",
         items: [
           "Čtyřfázový přirozený pohyb: Příprava a přikrčení, výskok v povětří s odlehčeným stínem, dopad se zvířenými obláčky prachu a vzpřímení.",
           "Podpora směrů (vpřed, vzad, do strany) a nová Animační zkušebna v testovacím menu pro krokování jednotlivých fází.",
@@ -749,7 +779,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Příběh a folklorní kánon",
-        icon: "📜",
+        icon: "scroll",
         items: [
           "Časové zasazení: Příběh hry je pevně ukotven přibližně 50 let před narozením Pepíka (v polovině 19. století).",
           "Vymezení postav: Ve hře nevystupuje Pepík ani jeho dětští kamarádi, ani Pulec s Bubáčkem (v této době ještě nejsou na světě).",
@@ -770,7 +800,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Interaktivní prvky pro radost",
-        icon: "✨",
+        icon: "star",
         items: [
           "Klikací kulisy v každém prostředí: Klepnutím na sluníčko, černého kocoura na plotě, kozu, kachny, žáby, veverku, sovu, hrníčky na vrbě, korouhvičku, kapličku či vír vyvoláte veselou reakci.",
           "Animace a zvukové efekty: Každý prvek po kliknutí pružně poskočí, zazní originální syntezovaný zvuk a objeví se roztomilá komiksová bublina.",
@@ -791,7 +821,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Venkovská zvířata a animace",
-        icon: "🐾",
+        icon: "paw",
         items: [
           "Černý kocour a domácí zvířectvo: Hrusický kocour s červeným obojkem vrtící ocáskem na plotě, pasoucí se bílá koza Běluše, husa s housátkem i babočka paví oko.",
           "Vodní a lesní fauna: Kuňkající zelená rosnička s pulzujícím hrdlem, kachní rodinka, skákající pstruh, vážky a vlaštovčí hnízdo s ptáčaty.",
@@ -814,7 +844,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Animovaná pozadí a živý svět",
-        icon: "☀️",
+        icon: "sun",
         items: [
           "Animované ladovské sluníčko: Usměvavá tvář s mrkajícíma očima, pulzující září a plynule rotujícími plamennými paprsky.",
           "Rozpohybovaný svět Ladových pohádek: Otáčející se vodní kolo se stříkajícími kapkami, kroužící jiřičky a krkavci, plující mraky a komínový kouř.",
@@ -836,7 +866,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Bojové rozestavení",
-        icon: "🌾",
+        icon: "field",
         items: [
           "Vyvýšení zadní řady o ~70 % výšky bubáka: Zadní řada strašidel byla posunuta nahoru na travnatý břeh a laťkový plot.",
           "Perfektní přehled bojiště: Postavy v zadní řadě již nejsou zakryty přední řadou a jejich siluety, odpočty i ukazatele životů jsou plně viditelné.",
@@ -856,7 +886,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Bojové rozestavení",
-        icon: "👣",
+        icon: "paw",
         items: [
           "Předsunutí formace o šířku menšího bubáka: Všichni bubáci v přední i zadní řadě se posunuli dopředu blíže k lovci, čímž vznikla přirozenější a vyváženější kompozice na polní cestě.",
           "Volnější pravý okraj: Svislé ukazatele na zádech strašidel mají nyní dostatek prostoru a netísní se u rámu arény.",
@@ -876,7 +906,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Lepší čitelnost ukazatele",
-        icon: "👀",
+        icon: "search",
         items: [
           "Předsunuto do popředí (z-20): Vertikální ukazatel je nyní ve vrstvě před tělem bubáka, takže jej korpulentní postavy (vodníci, čerti) nepřekrývají.",
           "Posun o 40 % více vzad: Ukazatel je posunut ještě více směrem za záda nepřítele pro přirozenou a čistou kompozici.",
@@ -896,7 +926,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Svislý ukazatel bubáků",
-        icon: "📏",
+        icon: "balance",
         items: [
           "Vertikální minimalistická lišta: Ukazatel odpočtu Augenblicků a životů (HP) je nyní umístěn svisle přímo za postavou bubáka.",
           "Uvolněný prostor nad hlavou: Horní zóna je zcela volná pro přehlednější zobrazení předpovědi zranění, cílového zaměřovače a komiksových citoslovcí.",
@@ -916,7 +946,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Zjednodušené rozhraní bubáků",
-        icon: "👻",
+        icon: "ghost",
         items: [
           "Odstranění masivního podstavce: Byla odstraněna rozměrná lišta se jménem a velkým panelem, čímž se scéna otevřela a bubáci vyniknou v plné ladovské kráse.",
           "Kompaktní odpočet a HP: Za tělem každého bubáka je decentní ukazatel odpočtu (Aug) a aktuálních životů (HP).",
@@ -937,10 +967,10 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Bojiště & Formace bubáků",
-        icon: "🌾",
+        icon: "field",
         items: [
           "Snížení horní řady: Zadní řada strašidel je posunuta níže k cestě, takže se jemně překrývá a částečně schovává za největšími bubáky v přední řadě.",
-          "Čisté vrstvení a odezva: Přední linie je v popředí; při najetí kurzorem i při zaměření (🎯) zadní bubák plynule vystoupí do popředí pro snadné ovládání a útok.",
+          "Čisté vrstvení a odezva: Přední linie je v popředí; při najetí kurzorem i při zaměření  zadní bubák plynule vystoupí do popředí pro snadné ovládání a útok.",
         ],
       },
     ],
@@ -957,7 +987,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Odstranění mrtvého kódu & úklid projektu",
-        icon: "🧹",
+        icon: "broom",
         items: [
           "Odstranění nepoužívaných souborů: Smazány zastaralé komponenty (CombatView, MapView, VillageHub, GameOverModal, FairytaleAlbum, FairytaleArt) a nepoužívané soubory routování.",
           "Extrakce spriteUtils: Pomocné funkce pro měřítka bubáků (getStageScale, getStagePercent) přesunuty do čistého pomocného modulu pro bezchybný Fast Refresh.",
@@ -965,7 +995,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Opravy soubojových mechanik & spolehlivost",
-        icon: "⚔️",
+        icon: "attack",
         items: [
           "Přímé cílení při kliku: Kliknutí na bubáka s vybranou kartou či rychlý útok předává cíl atomicky, což zabraňuje nechtěnému zásahu předchozího cíle.",
           "Bonus Kostelníka u okamžitých karet: Bonus k Bloku za kříže je nyní korektně započítáván i u okamžitých karet bez nápřahu.",
@@ -986,7 +1016,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Zásady zápisu novinek",
-        icon: "📜",
+        icon: "scroll",
         items: [
           "Stručnější záznamy: Všechny budoucí záznamy v changelogu se formulují o něco méně detailně než dosud.",
           "Aktualizace systémových pravidel: Požadavek na méně detailní záznamy byl zapsán do systémových pravidel projektu (AGENTS.md, GEMINI.md, README.md) i do hlavičky této kroniky.",
@@ -1006,7 +1036,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Oprava spritů Čerta hraběte (Stádium 4)",
-        icon: "🎩",
+        icon: "hat",
         items: [
           "Odstranění létajícího biče: Kompletní vymazání problematické rotující animace, která způsobovala odtržení biče a jeho poletování v prostoru mimo tělo.",
           "Bič pevně v ruce a před tělem: Jezdecký karabáč je zřetelně ukotven v čertovské pěsti se zlatým pečetním prstenem a zaručeně vykreslen v popředí před černým kabátcem i pláštěm.",
@@ -1015,7 +1045,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Sjednocení velikosti rodiny Čerta elegána",
-        icon: "📏",
+        icon: "balance",
         items: [
           "Stejná velikost všech 4 členů: Všichni členové rodiny (Čert voják, Čert myslivec, Čert džentlmen i Čert hrabě) mají nyní přesně identické rozměry.",
           "Běžná lidská velikost (Lovec): Velikost celé rodiny byla normalizována na 115 × 124 px, což přesně odpovídá spritu Lovce (běžný lidský vzrůst).",
@@ -1036,7 +1066,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Nové rodiny 1. úrovně",
-        icon: "🐸",
+        icon: "frog",
         items: [
           "Ropucha: Bradavičnatá tůňová ropucha (od ropušky s pulčím ocáskem až po královnu blátivých ropuch se zlatou leknínovou korunkou).",
           "Ohnivý kohout: Jiskřivý a plamenný kohout vysedávající na doškových střechách stodol.",
@@ -1045,7 +1075,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Nové rodiny 2. úrovně",
-        icon: "🧚",
+        icon: "fairy",
         items: [
           "Divoženka: Lesní žínka s mechovým lýkem a věnečkem z lesních jahod a jeřabin.",
           "Jeskyňka: Půvabná skalní elfka s modrou pletí, špičatýma ušima, krystalovou korunkou a křemenným nožem („Jen dva prstíčky strčíme...“).",
@@ -1055,7 +1085,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Nové rodiny 3. úrovně",
-        icon: "🌊",
+        icon: "pond",
         items: [
           "Rusalka: Půvabná vodní víla se zelenými vlásky, vodním závojem a leknínovou korunkou u mlýnských jezů.",
           "Permoník: Podzemní havířský skřítek s kahancem, stříbrným kladívkem a dýmčičkou plnou voňavého tabáku.",
@@ -1063,7 +1093,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Zkušebna & Testovací sestavy",
-        icon: "🧪",
+        icon: "flask",
         items: [
           "Okamžité testování: Ve Zkušebně jsou k dispozici rychlé testovací střety pro novou 1. úroveň (3 bubáci), 2. úroveň (4 bubáci) i 3. úroveň (2 bubáci).",
           "Pohádkový Bestiář: Všechny nové rodiny a jejich 4 vývojová stádia jsou kompletně zapsány v Bestiáři včetně autentického ladovského popisu.",
@@ -1083,7 +1113,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Nové vlastní sprity rodiny čertů",
-        icon: "🔥",
+        icon: "fire",
         items: [
           "8 unikátních Ladovských ilustrací: Všechna 4 stádia obou pekelných větví (Rarášek z pece i Hospodský čert) mají zbrusu nové, na míru kreslené vektorové sprity věrně odrážející ilustrace Josefa Lady.",
           "Větev Rarášek: Churavý rarášek se zavázaným růžkem a teplou šálou, Vyhublý rarášek s mašlí na ocase, vyplazeným jazykem a březovou metlou, klasický Rarášek v červené vestičce s dýmkou, a Pekelný rarášek s planoucími rohy a kovanými vidlemi.",
@@ -1092,7 +1122,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Velikostní odlišení bubáků (12 % za stádium)",
-        icon: "📏",
+        icon: "balance",
         items: [
           "Vizuální růst bubáků: Všechna 4 stádia každého bubáka jsou nyní velikostně odstupňována přesně o 12 % za každé stádium.",
           "Matematická škála: Stádium 1 (mláďata a neduživí) má 76 % základní velikosti, Stádium 2 má 88 %, Stádium 3 tvoří základ (100 %) a mocné Stádium 4 má 112 % velikosti.",
@@ -1113,7 +1143,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Plynulost začátku souboje",
-        icon: "⚔️",
+        icon: "attack",
         items: [
           "Okamžité uvolnění tahu po akci bubáků: Pokud měli bubáci vyšší Připravenost a provedli úvodní výpad, zpoždění lovce se okamžitě dokončí a karty i akce se ihned odemknou k reakci.",
           "Odstranění záseku časovače: Časová smyčka souboje byla stabilizována a spolehlivě odpočítává i při rychlých událostech a animacích.",
@@ -1134,7 +1164,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Taktická rovnováha & iniciativa",
-        icon: "⚡",
+        icon: "speed",
         items: [
           "Otočení škály Připravenosti: Vyšší hodnota nyní intuitivně znamená dřívější akci (Kostelník 28, Pobuda 25, Bylinkářka 22).",
           "Jednotné zpoždění před bojem: Hrdinové i bubáci mají nástupní zpoždění (50 − Připravenost) Aug.",
@@ -1143,10 +1173,10 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Rychlost & dynamika souboje",
-        icon: "⏩",
+        icon: "speed",
         items: [
           "3× zrychlený rozběh: Dokud nikdo nejedná (čeká se na první úder či nápřah), čas běží trojnásobnou rychlostí (300 ms na Aug).",
-          "Vizuální indikátor v záhlaví: Zelený pulzující štítek „⚡ 3× zrychlený rozběh“ jasně informuje o zrychleném toku času.",
+          "Vizuální indikátor v záhlaví: Zelený pulzující štítek „3× zrychlený rozběh“ jasně informuje o zrychleném toku času.",
           "Plynulý přechod: Jakmile kdokoliv zahájí akci (útok bubáka nebo nápřah karty), čas se automaticky vrátí k běžnému taktu.",
         ],
       },
@@ -1164,7 +1194,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Vizuální šťáva & hravý game feel",
-        icon: "✨",
+        icon: "star",
         items: [
           "Komiksové citoslovce (Comic Pops): Animované bubliny s autentickými zvuky (Bác!, Sssst!, Puf!, Žuch!, Šplouch!) při zásazích a tricích.",
           "Interaktivní dýmkový kouř (Pipe Smoke): Jemné líné obláčky stoupající z vodnických i tuláckých dýmek při bafnutí.",
@@ -1174,7 +1204,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Kronika & folklórní adaptace",
-        icon: "📜",
+        icon: "scroll",
         items: [
           "Přidána tato interaktivní Kronika změn (Changelog) s přehledem všech aktualizací.",
           "Zapracování motivů z knihy Josefa Lady Bubáci a hastrmani (vodník Brčál, strašidlo Mulisák, krejcary, stuhy a perníčky).",
@@ -1183,11 +1213,11 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Taktická rovnováha",
-        icon: "⚖️",
+        icon: "balance",
         items: [
           "Vyvážení odkladu úderů zraněním: delay = zranění * (1 - odolnost/100).",
           "Vylepšená odezva při přetížení ruky (Mokré lumpárny a Leknutí).",
-          "Jasnější vizualizace smrtícího zásahu (Lebka 💀 u nepřátel i hrdiny).",
+          "Jasnější vizualizace smrtícího zásahu (Lebka u nepřátel i hrdiny).",
         ],
       },
     ],
@@ -1203,16 +1233,16 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Šenk & obchod",
-        icon: "🍺",
+        icon: "beer",
         items: [
-          "Vylepšování základních karet: Hozená sůl ➔ Ostřejší sůl, Kříž ➔ Velký kříž, Odvar ➔ Košík bylin.",
+          "Vylepšování základních karet: Hozená sůl -> Ostřejší sůl, Kříž -> Velký kříž, Odvar -> Košík bylin.",
           "Vyhazování přebytečných a rušivých karet z brašny za krejcary.",
           "Odpočinek u vyhřátých kachlových kamen snižující Únavu o 5 bodů.",
         ],
       },
       {
         category: "Mapové události",
-        icon: "🗺️",
+        icon: "compass",
         items: [
           "Farářova lipová světnice — bezpečné místo s horkým lipovým čajem.",
           "Místní nástrahy: Obecní dráb s mýtem a Pytlácké železo v křoví.",
@@ -1232,7 +1262,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Taktický časový systém",
-        icon: "⏳",
+        icon: "hourglass",
         items: [
           "Čas neměřený na kola, ale na plynulé okamžiky — Augenblicky (Aug).",
           "Mechanika Nádechu a Únavy — čím víc unavený lovec, tím méně akcí z nádechu.",
@@ -1241,7 +1271,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Tři venkovští hrdinové",
-        icon: "🚶",
+        icon: "compass",
         items: [
           "Pobuda z Hrusic — vytrvalý krok a vyřezávaná slánka se Solí na kůži.",
           "Pobožný kostelník — dědův kříž, farní požehnání a vyšší obranný blok.",
@@ -1250,7 +1280,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
       },
       {
         category: "Výuka & video výcvik",
-        icon: "🎓",
+        icon: "school",
         items: [
           "Interaktivní výcvik s cvičným bubákem od stodoly.",
           "Automatický filmový náhled s vysvětlujícími titulky faráře.",
@@ -1269,7 +1299,7 @@ const CHANGELOG_DATA: VersionEntry[] = [
     highlights: [
       {
         category: "Základní souboje",
-        icon: "🧂",
+        icon: "salt",
         items: [
           "Karty Sůl, Kříž a Odvar tvořící jádro balíčku.",
           "Boj proti raráškům, bubákům od stodoly, mrtvákům a polednici.",
@@ -1290,8 +1320,8 @@ export const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b-3 border-[#1c1308] pb-3 mb-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-full bg-[#f0dfb6] border-2 border-[#1c1308] flex items-center justify-center text-xl shadow-inner">
-              📜
+            <div className="w-10 h-10 rounded-full bg-[#f0dfb6] border-2 border-[#1c1308] flex items-center justify-center shadow-inner">
+              <LadaThematicIcon name="scroll" size={24} animated />
             </div>
             <div>
               <h2 className="font-title text-xl sm:text-2xl font-black text-[#1c1308] leading-tight flex items-center gap-2">
@@ -1311,7 +1341,7 @@ export const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
             className="w-8 h-8 rounded-lg bg-[#c4321d] text-white font-black border-2 border-[#1c1308] flex items-center justify-center hover:bg-[#d63d26] transition-colors shadow-sm"
             title="Zavřít kroniku"
           >
-            ✕
+            <LadaThematicIcon name="close" size={14} />
           </button>
         </div>
 
@@ -1358,13 +1388,19 @@ export const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
                 </span>
               </div>
               <span className="text-xs font-bold text-[#8c5614] bg-[#fdf2d0] px-2 py-0.5 rounded border border-[#dfcb9a]">
-                🗓️ {activeEntry.date}
+                <LadaThematicIcon
+                  name="calendar"
+                  size={13}
+                  animated
+                  className="mr-1 inline-block"
+                />{" "}
+                {activeEntry.date}
               </span>
             </div>
 
             {/* Flavor Quote */}
             <div className="bg-[#f4ebd0] p-2.5 rounded-xl border border-[#d2ba85] text-xs italic text-[#5c3e21] flex items-start gap-2">
-              <span className="text-base not-italic">🌿</span>
+              <LadaThematicIcon name="herb" size={18} animated />
               <div>
                 <p>{activeEntry.flavorQuote}</p>
                 <p className="text-[0.7rem] font-black text-[#8c5614] not-italic mt-0.5 text-right">
@@ -1382,7 +1418,7 @@ export const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
                 className="bg-[#fffdf7] p-3 rounded-xl border-2 border-[#1c1308] shadow-xs"
               >
                 <div className="flex items-center gap-1.5 font-title text-sm sm:text-base font-bold text-[#1c1308] border-b border-[#dfcb9a] pb-1 mb-2">
-                  <span>{sec.icon}</span>
+                  <LadaThematicIcon name={sec.icon} size={18} animated />
                   <span>{sec.category}</span>
                 </div>
                 <ul className="space-y-1.5 list-none pl-1">
@@ -1392,7 +1428,7 @@ export const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
                       className="flex items-start gap-2 text-xs font-semibold text-[#422c15] leading-relaxed"
                     >
                       <span className="text-[#8c5614] font-black mt-0.5">●</span>
-                      <span>{item}</span>
+                      <span>{renderLadaText(item, 15)}</span>
                     </li>
                   ))}
                 </ul>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { LocationId } from "../../../types";
 import { LOCATIONS } from "../../../data/gameData";
 import { CombatLandscapeArena } from "../../sprites/CombatLandscapeArena";
+import { LadaThematicIcon } from "../../sprites/LadaThematicIcon";
 
 interface LandscapeInfo {
   id: LocationId;
@@ -19,7 +20,7 @@ const LANDSCAPE_INFOS: LandscapeInfo[] = [
   {
     id: "vesnice",
     name: "Vesnice Hrusice",
-    icon: "🏡",
+    icon: "village",
     subtitle: "Slunná rodná vesnička pod kostelem sv. Havla",
     desc: "Malebné hrusické kopečky, roubená chalupa s červenou střechou a kouřem z komína, dřevěný plaňkový plot se slunečnicemi a černým kocourem na sloupku.",
     groundDesc: "Zářivě zelená louka s kopretinami a vlčími máky",
@@ -36,7 +37,7 @@ const LANDSCAPE_INFOS: LandscapeInfo[] = [
   {
     id: "mlyn",
     name: "Klapáčův mlýn",
-    icon: "🌾",
+    icon: "field",
     subtitle: "Klapající mlýnské kolo na vodní strouze",
     desc: "Mohutné dřevěné mlýnské kolo čeří vodu, na břehu stojí pytle s moukou, ve strouze plují kapři a na vrbové větvi odpočívá ledňáček.",
     groundDesc: "Bujná pobřežní tráva se žlutými blatouchy",
@@ -47,7 +48,7 @@ const LANDSCAPE_INFOS: LandscapeInfo[] = [
   {
     id: "les",
     name: "Hluboký bor",
-    icon: "🌲",
+    icon: "forest",
     subtitle: "Voňavý jehličnatý hvozd s mechem a houštinami",
     desc: "Staré vzrostlé smrky a borovice, mechové balvany, červené kloboučky muchomůrek a v dutině vykotlaného dubu mrká stará moudrá sova.",
     groundDesc: "Hluboký mechový koberec se spadaným jehličím a šiškami",
@@ -58,7 +59,7 @@ const LANDSCAPE_INFOS: LandscapeInfo[] = [
   {
     id: "rybnik",
     name: "Olšový rybník",
-    icon: "🌊",
+    icon: "pond",
     subtitle: "Klidná vodní hladina lemovaná starými vrbami",
     desc: "Zkroucené vrby s popraskanou kůrou, husté rákosí s doutníky, bílé a žluté lekníny a zelená rosnička skákající z listu na list.",
     groundDesc: "Mokřadní břeh s rákosím a rozkvetlými blatouchy",
@@ -74,7 +75,7 @@ const LANDSCAPE_INFOS: LandscapeInfo[] = [
   {
     id: "zricenina",
     name: "Hradní zřícenina",
-    icon: "🏰",
+    icon: "castle",
     subtitle: "Opuštěný hrad Syslov nad hlubokými roklemi",
     desc: "Zbytky hradních bašt z lomového kamene, gotické klenuté okno s výhledem do kraje, vlající potrhaná korouhev a poletující netopýři v soumraku.",
     groundDesc: "Horský kamenitý trávník s fialovými bodláky",
@@ -90,7 +91,7 @@ const LANDSCAPE_INFOS: LandscapeInfo[] = [
   {
     id: "hrbitov",
     name: "Starý hřbitov",
-    icon: "🪦",
+    icon: "cemetery",
     subtitle: "Tichý vesnický hřbitůvek s kamennou zídkou",
     desc: "Mechovité břidlicové kříže s lidovými srdíčky, kamenná kostnice, staré lípy s padajícím listím a tajemná světélka bludiček tančící v mlze.",
     groundDesc: "Pochmurný hřbitovní drn se slaměnkami",
@@ -101,7 +102,7 @@ const LANDSCAPE_INFOS: LandscapeInfo[] = [
   {
     id: "boss",
     name: "Černá tůň",
-    icon: "🌑",
+    icon: "darkness",
     subtitle: "Tajemné bezedné zřídlo v srdci močálů",
     desc: "Prastaré bažinaté zřídlo, kde voda má barvu inkoustu. Z hlubin stoupají sirné bubliny, kořeny starých olší se kroutí jako hadi a ve vzduchu jiskří pekelná síla.",
     groundDesc: "Temná rašeliništní rašelina s rudě žhnoucími puklinami",
@@ -127,7 +128,7 @@ export const TestLandscapesTab: React.FC = () => {
       {/* 1. HEADER BANNER */}
       <div className="bg-[#fff9ea] p-3.5 sm:p-4 rounded-2xl border-3 border-[#1c1308] shadow-[0_4px_0_#1c1308] flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <span className="text-2xl">🏞️</span>
+          <LadaThematicIcon name="picture" size={26} animated />
           <div>
             <h2 className="font-title font-black text-base sm:text-lg text-[#1c1308] leading-tight">
               Pozadí boje (Krajiny bez bubáků a lovce)
@@ -149,7 +150,7 @@ export const TestLandscapesTab: React.FC = () => {
                 : "text-[#5c3e21] hover:bg-[#fff2cc]"
             }`}
           >
-            <span>👁️</span>
+            <LadaThematicIcon name="search" size={14} animated />
             <span>Detailní náhled</span>
           </button>
           <button
@@ -161,7 +162,7 @@ export const TestLandscapesTab: React.FC = () => {
                 : "text-[#5c3e21] hover:bg-[#fff2cc]"
             }`}
           >
-            <span>🖼️</span>
+            <LadaThematicIcon name="picture" size={14} animated />
             <span>Všechna pozadí (7)</span>
           </button>
         </div>
@@ -186,7 +187,7 @@ export const TestLandscapesTab: React.FC = () => {
                     : "bg-[#fffdf7] border-[#ded4be] text-[#5c3e21] hover:bg-[#ffeec2]"
                 }`}
               >
-                <span>{loc.icon}</span>
+                <LadaThematicIcon name={loc.icon} size={16} animated />
                 <span className="truncate">{loc.name.split(" ")[0]}</span>
               </button>
             );
@@ -204,11 +205,11 @@ export const TestLandscapesTab: React.FC = () => {
             {/* Overlay hint banner */}
             <div className="absolute top-2 left-3 z-30 pointer-events-none flex items-center gap-2">
               <span className="bg-[#1c1308]/85 text-[#ffd438] font-title font-black text-xs sm:text-sm px-3 py-1 rounded-full border border-[#1c1308] shadow-md backdrop-blur-xs flex items-center gap-1.5">
-                <span>{currentInfo.icon}</span>
+                <LadaThematicIcon name={currentInfo.icon} size={16} animated />
                 <span>{currentInfo.name}</span>
               </span>
               <span className="bg-[#fff8e8]/90 text-[#5c3e21] font-bold text-[0.65rem] px-2.5 py-0.5 rounded-full border border-[#1c1308] shadow-xs hidden sm:inline-block">
-                ✨ Klikací velikonoční vajíčka jsou aktivní!
+                Klikací velikonoční vajíčka jsou aktivní!
               </span>
             </div>
 
@@ -229,7 +230,7 @@ export const TestLandscapesTab: React.FC = () => {
             <div className="bg-[#fffdf7] p-3 rounded-xl border-2 border-[#1c1308] shadow-xs flex flex-col justify-between">
               <div>
                 <div className="font-title font-black text-xs text-[#1c1308] mb-1 flex items-center gap-1">
-                  <span>📜</span>
+                  <LadaThematicIcon name="scroll" size={14} animated />
                   <span>Popis scenerie:</span>
                 </div>
                 <p className="text-[0.72rem] text-[#4a3520] leading-relaxed">{currentInfo.desc}</p>
@@ -243,7 +244,7 @@ export const TestLandscapesTab: React.FC = () => {
             <div className="bg-[#fffdf7] p-3 rounded-xl border-2 border-[#1c1308] shadow-xs flex flex-col justify-between">
               <div>
                 <div className="font-title font-black text-xs text-[#1c1308] mb-1 flex items-center gap-1">
-                  <span>🎨</span>
+                  <LadaThematicIcon name="picture" size={14} animated />
                   <span>Ladovský terén bojiště:</span>
                 </div>
                 <ul className="text-[0.7rem] text-[#4a3520] space-y-1 list-disc list-inside">
@@ -266,7 +267,7 @@ export const TestLandscapesTab: React.FC = () => {
             <div className="bg-[#fffdf7] p-3 rounded-xl border-2 border-[#1c1308] shadow-xs flex flex-col justify-between">
               <div>
                 <div className="font-title font-black text-xs text-[#1c1308] mb-1 flex items-center gap-1">
-                  <span>🥚</span>
+                  <LadaThematicIcon name="egg" size={14} animated />
                   <span>Interaktivní prvky a bubáci:</span>
                 </div>
                 <div className="text-[0.68rem] text-[#4a3520] leading-tight">
@@ -275,7 +276,7 @@ export const TestLandscapesTab: React.FC = () => {
                 </div>
               </div>
               <div className="text-[0.65rem] text-[#c4321d] font-bold mt-2 pt-1 border-t border-[#1c1308]/15 truncate">
-                👹 Zdejší bubáci: {currentInfo.bogeysHere}
+                Zdejší bubáci: {currentInfo.bogeysHere}
               </div>
             </div>
           </div>
@@ -284,7 +285,7 @@ export const TestLandscapesTab: React.FC = () => {
         /* ALL 7 LANDSCAPES IN MOSAIC GRID */
         <div className="flex flex-col gap-3">
           <div className="text-xs font-black text-[#5c3e21] flex items-center justify-between px-1">
-            <span>🖼️ Všech 7 bitevních pozadí najednou (kliknutím zvětšíte):</span>
+            <span>Všech 7 bitevních pozadí najednou (kliknutím zvětšíte):</span>
             <span className="text-[0.68rem] text-[#8c5614] font-normal">
               Všechny běží živě v plné kráse bez postav
             </span>
@@ -302,11 +303,11 @@ export const TestLandscapesTab: React.FC = () => {
               >
                 <div className="p-2 bg-[#eedcb0] border-b border-[#1c1308] flex items-center justify-between">
                   <span className="font-title font-black text-xs text-[#1c1308] flex items-center gap-1">
-                    <span>{loc.icon}</span>
+                    <LadaThematicIcon name={loc.icon} size={16} animated />
                     <span>{loc.name}</span>
                   </span>
                   <span className="text-[0.62rem] font-bold text-[#8c5614] bg-[#fff8e8] px-1.5 py-0.5 rounded border border-[#1c1308]">
-                    Detail 🔍
+                    Detail
                   </span>
                 </div>
 

@@ -3,6 +3,7 @@ import { HeroId, LocationId } from "../../../types";
 import { HEROES, LOCATIONS } from "../../../data/gameData";
 import { HunterSprite } from "../../sprites/HunterSprite";
 import { EnemySprite } from "../../sprites/EnemySprite";
+import { LadaThematicIcon } from "../../sprites/LadaThematicIcon";
 
 interface TestFightsTabProps {
   selectedHero: HeroId;
@@ -39,7 +40,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex-1 text-center md:text-left">
             <div className="inline-flex items-center gap-1.5 bg-[#c4321d] text-white px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider mb-2 border border-[#1c1308]">
-              ⚡ Hlavní testovací souboj
+              <LadaThematicIcon name="speed" size={13} animated /><span>Hlavní testovací souboj</span>
             </div>
             <h2 className="font-title font-black text-xl sm:text-2xl text-[#1c1308] mb-1">
               Plný počet bubáků (8 protivníků)
@@ -56,7 +57,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
             onClick={() => onStartFullFight(selectedHero, selectedLoc)}
             className="flex-none bg-gradient-to-r from-[#e63e1e] to-[#c4321d] hover:from-[#f05030] hover:to-[#d63820] text-white font-title font-black text-base sm:text-lg px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl border-3 border-[#1c1308] shadow-[0_4px_0_#1c1308] active:translate-y-1 active:shadow-none transition-all cursor-pointer flex items-center gap-3 animate-pulse"
           >
-            <span className="text-2xl">👹</span>
+            <LadaThematicIcon name="devil" size={28} animated />
             <div className="text-left">
               <div className="leading-tight">Spustit plný střet</div>
               <div className="text-[0.7rem] font-bold text-[#ffd438] opacity-95">
@@ -70,7 +71,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
         <div className="mt-4 pt-3 border-t-2 border-[#1c1308]/20">
           <div className="text-xs font-black text-[#5c3e21] mb-2 flex items-center justify-between">
             <span className="flex items-center gap-1.5">
-              <span>🎭</span>
+              <LadaThematicIcon name="theater" size={16} animated />
               <span>8 zúčastněných bubáků v sestavě:</span>
             </span>
             <span className="text-[0.65rem] text-[#8c5614] font-bold">
@@ -101,7 +102,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
           </div>
 
           <div className="mt-3 bg-[#fff8e8] border border-[#1c1308] p-2.5 rounded-xl flex items-center gap-2.5 text-xs text-[#5c3e21]">
-            <span className="text-xl flex-none">🏳️</span>
+            <LadaThematicIcon name="surrender" size={22} animated className="flex-none" />
             <div>
               <strong className="text-[#1c1308]">Nové tlačítko v boji: „Vyřaď bubáka“</strong>
               <p className="text-[0.72rem] text-[#6e502c] mt-0.5 leading-snug">
@@ -121,7 +122,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
         <div className="bg-[#fff8e8] p-3 sm:p-4 rounded-2xl border-2 border-[#1c1308] shadow-[0_3px_0_#1c1308]">
           <div className="font-title font-black text-sm text-[#1c1308] mb-2 flex items-center justify-between">
             <div className="flex items-center gap-1.5">
-              <span>🏹</span>
+              <LadaThematicIcon name="hunter" size={16} animated />
               <span>Zvolte lovce pro test:</span>
             </div>
             <span className="text-[0.68rem] bg-[#ffd438] text-[#1c1308] px-2 py-0.5 rounded-full border border-[#1c1308] font-black">
@@ -164,7 +165,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
         <div className="bg-[#fff8e8] p-3 sm:p-4 rounded-2xl border-2 border-[#1c1308] shadow-[0_3px_0_#1c1308]">
           <div className="font-title font-black text-sm text-[#1c1308] mb-2 flex items-center justify-between">
             <div className="flex items-center gap-1.5">
-              <span>🏞️</span>
+              <LadaThematicIcon name="picture" size={16} animated />
               <span>Zvolte krajinu pro test:</span>
             </div>
             <span className="text-[0.68rem] bg-[#ffd438] text-[#1c1308] px-2 py-0.5 rounded-full border border-[#1c1308] font-black">
@@ -189,21 +190,25 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
                   `}
                 >
                   <div className="flex items-center gap-1.5 truncate">
-                    <span className="text-base">
-                      {loc.id === "vesnice"
-                        ? "🏡"
-                        : loc.id === "mlyn"
-                          ? "🌾"
-                          : loc.id === "les"
-                            ? "🌲"
-                            : loc.id === "rybnik"
-                              ? "🌊"
-                              : loc.id === "zricenina"
-                                ? "🏰"
-                                : loc.id === "hrbitov"
-                                  ? "🪦"
-                                  : "🌑"}
-                    </span>
+                    <LadaThematicIcon
+                      name={
+                        loc.id === "vesnice"
+                          ? "village"
+                          : loc.id === "mlyn"
+                            ? "field"
+                            : loc.id === "les"
+                              ? "forest"
+                              : loc.id === "rybnik"
+                                ? "pond"
+                                : loc.id === "zricenina"
+                                  ? "castle"
+                                  : loc.id === "hrbitov"
+                                    ? "cemetery"
+                                    : "darkness"
+                      }
+                      size={18}
+                      animated
+                    />
                     <span className="truncate">{loc.name}</span>
                   </div>
                 </button>
@@ -217,7 +222,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
       <div className="bg-[#fff9ea] p-3 sm:p-4 rounded-2xl border-2 border-[#1c1308] shadow-[0_3px_0_#1c1308]">
         <div className="font-title font-black text-sm text-[#1c1308] mb-2.5 flex items-center justify-between">
           <div className="flex items-center gap-1.5">
-            <span>⚙️</span>
+            <LadaThematicIcon name="settings" size={16} animated />
             <span>Rychlé tematické sestavy střetů:</span>
           </div>
           <span className="text-[0.68rem] text-[#6b4721] font-bold">
@@ -232,7 +237,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
             className="p-2.5 rounded-xl border-2 border-[#1c1308] bg-[#fffdf7] hover:bg-[#ffd438] text-left transition-all cursor-pointer shadow-xs active:scale-95 flex flex-col justify-between"
           >
             <div className="flex items-center gap-1.5 font-title font-black text-xs text-[#1c1308]">
-              <span>👥</span>
+              <LadaThematicIcon name="party" size={16} animated />
               <span>Hlídka (4)</span>
             </div>
             <div className="text-[0.62rem] text-[#6b4721] font-bold mt-1">
@@ -246,7 +251,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
             className="p-2.5 rounded-xl border-2 border-[#1c1308] bg-[#fffdf7] hover:bg-[#ffd438] text-left transition-all cursor-pointer shadow-xs active:scale-95 flex flex-col justify-between"
           >
             <div className="flex items-center gap-1.5 font-title font-black text-xs text-[#1c1308]">
-              <span>⚔️</span>
+              <LadaThematicIcon name="attack" size={16} animated />
               <span>Dvojice (2)</span>
             </div>
             <div className="text-[0.62rem] text-[#6b4721] font-bold mt-1">Rychlý souboj 1 na 2</div>
@@ -258,7 +263,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
             className="p-2.5 rounded-xl border-2 border-[#1c1308] bg-[#ffeed1] hover:bg-[#ffd438] text-left transition-all cursor-pointer shadow-xs active:scale-95 flex flex-col justify-between"
           >
             <div className="flex items-center gap-1.5 font-title font-black text-xs text-[#1c1308]">
-              <span>🌲</span>
+              <LadaThematicIcon name="forest" size={16} animated />
               <span>Loupežníci (2)</span>
             </div>
             <div className="text-[0.62rem] text-[#6b4721] font-bold mt-1">
@@ -272,7 +277,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
             className="p-2.5 rounded-xl border-2 border-[#1c1308] bg-[#e2f0d9] hover:bg-[#c5e0b4] text-left transition-all cursor-pointer shadow-xs active:scale-95 flex flex-col justify-between"
           >
             <div className="flex items-center gap-1.5 font-title font-black text-xs text-[#1c1308]">
-              <span>🐸</span>
+              <LadaThematicIcon name="frog" size={16} animated />
               <span>Úroveň 1 (3)</span>
             </div>
             <div className="text-[0.62rem] text-[#6b4721] font-bold mt-1">
@@ -286,7 +291,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
             className="p-2.5 rounded-xl border-2 border-[#1c1308] bg-[#e8f1f5] hover:bg-[#cfe2f3] text-left transition-all cursor-pointer shadow-xs active:scale-95 flex flex-col justify-between"
           >
             <div className="flex items-center gap-1.5 font-title font-black text-xs text-[#1c1308]">
-              <span>🧚</span>
+              <LadaThematicIcon name="fairy" size={16} animated />
               <span>Úroveň 2 (4)</span>
             </div>
             <div className="text-[0.62rem] text-[#6b4721] font-bold mt-1">
@@ -300,7 +305,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
             className="p-2.5 rounded-xl border-2 border-[#1c1308] bg-[#fce5cd] hover:bg-[#f9cb9c] text-left transition-all cursor-pointer shadow-xs active:scale-95 flex flex-col justify-between"
           >
             <div className="flex items-center gap-1.5 font-title font-black text-xs text-[#1c1308]">
-              <span>🌊</span>
+              <LadaThematicIcon name="pond" size={16} animated />
               <span>Úroveň 3 (2)</span>
             </div>
             <div className="text-[0.62rem] text-[#6b4721] font-bold mt-1">
@@ -314,7 +319,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
             className="p-2.5 rounded-xl border-2 border-[#1c1308] bg-[#dbeafe] hover:bg-[#bfdbfe] text-left transition-all cursor-pointer shadow-xs active:scale-95 flex flex-col justify-between"
           >
             <div className="flex items-center gap-1.5 font-title font-black text-xs text-[#1c1308]">
-              <span>⛏️</span>
+              <LadaThematicIcon name="salt" size={16} animated />
               <span>Permoníci (4)</span>
             </div>
             <div className="text-[0.62rem] text-[#6b4721] font-bold mt-1">
@@ -328,7 +333,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
             className="p-2.5 rounded-xl border-2 border-[#1c1308] bg-[#f6e3cf] hover:bg-[#eed0b2] text-left transition-all cursor-pointer shadow-xs active:scale-95 flex flex-col justify-between"
           >
             <div className="flex items-center gap-1.5 font-title font-black text-xs text-[#1c1308]">
-              <span>🦊</span>
+              <LadaThematicIcon name="cat" size={16} animated />
               <span>Nové rodiny (3)</span>
             </div>
             <div className="text-[0.62rem] text-[#6b4721] font-bold mt-1">

@@ -60,6 +60,7 @@ import { DiscardOverflowModal } from "./components/modals/DiscardOverflowModal";
 import { TutorialGuideModal } from "./components/modals/TutorialGuideModal";
 import { ChangelogModal } from "./components/modals/ChangelogModal";
 import { BestiaryModal } from "./components/modals/BestiaryModal";
+import { LadaThematicIcon, renderLadaText } from "./components/sprites/LadaThematicIcon";
 
 export function App() {
   const [options, setOptions] = useState<RunOptions>(loadStoredOptions());
@@ -528,7 +529,7 @@ export function App() {
                   playerBusy = "hit";
                 }
                 logs = addLog(
-                  `💥 Odveta! ${e.name} byl zasažen a okamžitě sekl zpět za ${revDmg} (${rBlk > 0 ? `${rBlk} do Bloku, ` : ""}${rThrough} do Životů)!`,
+                  `Odveta! ${e.name} byl zasažen a okamžitě sekl zpět za ${revDmg} (${rBlk > 0 ? `${rBlk} do Bloku, ` : ""}${rThrough} do Životů)!`,
                   logs,
                 );
               }
@@ -718,10 +719,10 @@ export function App() {
         if (anyEnemyAttacked) {
           playerBusy = null;
           newPlayerTimer = 0;
-          logs = addLog("⚔️ Bubáci provedli úvodní výpad — jste na tahu a můžete jednat!", logs);
+          logs = addLog("Bubáci provedli úvodní výpad — jste na tahu a můžete jednat!", logs);
         } else if (newPlayerTimer <= 0) {
           playerBusy = null;
-          logs = addLog("⚔️ Příprava na střet dokončena — jste rychlejší a na tahu!", logs);
+          logs = addLog("Příprava na střet dokončena — jste rychlejší a na tahu!", logs);
         }
       }
 
@@ -958,7 +959,7 @@ export function App() {
         const names = followersBehind.map((e) => e.name).join(", ");
         const rowName = rowType === "horni" || rowType === "back" ? "horní řadě" : "dolní řadě";
         const logs = addLog(
-          `🐾 ${names} v ${rowName} po 3 sekundách postupují dopředu a zaplňují uvolněné místo!`,
+          `${names} v ${rowName} po 3 sekundách postupují dopředu a zaplňují uvolněné místo!`,
           prev.log,
         );
 
@@ -1528,7 +1529,7 @@ export function App() {
 
     setState(dummyState);
     setTutorialStep(1);
-    showToast("🎓 Výcvik: Farář vám ukáže základy.");
+    showToast("Výcvik: Farář vám ukáže základy.");
   };
 
   // Start Test Arena Full 8-Bogey Fight (4 in front row, 4 in back row)
@@ -1580,7 +1581,7 @@ export function App() {
       pending: null,
       shopOffer: null,
       log: [
-        `🧪 Testovací souboj: ${heroDef.name} vs. 8 bubáků ve dvou řadách (${locDef.name})!`,
+        `Testovací souboj: ${heroDef.name} vs. 8 bubáků ve dvou řadách (${locDef.name})!`,
         "Dolní řada (cesta): 4 bubáci • Horní řada (břeh): 4 bubáci.",
       ],
       phase: "combat",
@@ -1619,7 +1620,7 @@ export function App() {
 
     setState(testState);
     lastTestFightRef.current = { type: "full", heroId, locId };
-    showToast(`🧪 Test: 8 bubáků ve 2 řadách (${locDef.name}) připraveno!`);
+    showToast(`Test: 8 bubáků ve 2 řadách (${locDef.name}) připraveno!`);
   };
 
   // Start Test Arena Preset Fight (e.g. 4 or 2 bogeys, or -1 for Loupežnická banda)
@@ -1881,7 +1882,7 @@ export function App() {
       options,
       pending: null,
       shopOffer: null,
-      log: [`🧪 Testovací souboj: ${count} bubáci (${locDef.name}).`],
+      log: [`Testovací souboj: ${count} bubáci (${locDef.name}).`],
       phase: "combat",
       rngStep: 0,
       fatigueOut: 0,
@@ -1918,7 +1919,7 @@ export function App() {
 
     setState(testState);
     lastTestFightRef.current = { type: "preset", heroId, locId, count };
-    showToast(`🧪 Test: ${count} bubáci (${locDef.name}) připraveni!`);
+    showToast(`Test: ${count} bubáci (${locDef.name}) připraveni!`);
   };
 
   // Immediate test eliminate bogey for testing retreat and queue shifts
@@ -1950,7 +1951,7 @@ export function App() {
       }
 
       const logs = addLog(
-        `🧪 Test: ${enemy.name} byl vyřazen testovacím tlačítkem! Vzdává se a spouští se odpočet pro posun řady.`,
+        `Test: ${enemy.name} byl vyřazen testovacím tlačítkem! Vzdává se a spouští se odpočet pro posun řady.`,
         prev.log,
       );
 
@@ -1964,7 +1965,7 @@ export function App() {
         },
       };
     });
-    showToast("🏳️ Bubák vyřazen! Sledujte ústup a posun řady.");
+    showToast("Bubák vyřazen! Sledujte ústup a posun řady.");
   }, []);
 
   const handleRestartTestFight = useCallback(() => {
@@ -2044,22 +2045,23 @@ export function App() {
       {/* Toast notification */}
       {toastMessage && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-[#1c1308] text-[#fff8e8] px-4 py-2 rounded-xl border-2 border-[#ffd438] font-bold text-sm shadow-xl flex items-center gap-2 animate-fade-in">
-          <span>🔔</span>
-          <span>{toastMessage}</span>
+          <LadaThematicIcon name="bell" size={18} animated />
+          <span>{renderLadaText(toastMessage, 16)}</span>
         </div>
       )}
 
       {/* Movie Tutorial Overlay Ribbon */}
       {movieActive && (
         <div className="fixed top-3 left-1/2 -translate-x-1/2 z-40 bg-[#1c1308] text-[#fff8e8] px-5 py-2.5 rounded-2xl border-3 border-[#f4c23c] shadow-2xl flex items-center gap-4 max-w-xl w-[92vw] text-xs sm:text-sm font-black">
-          <span className="text-xl animate-spin">🎬</span>
-          <div className="flex-1">{movieCaption}</div>
+          <LadaThematicIcon name="film" size={22} animated />
+          <div className="flex-1">{renderLadaText(movieCaption, 16)}</div>
           <button
             type="button"
             onClick={handleStopMovie}
-            className="bg-[#c4321d] text-white px-2.5 py-1 rounded-lg text-xs font-black border border-white hover:bg-[#d63d26]"
+            className="bg-[#c4321d] text-white px-2.5 py-1 rounded-lg text-xs font-black border border-white hover:bg-[#d63d26] inline-flex items-center gap-1"
           >
-            Zastavit ✕
+            <span>Zastavit</span>
+            <LadaThematicIcon name="close" size={12} />
           </button>
         </div>
       )}

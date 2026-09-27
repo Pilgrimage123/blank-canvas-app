@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ENEMY_DB, TRAITS, ENEMY_ACTIONS, LOCATIONS } from "../../data/gameData";
 import { EnemySprite } from "../sprites/EnemySprite";
 import { getStagePercent } from "../../utils/spriteUtils";
+import { LadaThematicIcon } from "../sprites/LadaThematicIcon";
 
 interface BestiaryModalProps {
   onClose: () => void;
@@ -36,7 +37,7 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
         {/* MODAL HEADER */}
         <div className="flex-none bg-[#eedcb0] px-4 py-3 sm:px-6 sm:py-4 border-b-3 border-[#1c1308] flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-2xl sm:text-3xl">📖</span>
+            <LadaThematicIcon name="book" size={28} />
             <div>
               <h2 className="font-title font-black text-lg sm:text-xl text-[#1c1308] leading-tight">
                 Přehled všech bubáků (Pohádkový bestiář)
@@ -52,7 +53,7 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
             className="bg-[#fff8e8] hover:bg-[#ffd438] text-[#1c1308] border-2 border-[#1c1308] w-8 h-8 rounded-xl font-black text-sm flex items-center justify-center cursor-pointer shadow-xs transition-transform active:scale-95"
             title="Zavřít bestiář (ESC)"
           >
-            ✕
+            <LadaThematicIcon name="close" size={14} />
           </button>
         </div>
 
@@ -60,7 +61,10 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
         <div className="flex-none bg-[#f5e9ce] px-4 py-2.5 border-b-2 border-[#1c1308]/20 flex flex-wrap items-center justify-between gap-2">
           {/* Location filter pills */}
           <div className="flex flex-wrap items-center gap-1.5 text-xs">
-            <span className="font-bold text-[#4a3219] mr-1">📍 Krajina:</span>
+            <span className="font-bold text-[#4a3219] mr-1 inline-flex items-center gap-1">
+              <LadaThematicIcon name="village" size={13} /> Krajina:
+            </span>
+
             <button
               type="button"
               onClick={() => setSelectedLocFilter("all")}
@@ -96,9 +100,10 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
             <button
               type="button"
               onClick={() => setSelectedFamilyId(null)}
-              className="text-xs bg-[#c4321d] text-white px-2 py-0.5 rounded-md font-bold hover:bg-[#d63d26] cursor-pointer"
+              className="text-xs bg-[#c4321d] text-white px-2 py-0.5 rounded-md font-bold hover:bg-[#d63d26] cursor-pointer inline-flex items-center gap-1"
             >
-              Zobrazit všechny rodiny ✕
+              <span>Zobrazit všechny rodiny</span>
+              <LadaThematicIcon name="close" size={12} />
             </button>
           )}
         </div>
@@ -142,8 +147,8 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
                             Druh: {family.type}
                           </span>
                         </div>
-                        <div className="text-xs text-[#5c3e21] font-bold mt-0.5">
-                          📍 Výskyt: {locNames}
+                        <div className="text-xs text-[#5c3e21] font-bold mt-0.5 flex items-center gap-1">
+                          <LadaThematicIcon name="village" size={12} /> Výskyt: {locNames}
                         </div>
                         {/* Traits */}
                         <div className="flex flex-wrap gap-1 mt-1">
@@ -157,10 +162,10 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
                               return (
                                 <span
                                   key={traitKey}
-                                  className="bg-[#ffe8b3] text-[#1c1308] border border-[#1c1308] text-[0.65rem] font-bold px-1.5 py-0.2 rounded-md"
+                                  className="bg-[#ffe8b3] text-[#1c1308] border border-[#1c1308] text-[0.65rem] font-bold px-1.5 py-0.2 rounded-md inline-flex items-center gap-1"
                                   title={tr?.desc}
                                 >
-                                  ✨ {tr?.name || traitKey}: {tr?.desc}
+                                  <LadaThematicIcon name="star" size={10} /> {tr?.name || traitKey}: {tr?.desc}
                                 </span>
                               );
                             })
@@ -194,23 +199,28 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
                       return (
                         <span
                           key={actKey}
-                          className="bg-[#fff4d1] border border-[#b88c42] text-[#3d270c] px-2 py-0.5 rounded-lg text-[0.68rem] font-bold"
+                          className="bg-[#fff4d1] border border-[#b88c42] text-[#3d270c] px-2 py-0.5 rounded-lg text-[0.68rem] font-bold inline-flex items-center gap-1"
                           title={act?.text}
                         >
-                          {actKey === "uder"
-                            ? "⚔️"
-                            : actKey === "vabnicka"
-                              ? "📣"
-                              : actKey === "odveta"
-                                ? "⚡"
-                                : actKey === "bafnuti_z_dymky"
-                                  ? "💨"
-                                  : actKey === "rybnicni_mlha"
-                                    ? "🌫️"
-                                    : actKey === "kouzelna_polivcicka"
-                                      ? "🍲"
-                                      : "🃏"}{" "}
-                          {act?.name || actKey}
+                          <LadaThematicIcon
+                            name={
+                              actKey === "uder"
+                                ? "attack"
+                                : actKey === "vabnicka"
+                                  ? "buff"
+                                  : actKey === "odveta"
+                                    ? "speed"
+                                    : actKey === "bafnuti_z_dymky"
+                                      ? "dodge"
+                                      : actKey === "rybnicni_mlha"
+                                        ? "fog"
+                                        : actKey === "kouzelna_polivcicka"
+                                          ? "soup"
+                                          : "draw"
+                            }
+                            size={12}
+                          />
+                          <span>{act?.name || actKey}</span>
                         </span>
                       );
                     })}
@@ -220,7 +230,7 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
                   <div className="mt-3">
                     <div className="font-title font-black text-xs text-[#1c1308] uppercase tracking-wider mb-2 flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-sm">👥</span>
+                        <LadaThematicIcon name="party" size={14} />
                         <span>
                           Členové rodiny ({family.variants?.length || 0} vývojové stupně):
                         </span>
@@ -264,7 +274,7 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
                                   {getStageBadge(vidx)} ({getStagePercent(vidx, family.id)} %)
                                 </span>
                                 <span className="text-[0.62rem] text-[#8c6b45] group-hover:text-[#1c1308] font-black transition-colors flex items-center gap-0.5">
-                                  <span>🔍</span> Portrét
+                                  <LadaThematicIcon name="search" size={11} /> Portrét
                                 </span>
                               </div>
                             </div>
@@ -301,10 +311,10 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
                             {/* Combat stats */}
                             <div className="grid grid-cols-2 gap-1.5 text-xs text-[#4a3520] font-bold mt-1">
                               <div className="bg-[#fee8e3] text-[#912313] px-1.5 py-1 rounded-lg text-center border border-[#e8a397] flex items-center justify-center gap-1 shadow-2xs">
-                                <span>❤️</span> <span>{v.hp} HP</span>
+                                <LadaThematicIcon name="hp" size={12} /> <span>{v.hp} HP</span>
                               </div>
                               <div className="bg-[#fcf2d9] text-[#784e12] px-1.5 py-1 rounded-lg text-center border border-[#e3c481] flex items-center justify-center gap-1 shadow-2xs">
-                                <span>⚔️</span> <span>{v.dmg} Zranění</span>
+                                <LadaThematicIcon name="attack" size={12} /> <span>{v.dmg} Zranění</span>
                               </div>
                             </div>
                           </div>
@@ -317,6 +327,7 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
             })
           )}
         </div>
+
 
         {/* MODAL FOOTER */}
         <div className="flex-none bg-[#eedcb0] px-4 py-2.5 sm:px-6 sm:py-3 border-t-3 border-[#1c1308] flex items-center justify-between">
@@ -382,7 +393,7 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
                       onClick={() => setInspectedMember(null)}
                       className="bg-[#fff8e8] hover:bg-[#ffd438] text-[#1c1308] border-2 border-[#1c1308] w-8 h-8 rounded-xl font-black text-sm flex items-center justify-center cursor-pointer shadow-xs transition-transform active:scale-95"
                     >
-                      ✕
+                      <LadaThematicIcon name="close" size={14} />
                     </button>
                   </div>
 
@@ -419,11 +430,15 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
                       {/* Stats grid */}
                       <div className="grid grid-cols-2 gap-2 text-xs font-bold">
                         <div className="bg-[#fee8e3] text-[#912313] p-2 rounded-xl border border-[#e8a397] flex items-center justify-between">
-                          <span>❤️ Životy:</span>
+                          <span className="flex items-center gap-1">
+                            <LadaThematicIcon name="hp" size={12} /> Životy:
+                          </span>
                           <span className="font-black text-sm">{v.hp} HP</span>
                         </div>
                         <div className="bg-[#fcf2d9] text-[#784e12] p-2 rounded-xl border border-[#e3c481] flex items-center justify-between">
-                          <span>⚔️ Zranění:</span>
+                          <span className="flex items-center gap-1">
+                            <LadaThematicIcon name="attack" size={12} /> Zranění:
+                          </span>
                           <span className="font-black text-sm">{v.dmg}</span>
                         </div>
                       </div>
@@ -475,9 +490,10 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
                       type="button"
                       disabled={variantIndex === 0}
                       onClick={() => setInspectedMember({ family, variantIndex: variantIndex - 1 })}
-                      className="bg-[#fff8e8] disabled:opacity-40 disabled:pointer-events-none hover:bg-[#ffd438] text-[#1c1308] border-2 border-[#1c1308] text-xs font-black px-3 py-1.5 rounded-xl shadow-2xs cursor-pointer transition-transform active:scale-95"
+                      className="bg-[#fff8e8] disabled:opacity-40 disabled:pointer-events-none hover:bg-[#ffd438] text-[#1c1308] border-2 border-[#1c1308] text-xs font-black px-3 py-1.5 rounded-xl shadow-2xs cursor-pointer transition-transform active:scale-95 inline-flex items-center gap-1"
                     >
-                      ⬅ Předchozí člen
+                      <LadaThematicIcon name="back" size={12} />
+                      <span>Předchozí člen</span>
                     </button>
 
                     <button
@@ -492,9 +508,10 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
                       type="button"
                       disabled={variantIndex === maxVariants - 1}
                       onClick={() => setInspectedMember({ family, variantIndex: variantIndex + 1 })}
-                      className="bg-[#fff8e8] disabled:opacity-40 disabled:pointer-events-none hover:bg-[#ffd438] text-[#1c1308] border-2 border-[#1c1308] text-xs font-black px-3 py-1.5 rounded-xl shadow-2xs cursor-pointer transition-transform active:scale-95"
+                      className="bg-[#fff8e8] disabled:opacity-40 disabled:pointer-events-none hover:bg-[#ffd438] text-[#1c1308] border-2 border-[#1c1308] text-xs font-black px-3 py-1.5 rounded-xl shadow-2xs cursor-pointer transition-transform active:scale-95 inline-flex items-center gap-1"
                     >
-                      Další člen ➔
+                      <span>Další člen</span>
+                      <LadaThematicIcon name="arrow_right" size={12} />
                     </button>
                   </div>
                 </>
@@ -510,17 +527,18 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
 function getStageBadge(vidx: number): string {
   switch (vidx) {
     case 0:
-      return "🌱 I. Mládě / Neduživý";
+      return "I. Mládě / Neduživý";
     case 1:
-      return "🌿 II. Poutník / Výrostek";
+      return "II. Poutník / Výrostek";
     case 2:
-      return "⭐ III. Původní strašidlo";
+      return "III. Původní strašidlo";
     case 3:
-      return "🔥 IV. Běs / Pán kraje";
+      return "IV. Běs / Pán kraje";
     default:
       return `Stupeň ${vidx + 1}`;
   }
 }
+
 
 function getMemberLore(familyId: string, vidx: number, name: string): string {
   const map: Record<string, string[]> = {

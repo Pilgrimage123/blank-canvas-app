@@ -1,6 +1,7 @@
 import React from "react";
 import { CardInstance } from "../../types";
 import { CardView } from "../CardView";
+import { LadaThematicIcon } from "../sprites/LadaThematicIcon";
 
 interface DiscardOverflowModalProps {
   hand: CardInstance[];
@@ -18,7 +19,9 @@ export const DiscardOverflowModal: React.FC<DiscardOverflowModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 bg-[#1c1308]/70 flex items-center justify-center p-4 backdrop-blur-xs select-none">
       <div className="lada-card max-w-2xl w-full p-6 bg-[#fffdf7] border-4 shadow-[8px_10px_0_rgba(28,19,8,0.4)] flex flex-col items-center text-center">
-        <span className="text-3xl mb-1">✋</span>
+        <div className="mb-2">
+          <LadaThematicIcon name="hand" size={40} animated />
+        </div>
         <h3 className="font-title text-2xl font-black text-[#1c1308]">
           Ruka je plná — odhoďte přebytek
         </h3>

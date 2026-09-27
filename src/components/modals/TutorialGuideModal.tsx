@@ -1,4 +1,5 @@
 import React from "react";
+import { LadaThematicIcon } from "../sprites/LadaThematicIcon";
 
 interface TutorialGuideModalProps {
   onClose: () => void;
@@ -10,20 +11,22 @@ export const TutorialGuideModal: React.FC<TutorialGuideModalProps> = ({ onClose 
       <div className="lada-card max-w-xl w-full max-h-[85vh] flex flex-col p-6 bg-[#fffdf7] border-4 shadow-[8px_10px_0_rgba(28,19,8,0.4)]">
         <div className="flex items-center justify-between border-b-2 border-[#1c1308] pb-3 mb-4">
           <div className="flex items-center gap-2">
-            <span className="text-2xl">📖</span>
+            <LadaThematicIcon name="book" size={26} animated />
             <h3 className="font-title text-2xl font-black text-[#1c1308]">
               Jak se hraje Lovec bubáků
             </h3>
           </div>
-          <button type="button" onClick={onClose} className="lada-button text-xs py-1.5 px-3">
-            Zavřít ✕
+          <button type="button" onClick={onClose} className="lada-button text-xs py-1.5 px-3 inline-flex items-center gap-1.5">
+            <span>Zavřít</span>
+            <LadaThematicIcon name="close" size={12} />
           </button>
         </div>
 
         <div className="flex-1 overflow-y-auto space-y-3.5 pr-2 text-xs sm:text-sm font-semibold text-[#382613] leading-relaxed">
           <div className="bg-[#f6ebd0] p-3 rounded-xl border border-[#1c1308]">
-            <h4 className="font-title text-base font-black text-[#1c1308] mb-1">
-              ⚡ Akce a Nádech
+            <h4 className="font-title text-base font-black text-[#1c1308] mb-1 flex items-center gap-1.5">
+              <LadaThematicIcon name="action" size={18} animated />
+              <span>Akce a Nádech</span>
             </h4>
             <p>
               Akce spotřebováváte zahráním karet. Samy od sebe se po kole nedobíjejí! Dobíjíte je
@@ -33,8 +36,9 @@ export const TutorialGuideModal: React.FC<TutorialGuideModalProps> = ({ onClose 
           </div>
 
           <div className="bg-[#f6ebd0] p-3 rounded-xl border border-[#1c1308]">
-            <h4 className="font-title text-base font-black text-[#1c1308] mb-1">
-              ⏳ Augenblicky (čas)
+            <h4 className="font-title text-base font-black text-[#1c1308] mb-1 flex items-center gap-1.5">
+              <LadaThematicIcon name="hourglass" size={18} animated />
+              <span>Augenblicky (čas)</span>
             </h4>
             <p>
               Čas ve hře měříme v <b>Augenblicích</b> (Aug). Vy i každý bubák máte svůj vlastní
@@ -45,8 +49,9 @@ export const TutorialGuideModal: React.FC<TutorialGuideModalProps> = ({ onClose 
           </div>
 
           <div className="bg-[#f6ebd0] p-3 rounded-xl border border-[#1c1308]">
-            <h4 className="font-title text-base font-black text-[#1c1308] mb-1">
-              ⚡ Připravenost a 3× zrychlený rozběh
+            <h4 className="font-title text-base font-black text-[#1c1308] mb-1 flex items-center gap-1.5">
+              <LadaThematicIcon name="speed" size={18} animated />
+              <span>Připravenost a 3× zrychlený rozběh</span>
             </h4>
             <p>
               Před zahájením souboje mají lovec i bubáci zpoždění rovné{" "}
@@ -57,8 +62,9 @@ export const TutorialGuideModal: React.FC<TutorialGuideModalProps> = ({ onClose 
           </div>
 
           <div className="bg-[#f6ebd0] p-3 rounded-xl border border-[#1c1308]">
-            <h4 className="font-title text-base font-black text-[#1c1308] mb-1">
-              😴 Spánek a Kochání
+            <h4 className="font-title text-base font-black text-[#1c1308] mb-1 flex items-center gap-1.5">
+              <LadaThematicIcon name="fatigue" size={18} animated />
+              <span>Spánek a Kochání</span>
             </h4>
             <p>
               <b>Spánek</b> vás zbaví velké porce Únavy, ale zabere 3 Aug.
@@ -68,8 +74,9 @@ export const TutorialGuideModal: React.FC<TutorialGuideModalProps> = ({ onClose 
           </div>
 
           <div className="bg-[#f6ebd0] p-3 rounded-xl border border-[#1c1308]">
-            <h4 className="font-title text-base font-black text-[#1c1308] mb-1">
-              🧂 Zranění a Odolnost
+            <h4 className="font-title text-base font-black text-[#1c1308] mb-1 flex items-center gap-1.5">
+              <LadaThematicIcon name="salt" size={18} animated />
+              <span>Zranění a Odolnost</span>
             </h4>
             <p>
               Každý bod zranění, který projde skrz Blok bubáka, mu přidá +1 Aug do jeho odpočtu a
@@ -79,8 +86,9 @@ export const TutorialGuideModal: React.FC<TutorialGuideModalProps> = ({ onClose 
           </div>
 
           <div className="bg-[#f6ebd0] p-3 rounded-xl border border-[#1c1308]">
-            <h4 className="font-title text-base font-black text-[#1c1308] mb-1">
-              🧭 Putování krajem a Krejcary
+            <h4 className="font-title text-base font-black text-[#1c1308] mb-1 flex items-center gap-1.5">
+              <LadaThematicIcon name="compass" size={18} animated />
+              <span>Putování krajem a Krejcary</span>
             </h4>
             <p>
               Na mapě volíte cesty a uzly (hospoda, farář, poklad, zkratka). V hospodě můžete za{" "}
@@ -93,9 +101,10 @@ export const TutorialGuideModal: React.FC<TutorialGuideModalProps> = ({ onClose 
           <button
             type="button"
             onClick={onClose}
-            className="lada-button lada-button-primary text-sm py-2 px-6"
+            className="lada-button lada-button-primary text-sm py-2 px-6 inline-flex items-center gap-2"
           >
-            Vše je jasné, jdu na bubáky! ➔
+            <span>Vše je jasné, jdu na bubáky!</span>
+            <LadaThematicIcon name="arrow_right" size={16} />
           </button>
         </div>
       </div>

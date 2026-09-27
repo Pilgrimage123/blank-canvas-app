@@ -2,6 +2,7 @@ import React from "react";
 import { GameState } from "../../types";
 import { LOCATIONS, NODE_DB, FLAVOR_BY_LOC, NODE_EFFECTS } from "../../data/gameData";
 import { LadaLandscape } from "../sprites/LadaLandscape";
+import { LadaThematicIcon } from "../sprites/LadaThematicIcon";
 
 interface MapScreenProps {
   state: GameState;
@@ -33,23 +34,32 @@ export const MapScreen: React.FC<MapScreenProps> = ({
               Zastávka {state.locIndex + 1} z {LOCATIONS.length}
             </span>
             <span>·</span>
-            <span className="text-[#b8331d]">
-              ❤️ {state.hp}/{state.maxHp} HP
+            <span className="text-[#b8331d] inline-flex items-center gap-1">
+              <LadaThematicIcon name="hp" size={13} animated />
+              <span>{state.hp}/{state.maxHp} HP</span>
             </span>
             <span>·</span>
-            <span className="text-[#8c5614]">😴 Únava {state.fatigueOut || 0}</span>
+            <span className="text-[#8c5614] inline-flex items-center gap-1">
+              <LadaThematicIcon name="fatigue" size={13} animated />
+              <span>Únava {state.fatigueOut || 0}</span>
+            </span>
             <span>·</span>
-            <span>🃏 {state.deckAll.length} karet</span>
+            <span className="inline-flex items-center gap-1">
+              <LadaThematicIcon name="draw" size={13} animated />
+              <span>{state.deckAll.length} karet</span>
+            </span>
           </div>
         </div>
 
         {/* Currency & Actions */}
         <div className="flex items-center gap-3">
-          <div className="bg-[#fff8e8] px-3.5 py-1.5 rounded-full border-2 border-[#1c1308] font-black text-sm text-[#8c5614] shadow-[0_2px_0_rgba(28,19,8,0.2)]">
-            🪙 {state.salt} krejcarů
+          <div className="bg-[#fff8e8] px-3.5 py-1.5 rounded-full border-2 border-[#1c1308] font-black text-sm text-[#8c5614] shadow-[0_2px_0_rgba(28,19,8,0.2)] inline-flex items-center gap-1.5">
+            <LadaThematicIcon name="coin" size={16} animated />
+            <span>{state.salt} krejcarů</span>
           </div>
-          <button type="button" onClick={onOpenDeck} className="lada-button text-xs py-1.5 px-3">
-            📚 Balíček
+          <button type="button" onClick={onOpenDeck} className="lada-button text-xs py-1.5 px-3 inline-flex items-center gap-1.5">
+            <LadaThematicIcon name="book" size={14} animated />
+            <span>Balíček</span>
           </button>
           <button
             type="button"
@@ -82,7 +92,15 @@ export const MapScreen: React.FC<MapScreenProps> = ({
                 ${!isCurrent && !isPast ? "bg-[#f4ebd0] text-[#705638]" : ""}
               `}
             >
-              <span>{isPast ? "✓" : isCurrent ? "📍" : `${i + 1}.`}</span>
+              <span className="inline-flex items-center justify-center">
+                {isPast ? (
+                  <LadaThematicIcon name="check" size={11} />
+                ) : isCurrent ? (
+                  <LadaThematicIcon name="target" size={11} animated />
+                ) : (
+                  `${i + 1}.`
+                )}
+              </span>
               <span>{loc.name.split(" ")[0]}</span>
             </div>
           );
@@ -91,10 +109,18 @@ export const MapScreen: React.FC<MapScreenProps> = ({
 
       {/* Crossroad Prompt Header */}
       <div className="mb-3">
-        <h3 className="font-title text-lg font-bold text-[#1c1308]">
-          {state.awaitingAfter
-            ? "🌟 Odbočka po vítězném souboji:"
-            : "🧭 Křižovatka před vámi — zvolte cestu:"}
+        <h3 className="font-title text-lg font-bold text-[#1c1308] flex items-center gap-2">
+          {state.awaitingAfter ? (
+            <>
+              <LadaThematicIcon name="star" size={18} animated />
+              <span>Odbočka po vítězném souboji:</span>
+            </>
+          ) : (
+            <>
+              <LadaThematicIcon name="compass" size={18} animated />
+              <span>Křižovatka před vámi — zvolte cestu:</span>
+            </>
+          )}
         </h3>
         <p className="text-xs font-semibold text-[#664929]">
           {state.awaitingAfter
@@ -147,9 +173,10 @@ export const MapScreen: React.FC<MapScreenProps> = ({
 
               <button
                 type="button"
-                className={`lada-button w-full text-xs py-2 ${isPositive ? "lada-button-good" : "lada-button-primary"}`}
+                className={`lada-button w-full text-xs py-2 inline-flex items-center justify-center gap-1.5 ${isPositive ? "lada-button-good" : "lada-button-primary"}`}
               >
-                {node.timing === "misto" ? "Vydat se sem" : "Vybrat tuto cestu"} ➔
+                <span>{node.timing === "misto" ? "Vydat se sem" : "Vybrat tuto cestu"}</span>
+                <LadaThematicIcon name="arrow_right" size={14} />
               </button>
             </div>
           );

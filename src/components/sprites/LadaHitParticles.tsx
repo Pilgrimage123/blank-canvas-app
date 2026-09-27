@@ -183,7 +183,7 @@ export const LadaHitParticles: React.FC<LadaHitParticlesProps> = ({
           />
         </g>
 
-        {/* 3. KOMICKÉ OBLÁČKY PRACHU / DÝMU (Puf! ☁️) */}
+        {/* 3. KOMICKÉ OBLÁČKY PRACHU / DÝMU (Puf!) */}
         <g className="anim-hit-dust-1" style={{ transformOrigin: "80px 80px" }}>
           <ellipse
             cx="32"
@@ -212,7 +212,7 @@ export const LadaHitParticles: React.FC<LadaHitParticlesProps> = ({
 
         {/* 4. TÉMATICKY SPECIFICKÉ ČÁSTICE (Voda / Sůl / Peklo / Hrdina) */}
 
-        {/* TÉMA: VODNÍ KAPKY (Hastrman, Rusalka, Ropucha - Šplouch! 💦) */}
+        {/* TÉMA: VODNÍ KAPKY (Hastrman, Rusalka, Ropucha - Šplouch!) */}
         {resolvedTheme === "water" && (
           <g className="anim-hit-theme-water">
             {/* Kapka 1: Vystříknutí vlevo nahoru mimo obličej */}
@@ -250,7 +250,7 @@ export const LadaHitParticles: React.FC<LadaHitParticlesProps> = ({
           </g>
         )}
 
-        {/* TÉMA: SŮL A KRYSTALKY (Při zásahu solí / Solný spálenec - Sssst! 🧂) */}
+        {/* TÉMA: SŮL A KRYSTALKY (Při zásahu solí / Solný spálenec - Sssst!) */}
         {resolvedTheme === "salt" && (
           <g className="anim-hit-theme-salt">
             {/* Krystal 1: Bílý diamant vpravo nahoře */}
@@ -302,7 +302,7 @@ export const LadaHitParticles: React.FC<LadaHitParticlesProps> = ({
           </g>
         )}
 
-        {/* TÉMA: PEKELNÉ SAZE A JISKRY (Čert, Rarášek, Dudy - Žuch! 🔥) */}
+        {/* TÉMA: PEKELNÉ SAZE A JISKRY (Čert, Rarášek, Dudy - Žuch!) */}
         {resolvedTheme === "devil" && (
           <g className="anim-hit-theme-devil">
             {/* Pekelná černá saze vlevo */}
@@ -344,7 +344,7 @@ export const LadaHitParticles: React.FC<LadaHitParticlesProps> = ({
           </g>
         )}
 
-        {/* TÉMA: HRDINA ZASAŽEN (Pobuda, Kostelník, Bylinkářka, Babička - Au! 💢) */}
+        {/* TÉMA: HRDINA ZASAŽEN (Pobuda, Kostelník, Bylinkářka, Babička - Au!) */}
         {resolvedTheme === "hero" && (
           <g className="anim-hit-theme-hero">
             {/* Pobuda: Poletující bažantí pírko a tabákový chomáček */}

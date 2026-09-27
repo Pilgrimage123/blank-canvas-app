@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { EnemySprite } from "../sprites/EnemySprite";
 import { downloadGameHtml } from "../../utils/downloadGameHtml";
+import { LadaThematicIcon } from "../sprites/LadaThematicIcon";
 
 interface TitleScreenProps {
   onNewRun: () => void;
@@ -61,18 +62,20 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
             <button
               type="button"
               onClick={onChangelog}
-              className="lada-button text-xs py-1 px-2.5 bg-[#f5e4bc]"
+              className="lada-button text-xs py-1 px-2.5 bg-[#f5e4bc] inline-flex items-center gap-1"
               title="Kronika novinek a změn (Changelog)"
             >
-              📜 Kronika změn
+              <LadaThematicIcon name="scroll" size={13} animated />
+              <span>Kronika změn</span>
             </button>
             <button
               type="button"
               onClick={onOptions}
-              className="lada-button text-xs py-1 px-2.5"
+              className="lada-button text-xs py-1 px-2.5 inline-flex items-center gap-1"
               title="Nastavení škálování, hustoty a seedu"
             >
-              ⚙️ Volby
+              <LadaThematicIcon name="settings" size={13} animated />
+              <span>Volby</span>
             </button>
           </div>
         </div>
@@ -87,19 +90,21 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           <button
             type="button"
             onClick={onNewRun}
-            className="lada-button lada-button-primary text-base py-3"
+            className="lada-button lada-button-primary text-base py-3 inline-flex items-center justify-center gap-2"
           >
-            🚶 Nové putování
+            <LadaThematicIcon name="compass" size={18} animated />
+            <span>Nové putování</span>
           </button>
 
           <button
             type="button"
             onClick={onContinue}
             disabled={!hasSavedRun}
-            className={`lada-button text-base py-3 ${hasSavedRun ? "lada-button-good" : ""}`}
+            className={`lada-button text-base py-3 inline-flex items-center justify-center gap-2 ${hasSavedRun ? "lada-button-good" : ""}`}
             title={hasSavedRun ? "Pokračovat v rozehraném putování" : "Žádné uložené putování"}
           >
-            ▶️ Pokračovat {hasSavedRun ? "" : "(prázdné)"}
+            <LadaThematicIcon name="arrow_right" size={16} />
+            <span>Pokračovat {hasSavedRun ? "" : "(prázdné)"}</span>
           </button>
 
           {/* Test & Bestiary Buttons */}
@@ -110,7 +115,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
               className="lada-button text-base py-2.5 bg-[#ffd438] hover:bg-[#ffe066] border-2 border-[#1c1308] font-black text-[#1c1308] shadow-[0_3px_0_#1c1308] flex items-center justify-center gap-2"
               title="Otevřít zkušebnu s testovacím soubojem pro 8 bubáků"
             >
-              <span className="text-xl">🧪</span>
+              <LadaThematicIcon name="flask" size={20} animated />
               <span>Test</span>
             </button>
 
@@ -121,7 +126,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
                 className="lada-button text-base py-2.5 bg-[#fff8e8] hover:bg-[#ffd438] border-2 border-[#1c1308] font-black text-[#1c1308] shadow-[0_3px_0_#1c1308] flex items-center justify-center gap-2"
                 title="Otevřít přehled všech rodin a druhů bubáků"
               >
-                <span className="text-xl">📖</span>
+                <LadaThematicIcon name="book" size={20} animated />
                 <span>Přehled bubáků</span>
               </button>
             )}
@@ -130,37 +135,41 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           <button
             type="button"
             onClick={onTraining}
-            className="lada-button text-sm py-2.5"
+            className="lada-button text-sm py-2.5 inline-flex items-center justify-center gap-1.5"
             title="Krokovaný výcvik s farářem a cvičným bubákem"
           >
-            🎓 Školení faráře
+            <LadaThematicIcon name="school" size={16} animated />
+            <span>Školení faráře</span>
           </button>
 
           <button
             type="button"
             onClick={onMovie}
-            className="lada-button text-sm py-2.5"
+            className="lada-button text-sm py-2.5 inline-flex items-center justify-center gap-1.5"
             title="Automatická ukázka boje, karet a Augenblicku"
           >
-            🎬 Video výcvik
+            <LadaThematicIcon name="film" size={16} animated />
+            <span>Video výcvik</span>
           </button>
 
           <button
             type="button"
             onClick={onIntro}
-            className="lada-button text-sm py-2.5"
+            className="lada-button text-sm py-2.5 inline-flex items-center justify-center gap-1.5"
             title="Vysvětlení Akcí, Augenblicků, Únavy a mapy"
           >
-            📖 Pravidla & nápověda
+            <LadaThematicIcon name="book" size={16} animated />
+            <span>Pravidla & nápověda</span>
           </button>
 
           <button
             type="button"
             onClick={onChangelog}
-            className="lada-button text-sm py-2.5"
+            className="lada-button text-sm py-2.5 inline-flex items-center justify-center gap-1.5"
             title="Přehled verzí a pohádkových novinek"
           >
-            📜 Kronika novinek (Changelog)
+            <LadaThematicIcon name="scroll" size={16} animated />
+            <span>Kronika novinek (Changelog)</span>
           </button>
 
           {/* Download Standalone Single-file Game Button */}
@@ -170,7 +179,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
             className="lada-button text-sm py-2.5 bg-[#eaf4dc] hover:bg-[#d8edbe] border-2 border-[#1c1308] font-black text-[#1c1308] shadow-[0_3px_0_#1c1308] flex items-center justify-center gap-2 sm:col-span-2 cursor-pointer transition-colors"
             title="Stáhnout celou hru v jediném HTML souboru (hraje i offline bez internetu)"
           >
-            <span className="text-lg">📥</span>
+            <LadaThematicIcon name="download" size={18} animated />
             <span>Stáhnout celou hru (1 samostatný HTML soubor)</span>
           </button>
         </div>
@@ -186,25 +195,38 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
                   : "bg-[#fde2de] border-[#c23318] text-[#8a1a08]"
             }`}
           >
-            <span>{downloadMsg.status === "loading" ? "⏳" : downloadMsg.status === "success" ? "✅" : "⚠️"}</span>
+            <LadaThematicIcon
+              name={downloadMsg.status === "loading" ? "hourglass" : downloadMsg.status === "success" ? "check" : "warning"}
+              size={14}
+              animated
+            />
             <span>{downloadMsg.text}</span>
           </div>
         )}
 
         {/* Small folk footer */}
         <div className="flex items-center gap-4 text-xs font-bold text-[#694825] mt-2 border-t border-[#d8c498] pt-3 w-full justify-center">
-          <span>🌱 Akce a Nádech</span>
+          <span className="inline-flex items-center gap-1">
+            <LadaThematicIcon name="action" size={13} animated />
+            <span>Akce a Nádech</span>
+          </span>
           <span>·</span>
-          <span>⏳ Čas v Augenblicích</span>
+          <span className="inline-flex items-center gap-1">
+            <LadaThematicIcon name="hourglass" size={13} animated />
+            <span>Čas v Augenblicích</span>
+          </span>
           <span>·</span>
-          <span>🧂 Sůl a kříž</span>
+          <span className="inline-flex items-center gap-1">
+            <LadaThematicIcon name="salt" size={13} animated />
+            <span>Sůl a kříž</span>
+          </span>
           <span>·</span>
           <button
             type="button"
             onClick={onChangelog}
             className="underline hover:text-[#1c1308] cursor-pointer"
           >
-            v0.9.6
+            v0.9.7
           </button>
         </div>
       </div>

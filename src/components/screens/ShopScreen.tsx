@@ -12,6 +12,7 @@ import {
 } from "../../data/gameData";
 import { normalizeShopOffer } from "../../utils/gameEngine";
 import { CardView } from "../CardView";
+import { LadaThematicIcon } from "../sprites/LadaThematicIcon";
 
 interface ShopScreenProps {
   state: GameState;
@@ -71,7 +72,7 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
       {/* Tavern Signboard Header */}
       <div className="flex flex-wrap items-center justify-between gap-3 bg-[#e8cd92] p-4 rounded-2xl border-3 border-[#1c1308] shadow-[3px_4px_0_rgba(28,19,8,0.25)] mb-6">
         <div className="flex items-center gap-3">
-          <span className="text-3xl">🍺</span>
+          <LadaThematicIcon name="beer" size={36} />
           <div>
             <h2 className="font-title text-2xl sm:text-3xl font-black text-[#1c1308] leading-tight">
               Hospoda U Černého kocoura
@@ -83,15 +84,17 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="bg-[#fff8e8] px-4 py-1.5 rounded-full border-2 border-[#1c1308] font-black text-base text-[#8c5614] shadow-[0_2px_0_rgba(28,19,8,0.2)]">
-            🪙 {state.salt} krejcarů
+          <div className="bg-[#fff8e8] px-4 py-1.5 rounded-full border-2 border-[#1c1308] font-black text-base text-[#8c5614] shadow-[0_2px_0_rgba(28,19,8,0.2)] inline-flex items-center gap-1.5">
+            <LadaThematicIcon name="coin" size={18} />
+            <span>{state.salt} krejcarů</span>
           </div>
           <button
             type="button"
             onClick={onLeaveShop}
-            className="lada-button lada-button-primary text-sm py-2 px-5"
+            className="lada-button lada-button-primary text-sm py-2 px-5 inline-flex items-center gap-1.5"
           >
-            Odejít ze šenku ➔
+            <span>Odejít ze šenku</span>
+            <LadaThematicIcon name="arrow_right" size={14} />
           </button>
         </div>
       </div>
@@ -100,9 +103,10 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
       <div className="mb-6">
         <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-2">
-            <span className="text-xl">🎴</span>
+            <LadaThematicIcon name="draw" size={22} />
             <h3 className="font-title text-xl font-bold text-[#1c1308]">Nové karty do brašny</h3>
           </div>
+
           <span className="text-xs font-semibold text-[#664c2c]">
             (Karty mohou nést řemeslné hvězdičky jakosti přímo ze šenku!)
           </span>
@@ -191,8 +195,8 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
                       <CardView card={group.id} stars={currentStars} className="scale-90" />
                     </div>
                     <div className="flex flex-col items-center px-1">
-                      <span className="text-xl font-black text-[#8c5614]">➔</span>
-                      <span className="text-[0.62rem] font-black text-[#b36b00] whitespace-nowrap bg-[#fff0cc] px-1 rounded border border-[#d68b0e]/30">
+                      <LadaThematicIcon name="arrow_right" size={18} animated />
+                      <span className="text-[0.62rem] font-black text-[#b36b00] whitespace-nowrap bg-[#fff0cc] px-1 rounded border border-[#d68b0e]/30 mt-0.5">
                         +10 %
                       </span>
                     </div>
@@ -228,7 +232,7 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
       {/* Section 3: Remove Card from Deck */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-3">
-          <span className="text-xl">🗑️</span>
+          <LadaThematicIcon name="trash" size={24} animated />
           <h3 className="font-title text-xl font-bold text-[#1c1308]">
             Odhodit nepotřebnou kartu z brašny ({REMOVE_COST} krejcarů)
           </h3>
@@ -275,9 +279,10 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
           type="button"
           onClick={onRest}
           disabled={state.salt < REST_COST || (state.fatigueOut || 0) === 0}
-          className="lada-button text-sm py-2 px-4 shadow-[0_3px_0_#1c1308]"
+          className="lada-button text-sm py-2 px-4 shadow-[0_3px_0_#1c1308] inline-flex items-center gap-2"
         >
-          😴 Odpočinout si (−5 Únavy za {REST_COST} k.)
+          <LadaThematicIcon name="fatigue" size={18} animated />
+          <span>Odpočinout si (−5 Únavy za {REST_COST} k.)</span>
         </button>
       </div>
     </div>

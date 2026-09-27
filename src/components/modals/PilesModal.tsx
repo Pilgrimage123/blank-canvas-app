@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { CardInstance } from "../../types";
 import { CardView } from "../CardView";
+import { LadaThematicIcon } from "../sprites/LadaThematicIcon";
 
 interface PilesModalProps {
   drawPile: CardInstance[];
@@ -30,13 +31,14 @@ export const PilesModal: React.FC<PilesModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between border-b-2 border-[#1c1308] pb-3 mb-3">
           <div className="flex items-center gap-2">
-            <span className="text-2xl">📚</span>
+            <LadaThematicIcon name="book" size={26} animated />
             <h3 className="font-title text-2xl font-black text-[#1c1308]">
               Prohlížeč brašny a karet
             </h3>
           </div>
-          <button type="button" onClick={onClose} className="lada-button text-xs py-1.5 px-3">
-            Zavřít ✕
+          <button type="button" onClick={onClose} className="lada-button text-xs py-1.5 px-3 inline-flex items-center gap-1.5">
+            <span>Zavřít</span>
+            <LadaThematicIcon name="close" size={12} />
           </button>
         </div>
 

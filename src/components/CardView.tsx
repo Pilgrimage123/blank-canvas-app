@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { CardDef, CardInstance } from "../types";
 import { CARD_DB, starEmoji, starValueMult } from "../data/gameData";
+import { LadaThematicIcon } from "./sprites/LadaThematicIcon";
 
 interface CardViewProps {
   card: CardInstance | string;
@@ -106,7 +107,11 @@ export const CardView: React.FC<CardViewProps> = ({
             className="text-[0.68rem] font-black leading-none text-[#b36b00] mt-0.5 tracking-tight flex items-center justify-center gap-0.5"
             title={`Jakost ${starCount}★ (+${Math.round(starCount * 10)} % síla účinku)`}
           >
-            <span>{starEmoji(starCount)}</span>
+            <div className="flex items-center gap-0.5">
+              {Array.from({ length: starCount }).map((_, i) => (
+                <LadaThematicIcon key={i} name="star" size={11} />
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -116,45 +121,45 @@ export const CardView: React.FC<CardViewProps> = ({
         <div className="flex flex-wrap items-center justify-center gap-1 my-1">
           {effectiveDmg !== undefined && (
             <span
-              className={`inline-flex items-center gap-0.5 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full ${
+              className={`inline-flex items-center gap-1 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full ${
                 starCount > 0
                   ? "bg-[#ffece4] border-2 border-[#b8331d] text-[#942718] shadow-[0_1px_2px_rgba(184,51,29,0.25)]"
                   : "bg-[#fce0d8] border border-[#942718] text-[#942718]"
               }`}
             >
-              ⚔️ {effectiveDmg}
+              <LadaThematicIcon name="attack" size={13} /> {effectiveDmg}
             </span>
           )}
           {effectiveBlock !== undefined && (
             <span
-              className={`inline-flex items-center gap-0.5 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full ${
+              className={`inline-flex items-center gap-1 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full ${
                 starCount > 0
                   ? "bg-[#e5f0fc] border-2 border-[#15467e] text-[#1b4372] shadow-[0_1px_2px_rgba(27,67,114,0.25)]"
                   : "bg-[#d8e8fc] border border-[#1b4372] text-[#1b4372]"
               }`}
             >
-              🛡️ {effectiveBlock}
+              <LadaThematicIcon name="block" size={13} /> {effectiveBlock}
             </span>
           )}
           {effectiveDodge !== undefined && (
-            <span className="inline-flex items-center gap-0.5 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full bg-[#ecdcd0] border border-[#593d25] text-[#593d25]">
-              💨 {effectiveDodge}
+            <span className="inline-flex items-center gap-1 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full bg-[#ecdcd0] border border-[#593d25] text-[#593d25]">
+              <LadaThematicIcon name="dodge" size={13} /> {effectiveDodge}
             </span>
           )}
           {effectiveDraw !== undefined && (
-            <span className="inline-flex items-center gap-0.5 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full bg-[#e4f4d8] border border-[#2d6328] text-[#2d6328]">
-              🃏 +{effectiveDraw}
+            <span className="inline-flex items-center gap-1 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full bg-[#e4f4d8] border border-[#2d6328] text-[#2d6328]">
+              <LadaThematicIcon name="draw" size={13} /> +{effectiveDraw}
             </span>
           )}
           {effectiveFatigue !== undefined && (
             <span
-              className={`inline-flex items-center gap-0.5 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full ${
+              className={`inline-flex items-center gap-1 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full ${
                 starCount > 0
                   ? "bg-[#fff2d2] border-2 border-[#a66d0c] text-[#825406] shadow-[0_1px_2px_rgba(166,109,12,0.25)]"
                   : "bg-[#fff0d0] border border-[#d69818] text-[#825406]"
               }`}
             >
-              😴 {effectiveFatigue}
+              <LadaThematicIcon name="fatigue" size={13} /> {effectiveFatigue}
             </span>
           )}
         </div>
@@ -166,10 +171,18 @@ export const CardView: React.FC<CardViewProps> = ({
           <div>{def.text}</div>
           {starCount > 0 && (
             <div className="text-[0.62rem] font-black text-[#8c5614] mt-1 bg-[#fffae8] px-1.5 py-0.5 rounded-md border border-[#d68b0e]/50 flex items-center justify-between">
-              <span>Jakost: {starEmoji(starCount)}</span>
+              <span className="inline-flex items-center gap-1">
+                Jakost:{" "}
+                <span className="inline-flex items-center gap-0.5">
+                  {Array.from({ length: starCount }).map((_, i) => (
+                    <LadaThematicIcon key={i} name="star" size={11} />
+                  ))}
+                </span>
+              </span>
               <span>+{Math.round(starCount * 10)} % účinku</span>
             </div>
           )}
+
           {def.flavor && (
             <div className="text-[0.64rem] italic text-[#594432] mt-1 border-t border-[#dfcb9a] pt-1">
               "{def.flavor}"

@@ -3,6 +3,7 @@ import { HeroId, LocationId } from "../../types";
 import { TestFightsTab } from "./test/TestFightsTab";
 import { TestAnimationsTab } from "./test/TestAnimationsTab";
 import { TestLandscapesTab } from "./test/TestLandscapesTab";
+import { LadaThematicIcon } from "../sprites/LadaThematicIcon";
 
 export type TestScreenTab = "fights" | "animations" | "landscapes";
 
@@ -33,7 +34,7 @@ export const TestScreen: React.FC<TestScreenProps> = ({
           {/* Title row */}
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-3">
-              <span className="text-2xl sm:text-3xl">🧪</span>
+              <LadaThematicIcon name="flask" size={28} animated />
               <div>
                 <h1 className="font-title font-black text-lg sm:text-xl text-[#1c1308] leading-tight">
                   Zkušebna a testovací studio
@@ -53,7 +54,7 @@ export const TestScreen: React.FC<TestScreenProps> = ({
                   className="bg-[#ffd438] hover:bg-[#ffe066] text-[#1c1308] border-2 border-[#1c1308] font-title font-black text-xs sm:text-sm px-3 py-1.5 rounded-xl shadow-xs transition-transform active:scale-95 cursor-pointer flex items-center gap-1.5"
                   title="Otevřít přehled všech rodin a členů bubáků"
                 >
-                  <span>📖</span>
+                  <LadaThematicIcon name="book" size={16} animated />
                   <span className="hidden sm:inline">Přehled bubáků</span>
                 </button>
               )}
@@ -63,7 +64,7 @@ export const TestScreen: React.FC<TestScreenProps> = ({
                 className="bg-[#fff8e8] hover:bg-[#ffd438] text-[#1c1308] border-2 border-[#1c1308] font-bold text-xs sm:text-sm px-3 py-1.5 rounded-xl shadow-xs transition-transform active:scale-95 cursor-pointer flex items-center gap-1.5"
                 title="Vrátit se do hlavního menu"
               >
-                <span>🔙</span>
+                <LadaThematicIcon name="back" size={14} />
                 <span>Zpět do menu</span>
               </button>
             </div>
@@ -83,7 +84,7 @@ export const TestScreen: React.FC<TestScreenProps> = ({
                   : "bg-[#fffdf7] hover:bg-[#ffeec2] text-[#4a3520] border-[#ded4be]"
               }`}
             >
-              <span className="text-base">⚔️</span>
+              <LadaThematicIcon name="attack" size={16} animated />
               <span className="truncate">Testovací souboje</span>
             </button>
 
@@ -96,7 +97,7 @@ export const TestScreen: React.FC<TestScreenProps> = ({
                   : "bg-[#fffdf7] hover:bg-[#ffeec2] text-[#4a3520] border-[#ded4be]"
               }`}
             >
-              <span className="text-base">👹</span>
+              <LadaThematicIcon name="devil" size={16} animated />
               <span className="truncate">Animace bubáků</span>
             </button>
 
@@ -109,7 +110,7 @@ export const TestScreen: React.FC<TestScreenProps> = ({
                   : "bg-[#fffdf7] hover:bg-[#ffeec2] text-[#4a3520] border-[#ded4be]"
               }`}
             >
-              <span className="text-base">🏞️</span>
+              <LadaThematicIcon name="picture" size={16} animated />
               <span className="truncate">Pozadí boje</span>
             </button>
           </nav>
@@ -141,7 +142,7 @@ export const TestScreen: React.FC<TestScreenProps> = ({
           onClick={onBack}
           className="bg-[#eedcb0] hover:bg-[#ffd438] text-[#1c1308] border-2 border-[#1c1308] text-xs font-black px-3.5 py-1.5 rounded-xl cursor-pointer shadow-xs active:scale-95 flex items-center gap-1.5"
         >
-          <span>⬅️</span>
+          <LadaThematicIcon name="back" size={14} />
           <span>Zpět do menu</span>
         </button>
 

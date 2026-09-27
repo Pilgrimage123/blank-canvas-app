@@ -3,6 +3,7 @@ import { EnemyInstance } from "../../types";
 import { ENEMY_DB, ENEMY_ACTIONS, TRAITS, LOCATIONS } from "../../data/gameData";
 import { EnemySprite } from "../sprites/EnemySprite";
 import { getStagePercent } from "../../utils/spriteUtils";
+import { LadaThematicIcon } from "../sprites/LadaThematicIcon";
 
 interface EnemyDetailModalProps {
   enemy: EnemyInstance;
@@ -29,31 +30,31 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
   const getActionIcon = (actId?: string | null) => {
     switch (actId) {
       case "uder":
-        return "⚔️";
+        return <LadaThematicIcon name="attack" size={20} />;
       case "ukryt":
-        return "🛡️";
+        return <LadaThematicIcon name="block" size={20} />;
       case "zlovest":
-        return "😤";
+        return <LadaThematicIcon name="omen" size={20} />;
       case "vabnicka":
-        return "📣";
+        return <LadaThematicIcon name="buff" size={20} />;
       case "odveta":
-        return "⚡";
+        return <LadaThematicIcon name="speed" size={20} />;
       case "zatuhnuti":
-        return "🧊";
+        return <LadaThematicIcon name="freeze" size={20} />;
       case "skrek":
-        return "😱";
+        return <LadaThematicIcon name="fear" size={20} />;
       case "puch":
-        return "🦨";
+        return <LadaThematicIcon name="stink" size={20} />;
       case "vtipek":
-        return "🃏";
+        return <LadaThematicIcon name="draw" size={20} />;
       case "bafnuti_z_dymky":
-        return "💨";
+        return <LadaThematicIcon name="dodge" size={20} />;
       case "kouzelna_polivcicka":
-        return "🍲";
+        return <LadaThematicIcon name="soup" size={20} />;
       case "rybnicni_mlha":
-        return "🌫️";
+        return <LadaThematicIcon name="fog" size={20} />;
       default:
-        return "💨";
+        return <LadaThematicIcon name="dodge" size={20} />;
     }
   };
 
@@ -119,12 +120,14 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
               </div>
 
               <div className="text-xs font-bold text-[#694825] flex flex-wrap items-center gap-1.5 mt-1">
-                <span className="bg-[#f0dfb6] text-[#4a2e12] px-1.5 py-0.2 rounded border border-[#d6be96]">
-                  {enemy.role === "linie"
-                    ? "🛡️ Linie"
-                    : enemy.role === "podpora"
-                      ? "📣 Podpora"
-                      : "🎯 Dělostřelba"}
+                <span className="bg-[#f0dfb6] text-[#4a2e12] px-1.5 py-0.2 rounded border border-[#d6be96] inline-flex items-center gap-1">
+                  {enemy.role === "linie" ? (
+                    <><LadaThematicIcon name="block" size={12} /> Linie</>
+                  ) : enemy.role === "podpora" ? (
+                    <><LadaThematicIcon name="buff" size={12} /> Podpora</>
+                  ) : (
+                    <><LadaThematicIcon name="target" size={12} /> Dělostřelba</>
+                  )}
                 </span>
                 <span>·</span>
                 <span className="text-[#3b2713]">
@@ -132,7 +135,7 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
                 </span>
                 <span>·</span>
                 <span className={enemy.alive ? "text-[#2d6328]" : "text-[#8c3220]"}>
-                  {enemy.alive ? `${enemy.hp}/${enemy.maxHp} HP` : "💨 Rozplynul se"}
+                  {enemy.alive ? `${enemy.hp}/${enemy.maxHp} HP` : "Rozplynul se"}
                 </span>
               </div>
             </div>
@@ -142,10 +145,10 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
             type="button"
             id="btn-close-enemy-detail"
             onClick={onClose}
-            className="lada-button text-xs py-1 px-2.5 shrink-0"
+            className="lada-button text-xs py-1 px-2.5 shrink-0 flex items-center justify-center"
             title="Zavřít detail"
           >
-            ✕
+            <LadaThematicIcon name="close" size={13} />
           </button>
         </div>
 
@@ -155,7 +158,7 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
           <div className="bg-[#f7eed9] p-2.5 rounded-xl border border-[#1c1308]">
             <div className="flex items-center justify-between text-xs font-bold mb-1">
               <span className="font-title font-black text-[#1c1308] flex items-center gap-1">
-                <span>❤️</span> Životy bubáka
+                <LadaThematicIcon name="hp" size={13} /> Životy bubáka
               </span>
               <span className="font-black text-[#1c1308]">
                 {enemy.hp} / {enemy.maxHp} HP ({hpPct} %)
@@ -180,7 +183,7 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
             <div className="bg-[#fff3c9] border-2 border-[#1c1308] rounded-xl p-3 shadow-xs">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl">{getActionIcon(enemy.nextAction)}</span>
+                  <span className="text-2xl flex items-center justify-center">{getActionIcon(enemy.nextAction)}</span>
                   <div>
                     <div className="text-[0.65rem] uppercase font-black text-[#8c5614] tracking-wider">
                       Chystaný tah bubáka:
@@ -191,7 +194,7 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
                   </div>
                 </div>
                 <div className="bg-[#1c1308] text-[#ffd438] font-title font-black text-xs px-2.5 py-1 rounded-full shadow-2xs shrink-0 flex items-center gap-1">
-                  <span>⏱️</span>
+                  <LadaThematicIcon name="hourglass" size={12} />
                   <span>za {Math.max(0, enemy.timer)} Aug</span>
                 </div>
               </div>
@@ -248,37 +251,37 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
             enemy.stiffen > 0) && (
             <div className="bg-[#fff9ed] p-2.5 rounded-xl border border-[#1c1308]">
               <h4 className="font-title text-xs font-black text-[#1c1308] uppercase tracking-wider mb-1.5 flex items-center gap-1">
-                <span>✨</span> Aktivní bojové stavy:
+                <LadaThematicIcon name="star" size={13} /> Aktivní bojové stavy:
               </h4>
               <div className="flex flex-wrap gap-1.5">
                 {enemy.saltDot > 0 && (
-                  <span className="bg-[#fffdf2] border border-[#1c1308] text-[#8c5614] text-xs font-black px-2 py-0.5 rounded-full shadow-2xs">
-                    🧂 {enemy.saltDot}× Sůl na kůži (pálí při každém zásahu)
+                  <span className="bg-[#fffdf2] border border-[#1c1308] text-[#8c5614] text-xs font-black px-2 py-0.5 rounded-full shadow-2xs inline-flex items-center gap-1">
+                    <LadaThematicIcon name="salt" size={12} /> {enemy.saltDot}× Sůl na kůži (pálí při každém zásahu)
                   </span>
                 )}
                 {enemy.omen > 0 && (
-                  <span className="bg-[#fce0d8] border border-[#1c1308] text-[#c4321d] text-xs font-black px-2 py-0.5 rounded-full shadow-2xs">
-                    😤 +{enemy.omen} Zlověst / Nadechnutí (bonus k příští ráně)
+                  <span className="bg-[#fce0d8] border border-[#1c1308] text-[#c4321d] text-xs font-black px-2 py-0.5 rounded-full shadow-2xs inline-flex items-center gap-1">
+                    <LadaThematicIcon name="omen" size={12} /> +{enemy.omen} Zlověst / Nadechnutí (bonus k příští ráně)
                   </span>
                 )}
                 {enemy.block > 0 && (
-                  <span className="bg-[#dcf0fc] border border-[#1c1308] text-[#1c4b7d] text-xs font-black px-2 py-0.5 rounded-full shadow-2xs">
-                    🛡️ {enemy.block} Blok (kryje před zraněním)
+                  <span className="bg-[#dcf0fc] border border-[#1c1308] text-[#1c4b7d] text-xs font-black px-2 py-0.5 rounded-full shadow-2xs inline-flex items-center gap-1">
+                    <LadaThematicIcon name="block" size={12} /> {enemy.block} Blok (kryje před zraněním)
                   </span>
                 )}
                 {enemy.revenge && (
-                  <span className="bg-[#fff2be] border border-[#1c1308] text-[#825b0f] text-xs font-black px-2 py-0.5 rounded-full shadow-2xs">
-                    ⚡ Odveta aktivní (při zásahu okamžitě sekne zpět!)
+                  <span className="bg-[#fff2be] border border-[#1c1308] text-[#825b0f] text-xs font-black px-2 py-0.5 rounded-full shadow-2xs inline-flex items-center gap-1">
+                    <LadaThematicIcon name="speed" size={12} /> Odveta aktivní (při zásahu okamžitě sekne zpět!)
                   </span>
                 )}
                 {enemy.uskokDodge && (
-                  <span className="bg-[#e4f7d7] border border-[#1c1308] text-[#2d6328] text-xs font-black px-2 py-0.5 rounded-full shadow-2xs">
-                    💨 Úskok připraven (vyhne se příštímu útoku)
+                  <span className="bg-[#e4f7d7] border border-[#1c1308] text-[#2d6328] text-xs font-black px-2 py-0.5 rounded-full shadow-2xs inline-flex items-center gap-1">
+                    <LadaThematicIcon name="dodge" size={12} /> Úskok připraven (vyhne se příštímu útoku)
                   </span>
                 )}
                 {enemy.stiffen > 0 && (
-                  <span className="bg-[#e2eaf5] border border-[#1c1308] text-[#23456b] text-xs font-black px-2 py-0.5 rounded-full shadow-2xs">
-                    🧊 Zatuhnutí ({enemy.stiffen} Aug)
+                  <span className="bg-[#e2eaf5] border border-[#1c1308] text-[#23456b] text-xs font-black px-2 py-0.5 rounded-full shadow-2xs inline-flex items-center gap-1">
+                    <LadaThematicIcon name="freeze" size={12} /> Zatuhnutí ({enemy.stiffen} Aug)
                   </span>
                 )}
               </div>
@@ -288,8 +291,9 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
           {/* Traits & Nature */}
           <div>
             <h4 className="font-title text-sm font-bold text-[#1c1308] mb-1.5 flex items-center gap-1">
-              <span>🎭</span> Povaha a zvláštní traity:
+              <LadaThematicIcon name="theater" size={14} /> Povaha a zvláštní traity:
             </h4>
+
             {enemy.traits.length === 0 ? (
               <p className="text-xs italic text-[#705638] bg-[#fffaf0] p-2 rounded-lg border border-[#1c1308]">
                 Nemá žádné zvláštní traity — chová se podle obyčejů svého druhu.
@@ -318,7 +322,7 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
           {/* Enemy Actions / Cards in Pool */}
           <div>
             <h4 className="font-title text-sm font-bold text-[#1c1308] mb-1.5 flex items-center gap-1">
-              <span>🎴</span> Akce v arzenálu bubáka:
+              <LadaThematicIcon name="draw" size={14} /> Akce v arzenálu bubáka:
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {pool.map((actId) => {
@@ -336,15 +340,19 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
                     <div>
                       <div className="flex items-center justify-between font-bold mb-1">
                         <span className="font-title font-black text-[#1c1308] flex items-center gap-1">
-                          <span>{getActionIcon(actId)}</span>
+                          <span className="flex items-center">{getActionIcon(actId)}</span>
                           <span>{act.name}</span>
                         </span>
                         <span
-                          className={`text-[0.62rem] font-black uppercase px-1.5 py-0.5 rounded border border-[#1c1308] ${
+                          className={`text-[0.62rem] font-black uppercase px-1.5 py-0.5 rounded border border-[#1c1308] flex items-center gap-0.5 ${
                             isCurrent ? "bg-[#b8331d] text-white" : "bg-[#ebd5a0] text-[#1c1308]"
                           }`}
                         >
-                          {isCurrent ? "⭐ Chystá teď" : act.kind}
+                          {isCurrent ? (
+                            <><LadaThematicIcon name="star" size={10} /> Chystá teď</>
+                          ) : (
+                            act.kind
+                          )}
                         </span>
                       </div>
                       <p className="text-[0.72rem] text-[#4a3420] font-semibold leading-tight">
@@ -361,11 +369,14 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
           {tpl.variants && tpl.variants.length > 0 && (
             <div className="bg-[#fcf5e5] p-3 rounded-xl border border-[#1c1308]">
               <h4 className="font-title text-xs font-black text-[#1c1308] uppercase tracking-wider mb-2 flex items-center justify-between">
-                <span>👥 Stádia vývoje rodiny:</span>
+                <span className="flex items-center gap-1">
+                  <LadaThematicIcon name="party" size={14} /> Stádia vývoje rodiny:
+                </span>
                 <span className="text-[0.65rem] text-[#7a5833] font-bold">
                   12 % změna velikosti za stádium
                 </span>
               </h4>
+
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                 {tpl.variants.map((v, vidx) => {
                   const isThisOne = vidx === stageIdx;
@@ -402,7 +413,10 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
           {/* Habitats / Lore Locations */}
           {tpl.loc && tpl.loc.length > 0 && (
             <div className="flex items-center gap-1.5 flex-wrap text-[0.72rem] text-[#543b24] font-bold">
-              <span>📍 Přirozený výskyt:</span>
+              <span className="inline-flex items-center gap-1">
+                <LadaThematicIcon name="village" size={13} animated />
+                <span>Přirozený výskyt:</span>
+              </span>
               {tpl.loc.map((locId) => (
                 <span
                   key={locId}
@@ -415,11 +429,14 @@ export const EnemyDetailModal: React.FC<EnemyDetailModalProps> = ({ enemy, onClo
           )}
 
           {/* Hunter Tip */}
-          <div className="bg-[#f0dfb6] p-2.5 rounded-xl border border-[#1c1308] text-[0.72rem] font-semibold text-[#543b24] leading-relaxed">
-            💡 <b>Rada starého lovce:</b> Každé zranění ze soli nebo hole, které projde skrz Blok,
-            posune odpočet bubáka o Augenblick dál (1 bod = 1 Aug). Jeho{" "}
-            <b>Odolnost ({enemy.odolnost} %)</b> z toho však procento sežere. Sledujte bedlivě
-            odpočty a nenechte je dokončit mocné výpady!
+          <div className="bg-[#f0dfb6] p-2.5 rounded-xl border border-[#1c1308] text-[0.72rem] font-semibold text-[#543b24] leading-relaxed flex items-start gap-1.5">
+            <LadaThematicIcon name="idea" size={16} animated className="flex-shrink-0 mt-0.5" />
+            <div>
+              <b>Rada starého lovce:</b> Každé zranění ze soli nebo hole, které projde skrz Blok,
+              posune odpočet bubáka o Augenblick dál (1 bod = 1 Aug). Jeho{" "}
+              <b>Odolnost ({enemy.odolnost} %)</b> z toho však procento sežere. Sledujte bedlivě
+              odpočty a nenechte je dokončit mocné výpady!
+            </div>
           </div>
         </div>
 

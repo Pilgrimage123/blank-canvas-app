@@ -9,6 +9,7 @@ import { LadaHitParticles, LadaDizzyHalo } from "../sprites/LadaHitParticles";
 import { SurrenderWhiteFlag } from "../sprites/SurrenderWhiteFlag";
 import { sound } from "../../lib/sound";
 import { CardView } from "../CardView";
+import { LadaThematicIcon } from "../sprites/LadaThematicIcon";
 
 interface CombatScreenProps {
   state: GameState;
@@ -453,7 +454,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
         }
         title={
           eliminateMode && enemy.alive
-            ? `🎯 Klepnutím vyřadíte: ${enemy.name}`
+            ? `Cíl: Klepnutím vyřadíte: ${enemy.name}`
             : isDefeated
               ? `${enemy.name} (Vzdal se! Klepnutím otevřete kompletní informace a karty)`
               : `${enemy.name} (Klepnutím otevřete kompletní informace a karty)`
@@ -463,7 +464,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
         {isFocused && enemy.alive && (
           <div className="absolute -top-7 z-30 flex flex-col items-center pointer-events-none animate-bounce">
             <div className="bg-[#ffd438] text-[#1c1308] border-1.5 border-[#1c1308] font-title font-black text-[0.6rem] px-2 py-0.2 rounded-full shadow-md flex items-center gap-1">
-              🎯 CÍL
+              <LadaThematicIcon name="target" size={13} /> CÍL
             </div>
             <div className="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[5px] border-t-[#1c1308]" />
           </div>
@@ -476,30 +477,39 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
             {enemy.isHit && (
               <div
                 key={enemy.hitNonce ? `pop-${enemy.hitNonce}` : "pop-hit"}
-                className="absolute -top-5 right-0 z-30 anim-comic-pop bg-[#ffd438] text-[#1c1308] border-1.5 border-[#1c1308] font-black text-[0.62rem] px-1.5 py-0.2 rounded-full shadow-md"
+                className="absolute -top-5 right-0 z-30 anim-comic-pop bg-[#ffd438] text-[#1c1308] border-1.5 border-[#1c1308] font-black text-[0.62rem] px-1.5 py-0.2 rounded-full shadow-md flex items-center gap-1"
               >
-                {enemy.saltDot > 0 ? "Sssst! 🧂" : "Bác! 💥"}
+                {enemy.saltDot > 0 ? (
+                  <>Sssst! <LadaThematicIcon name="salt" size={12} /></>
+                ) : (
+                  <>Bác! <LadaThematicIcon name="hit" size={12} /></>
+                )}
               </div>
             )}
             {enemy.alive && enemy.isAttacking && (
-              <div className="absolute -top-5 left-0 z-30 anim-comic-pop bg-[#f06e56] text-white border-1.5 border-[#1c1308] font-black text-[0.62rem] px-1.5 py-0.2 rounded-full shadow-md">
-                {enemy.nextAction === "bafnuti_z_dymky"
-                  ? "Puf! ☁️"
-                  : enemy.type === "vodnik"
-                    ? "Šplouch! 💦"
-                    : "Žuch! 👊"}
+              <div className="absolute -top-5 left-0 z-30 anim-comic-pop bg-[#f06e56] text-white border-1.5 border-[#1c1308] font-black text-[0.62rem] px-1.5 py-0.2 rounded-full shadow-md flex items-center gap-1">
+                {enemy.nextAction === "bafnuti_z_dymky" ? (
+                  <>Puf! <LadaThematicIcon name="fog" size={12} /></>
+                ) : enemy.type === "vodnik" ? (
+                  <>Šplouch! <LadaThematicIcon name="water" size={12} /></>
+                ) : (
+                  <>Žuch! <LadaThematicIcon name="hit" size={12} /></>
+                )}
               </div>
             )}
 
             {/* Floating Damage Preview Tag */}
             {enemy.alive && previewDmg > 0 && (
               <div className="absolute -top-4 z-30 anim-comic-pop bg-[#c4321d] text-white border-1.5 border-[#1c1308] font-title font-black text-[0.65rem] px-1.5 py-0.2 rounded-full shadow-lg flex items-center gap-1 whitespace-nowrap">
-                <span>💥 −{previewDmg}</span>
-                {isLethal && <span className="text-yellow-300">💀</span>}
+                <span className="flex items-center gap-0.5">
+                  <LadaThematicIcon name="hit" size={12} /> −{previewDmg}
+                </span>
+                {isLethal && <LadaThematicIcon name="death" size={12} />}
               </div>
             )}
           </div>
         ) : null}
+
 
         {/* 3. MÁVAJÍCÍ BÍLÁ VLAJKA KUS NAD PORAŽENÝM BUBÁKEM (JAKOŽE SE VZDÁVAJÍ) */}
         {isDefeated && (
@@ -554,7 +564,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                 className="flex flex-col items-center text-[#b8331d] font-black text-[0.58rem] leading-tight min-w-[20px] text-center"
                 title={`Životy: ${enemy.hp}/${enemy.maxHp}`}
               >
-                <span className="text-[0.6rem] leading-none">❤️</span>
+                <LadaThematicIcon name="hp" size={11} />
                 <span className="leading-none mt-0.5 whitespace-nowrap tabular-nums">
                   {enemy.hp}
                 </span>
@@ -617,18 +627,18 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
           {enemy.alive && (
             <div className="absolute bottom-1 left-0 flex flex-col gap-0.5 pointer-events-none z-20">
               {enemy.saltDot > 0 && (
-                <span className="bg-[#fffdf2] border border-[#1c1308] text-[#8c5614] text-[0.52rem] font-black px-1 rounded-full shadow-xs">
-                  🧂 {enemy.saltDot}
+                <span className="bg-[#fffdf2] border border-[#1c1308] text-[#8c5614] text-[0.52rem] font-black px-1 rounded-full shadow-xs flex items-center gap-0.5">
+                  <LadaThematicIcon name="salt" size={9} /> {enemy.saltDot}
                 </span>
               )}
               {enemy.omen > 0 && (
-                <span className="bg-[#fce0d8] border border-[#1c1308] text-[#c4321d] text-[0.52rem] font-black px-1 rounded-full shadow-xs">
-                  😤 +{enemy.omen}
+                <span className="bg-[#fce0d8] border border-[#1c1308] text-[#c4321d] text-[0.52rem] font-black px-1 rounded-full shadow-xs flex items-center gap-0.5">
+                  <LadaThematicIcon name="omen" size={9} /> +{enemy.omen}
                 </span>
               )}
               {enemy.revenge && (
-                <span className="bg-[#ffd438] border border-[#1c1308] text-[#1c1308] text-[0.52rem] font-black px-1 rounded-full shadow-xs">
-                  ⚡
+                <span className="bg-[#ffd438] border border-[#1c1308] text-[#1c1308] text-[0.52rem] font-black px-1 rounded-full shadow-xs flex items-center">
+                  <LadaThematicIcon name="speed" size={9} />
                 </span>
               )}
             </div>
@@ -644,8 +654,8 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
       <div className="flex-none mb-2">
         <div className="flex flex-wrap items-center justify-between gap-2 bg-[#eedcb0] px-3 py-1.5 rounded-xl border-2 border-[#1c1308] shadow-[0_2px_0_rgba(28,19,8,0.25)]">
           <div className="flex items-center gap-2">
-            <span className="bg-[#fff8e8] px-2.5 py-0.5 rounded-full border border-[#1c1308] text-xs font-black text-[#1c1308] flex items-center gap-1">
-              📍 {curLoc.name}
+            <span className="bg-[#fff8e8] px-2.5 py-0.5 rounded-full border border-[#1c1308] text-xs font-black text-[#1c1308] flex items-center gap-1.5">
+              <LadaThematicIcon name="village" size={14} /> {curLoc.name}
             </span>
             <button
               type="button"
@@ -654,10 +664,10 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
               title="Klepněte pro zobrazení detailů, vlastností a balíčku hrdiny"
             >
               <span>{hero.name}</span>
-              <span className="text-[0.65rem] text-[#8c5614]">ℹ️</span>
+              <LadaThematicIcon name="info" size={12} />
             </button>
-            <span className="text-[0.7rem] text-[#6e502c] font-semibold hidden md:inline-block">
-              👉 Klepněte na tělo bubáka pro detailní informace a zacílení útoků!
+            <span className="text-[0.7rem] text-[#6e502c] font-semibold hidden md:inline-flex items-center gap-1">
+              <LadaThematicIcon name="target" size={12} /> Klepněte na tělo bubáka pro detailní informace a zacílení útoků!
             </span>
           </div>
 
@@ -673,8 +683,8 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                 }`}
                 title="Klepněte sem a poté klikněte na libovolného bubáka, kterého chcete vyřadit z boje pro otestování ústupu"
               >
-                <span>{eliminateMode ? "🎯" : "🏳️"}</span>
-                <span>{eliminateMode ? "Zrušit výběr ✕" : "Vyřaď bubáka"}</span>
+                <LadaThematicIcon name={eliminateMode ? "target" : "surrender"} size={14} />
+                <span>{eliminateMode ? "Zrušit výběr" : "Vyřaď bubáka"}</span>
               </button>
             )}
             {isTestFight && onRestartTestFight && (
@@ -684,7 +694,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                 className="bg-[#fff8e8] hover:bg-[#ffd438] text-[#1c1308] border border-[#1c1308] px-2.5 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1 shadow-xs active:scale-95"
                 title="Restartovat tento testovací souboj znovu od začátku"
               >
-                <span>🔄</span>
+                <LadaThematicIcon name="reset" size={13} />
                 <span className="hidden sm:inline">Restart</span>
               </button>
             )}
@@ -695,7 +705,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                 className="bg-[#fff8e8] hover:bg-[#ffd438] text-[#1c1308] border border-[#1c1308] px-2.5 py-0.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1 shadow-xs active:scale-95"
                 title="Vrátit se do nabídky / menu"
               >
-                <span>🔙</span>
+                <LadaThematicIcon name="back" size={13} />
                 <span>Zpět do menu</span>
               </button>
             )}
@@ -706,20 +716,20 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                 className="bg-[#fff8e8] hover:bg-[#ffd438] text-[#1c1308] border border-[#1c1308] px-2.5 py-0.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1 shadow-xs active:scale-95"
                 title="Zobrazit přehled všech bubáků a rodin"
               >
-                <span>📖</span>
+                <LadaThematicIcon name="book" size={13} />
                 <span>Přehled bubáků</span>
               </button>
             )}
             {combat.playerTimer > 0 && !combat.pendingCard && (
               <span
-                className="bg-[#eaf5e1] px-2.5 py-0.5 rounded-full border border-[#2d6328] text-xs font-black text-[#1a4016] animate-pulse"
+                className="bg-[#eaf5e1] px-2.5 py-0.5 rounded-full border border-[#2d6328] text-xs font-black text-[#1a4016] animate-pulse inline-flex items-center gap-1"
                 title="Čas do prvního tahu obou stran běží 3× rychleji"
               >
-                ⚡ 3× zrychlený rozběh
+                <LadaThematicIcon name="speed" size={13} /> 3× zrychlený rozběh
               </span>
             )}
-            <span className="bg-[#fff3c9] px-3 py-0.5 rounded-full border border-[#1c1308] text-xs font-black text-[#8c5614]">
-              ⏳ Aug {combat.time}
+            <span className="bg-[#fff3c9] px-3 py-0.5 rounded-full border border-[#1c1308] text-xs font-black text-[#8c5614] inline-flex items-center gap-1">
+              <LadaThematicIcon name="hourglass" size={12} /> Aug {combat.time}
             </span>
             <button
               type="button"
@@ -727,18 +737,19 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
               className="lada-button text-xs py-0.5 px-2.5"
               title="Otevřít kroniku zápisů souboje"
             >
-              📜 Záznam
+              <LadaThematicIcon name="scroll" size={13} /> Záznam
             </button>
           </div>
         </div>
       </div>
+
 
       {/* 2. THE MAIN BATTLEFIELD ARENA: JOSEF LADA LANDSCAPE STAGE */}
       <div className="flex-1 min-h-0 relative mb-2">
         {/* Floating eliminate mode banner */}
         {eliminateMode && (
           <div className="absolute top-2 left-1/2 -translate-x-1/2 z-40 bg-[#c4321d] text-white border-2 border-[#1c1308] px-4 py-1.5 rounded-2xl shadow-xl flex items-center gap-2 max-w-[95%] text-center animate-bounce">
-            <span className="text-base">🎯</span>
+            <LadaThematicIcon name="target" size={16} />
             <span className="text-xs sm:text-sm font-black">
               {lastEliminatedName
                 ? `Vyřazen ${lastEliminatedName}! Klikněte na dalšího bubáka nebo režim ukončete:`
@@ -747,9 +758,10 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
             <button
               type="button"
               onClick={() => setEliminateMode(false)}
-              className="bg-[#fff8e8] hover:bg-[#ffd438] text-[#1c1308] px-2 py-0.5 rounded-lg text-xs font-black border border-[#1c1308] cursor-pointer ml-1 active:scale-95"
+              className="bg-[#fff8e8] hover:bg-[#ffd438] text-[#1c1308] px-2 py-0.5 rounded-lg text-xs font-black border border-[#1c1308] cursor-pointer ml-1 active:scale-95 flex items-center gap-1"
             >
-              Hotovo ✕
+              <span>Hotovo</span>
+              <LadaThematicIcon name="close" size={11} />
             </button>
           </div>
         )}
@@ -764,8 +776,9 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
               {/* Hunter State Bubble (Nápřah, Připraven, Au!) */}
               <div className="mb-1 flex flex-col items-center">
                 {combat.playerBusy === "hit" && (
-                  <div className="anim-comic-pop bg-[#f06e56] text-white border-2 border-[#1c1308] font-black text-xs px-2.5 py-0.5 rounded-full shadow-md -mb-2 z-30">
-                    Au! 💥
+                  <div className="anim-comic-pop bg-[#f06e56] text-white border-2 border-[#1c1308] font-black text-xs px-2.5 py-0.5 rounded-full shadow-md -mb-2 z-30 flex items-center gap-1">
+                    <span>Au!</span>
+                    <LadaThematicIcon name="hit" size={13} />
                   </div>
                 )}
                 <div
@@ -811,7 +824,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
 
                 {/* Hero Info Inspect Pill */}
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute top-0 right-0 bg-[#1c1308] text-[#ffd438] text-[0.65rem] font-black px-1.5 py-0.5 rounded-full shadow-md flex items-center gap-0.5">
-                  🔍 Info
+                  <LadaThematicIcon name="search" size={11} /> Info
                 </div>
               </div>
 
@@ -824,18 +837,18 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                   <div className="flex items-center gap-1">
                     {combat.dodge > 0 && (
                       <span
-                        className="bg-[#dfcb9a] px-1.5 py-0.2 rounded border border-[#1c1308] text-[0.65rem] font-black text-[#5c3e21]"
+                        className="bg-[#dfcb9a] px-1.5 py-0.2 rounded border border-[#1c1308] text-[0.65rem] font-black text-[#5c3e21] flex items-center gap-0.5"
                         title="Úhyb: vyhne se příštímu zásahu"
                       >
-                        💨 {combat.dodge}
+                        <LadaThematicIcon name="dodge" size={11} /> {combat.dodge}
                       </span>
                     )}
                     {combat.block > 0 && (
                       <span
-                        className="bg-[#c9e1f7] px-1.5 py-0.2 rounded border border-[#1c4b7d] text-[0.65rem] font-black text-[#1c4b7d]"
+                        className="bg-[#c9e1f7] px-1.5 py-0.2 rounded border border-[#1c4b7d] text-[0.65rem] font-black text-[#1c4b7d] flex items-center gap-0.5"
                         title="Blok zachytí poškození. Každý Augenblick klesá o 15 % (min. o 1)."
                       >
-                        🛡️ {combat.block}
+                        <LadaThematicIcon name="block" size={11} /> {combat.block}
                       </span>
                     )}
                   </div>
@@ -844,7 +857,9 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                 {/* HP Bar */}
                 <div>
                   <div className="flex items-center justify-between text-[0.68rem] font-bold text-[#b8331d] mb-0.5">
-                    <span>❤️ Životy</span>
+                    <span className="flex items-center gap-1">
+                      <LadaThematicIcon name="hp" size={12} /> Životy
+                    </span>
                     <span className="font-black">
                       {state.hp}/{state.maxHp}
                     </span>
@@ -861,8 +876,8 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
 
                 {/* Threat warning from focused enemy */}
                 {incomingThroughBlock > 0 && focusEnemy?.alive && (
-                  <div className="text-[0.62rem] font-black text-[#c4321d] bg-[#fce0d8] rounded px-1 py-0.5 border border-[#c4321d] animate-pulse">
-                    ⚠️ Hrozí {incomingThroughBlock} poškození!
+                  <div className="text-[0.62rem] font-black text-[#c4321d] bg-[#fce0d8] rounded px-1 py-0.5 border border-[#c4321d] animate-pulse flex items-center justify-center gap-1">
+                    <LadaThematicIcon name="warning" size={11} /> Hrozí {incomingThroughBlock} poškození!
                   </div>
                 )}
               </div>
@@ -875,9 +890,10 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                 {/* HORNÍ ŘADA (Vyvýšený břeh) */}
                 {horniRadaEnemies.length > 0 && (
                   <div className="flex items-end justify-start gap-2 sm:gap-3 relative z-10 pr-1 sm:pr-2 mb-1 sm:mb-2 md:mb-3">
-                    <div className="hidden md:flex items-center text-[0.6rem] font-black text-[#523e2a] bg-[#ebdcb9]/85 border border-[#1c1308] px-1.5 py-0.5 rounded-full select-none shadow-xs whitespace-nowrap self-center mb-2 mr-1">
-                      🌾 Horní řada ({horniRadaAlive.length})
+                    <div className="hidden md:flex items-center gap-1 text-[0.6rem] font-black text-[#523e2a] bg-[#ebdcb9]/85 border border-[#1c1308] px-1.5 py-0.5 rounded-full select-none shadow-xs whitespace-nowrap self-center mb-2 mr-1">
+                      <LadaThematicIcon name="field" size={12} /> Horní řada ({horniRadaAlive.length})
                     </div>
+
 
                     {/* Neporažení bojující bubáci v horní řadě s trvalou délkou řady */}
                     <div
@@ -929,8 +945,8 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                 {/* DOLNÍ ŘADA (Polní cesta) */}
                 <div className="flex items-end justify-start gap-2 sm:gap-3 relative z-20 pr-1 sm:pr-2">
                   {horniRadaEnemies.length > 0 && (
-                    <div className="hidden md:flex items-center text-[0.6rem] font-black text-[#523e2a] bg-[#ebdcb9]/85 border border-[#1c1308] px-1.5 py-0.5 rounded-full select-none shadow-xs whitespace-nowrap self-center mb-4 mr-1">
-                      🛤️ Dolní řada ({dolniRadaAlive.length})
+                    <div className="hidden md:flex items-center gap-1 text-[0.6rem] font-black text-[#523e2a] bg-[#ebdcb9]/85 border border-[#1c1308] px-1.5 py-0.5 rounded-full select-none shadow-xs whitespace-nowrap self-center mb-4 mr-1">
+                      <LadaThematicIcon name="village" size={12} /> Dolní řada ({dolniRadaAlive.length})
                     </div>
                   )}
 
@@ -991,7 +1007,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
               >
                 {allDefeatedEnemies.length === 0 ? (
                   <div className="hidden sm:flex items-center gap-1.5 text-[0.58rem] sm:text-[0.62rem] font-bold text-[#8c5614]/40 italic select-none self-center whitespace-nowrap mb-6">
-                    <span>🏳️</span>
+                    <LadaThematicIcon name="surrender" size={13} />
                     <span>Místo pro poražené</span>
                   </div>
                 ) : (
@@ -1036,11 +1052,13 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
           {/* Akce & Únava counters */}
           <div className="flex items-center gap-2">
             <div className="bg-[#ffd438] px-3 py-1 rounded-xl border-2 border-[#1c1308] flex items-center gap-1.5 shadow-[0_2px_0_#1c1308]">
+              <LadaThematicIcon name="action" size={14} />
               <span className="text-xs font-bold text-[#5c3e21]">Akce:</span>
               <span className="font-black text-base text-[#1c1308]">{combat.actions}</span>
             </div>
 
             <div className="bg-[#f0c39a] px-3 py-1 rounded-xl border-2 border-[#1c1308] flex items-center gap-1.5 shadow-[0_2px_0_#1c1308]">
+              <LadaThematicIcon name="fatigue" size={14} />
               <span className="text-xs font-bold text-[#5c3e21]">Únava:</span>
               <span className="font-black text-base text-[#1c1308]">{combat.fatigue}</span>
             </div>
@@ -1052,17 +1070,18 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
               type="button"
               onClick={onBlink}
               disabled={!isPlayerTurn}
-              className="lada-button text-xs py-1.5 px-3"
+              className="lada-button text-xs py-1.5 px-3 flex items-center gap-1"
               title="Pustí čas o 1 Augenblick. Nic nestojí, jen čekáte na doběhnutí nápřahu či tahu bubáka."
             >
-              😉 Mrknutí
+              <LadaThematicIcon name="wink" size={14} />
+              <span>Mrknutí</span>
             </button>
 
             <button
               type="button"
               onClick={onBreath}
               disabled={!isPlayerTurn || combat.cdBreath > 0}
-              className="lada-button text-xs py-1.5 px-3 relative"
+              className="lada-button text-xs py-1.5 px-3 relative flex items-center gap-1"
               title={`Nádech dobije +${breathGain} Akcí a přidá +2 Únavy. Stojí 1 Aug.`}
             >
               {combat.cdBreath > 0 && (
@@ -1070,14 +1089,15 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                   {combat.cdBreath}
                 </span>
               )}
-              😮‍💨 Nádech +{breathGain}
+              <LadaThematicIcon name="breath" size={14} />
+              <span>Nádech +{breathGain}</span>
             </button>
 
             <button
               type="button"
               onClick={onSleep}
               disabled={!isPlayerTurn || combat.cdSleep > 0}
-              className="lada-button text-xs py-1.5 px-3 relative"
+              className="lada-button text-xs py-1.5 px-3 relative flex items-center gap-1"
               title={`Spánek sundá −${sleepDrop} Únavy. Stojí 3 Aug.`}
             >
               {combat.cdSleep > 0 && (
@@ -1085,14 +1105,15 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                   {combat.cdSleep}
                 </span>
               )}
-              😴 Spánek −{sleepDrop}
+              <LadaThematicIcon name="fatigue" size={14} />
+              <span>Spánek −{sleepDrop}</span>
             </button>
 
             <button
               type="button"
               onClick={onIdea}
               disabled={!isPlayerTurn || combat.cdIdea > 0 || combat.actions < 2}
-              className="lada-button text-xs py-1.5 px-3 relative"
+              className="lada-button text-xs py-1.5 px-3 relative flex items-center gap-1"
               title="Nápad stojí 2 Akce a lízne 1 kartu. Stojí 1 Aug."
             >
               {combat.cdIdea > 0 && (
@@ -1100,14 +1121,15 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                   {combat.cdIdea}
                 </span>
               )}
-              💡 Nápad
+              <LadaThematicIcon name="idea" size={14} />
+              <span>Nápad</span>
             </button>
 
             <button
               type="button"
               onClick={onScenery}
               disabled={!isPlayerTurn || combat.cdScenery > 0}
-              className="lada-button text-xs py-1.5 px-3 relative"
+              className="lada-button text-xs py-1.5 px-3 relative flex items-center gap-1"
               title="Kochání se krásou krajiny vyléčí 1 Únavu. Stojí 2 Aug."
             >
               {combat.cdScenery > 0 && (
@@ -1115,14 +1137,15 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                   {combat.cdScenery}
                 </span>
               )}
-              🏞️ Kochání
+              <LadaThematicIcon name="pond" size={14} />
+              <span>Kochání</span>
             </button>
 
             <button
               type="button"
               onClick={onSpecial}
               disabled={!isPlayerTurn || combat.cdSpecial > 0}
-              className="lada-button lada-button-primary text-xs py-1.5 px-3 relative"
+              className="lada-button lada-button-primary text-xs py-1.5 px-3 relative flex items-center gap-1"
               title={`${hero.special.name}: ${hero.special.draw ? `lízne ${hero.special.draw} karty, ` : ""}${hero.special.fat ? `Únava ${hero.special.fat}, ` : ""}${hero.special.dmg ? `zásah za ${hero.special.dmg} HP, ` : ""}${hero.special.block ? `+${hero.special.block} Blok, ` : ""}ochlazení ${hero.special.cd} Aug.`}
             >
               {combat.cdSpecial > 0 && (
@@ -1130,22 +1153,23 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                   {combat.cdSpecial}
                 </span>
               )}
-              {hero.special.name}
+              <LadaThematicIcon name="star" size={13} />
+              <span>{hero.special.name}</span>
             </button>
 
             {isTestFight && (
               <button
                 type="button"
                 onClick={() => setEliminateMode((prev) => !prev)}
-                className={`lada-button text-xs py-1.5 px-3 relative border-2 ${
+                className={`lada-button text-xs py-1.5 px-3 relative border-2 flex items-center gap-1.5 ${
                   eliminateMode
                     ? "!bg-[#c4321d] !text-white ring-2 ring-[#ffd438] animate-pulse"
                     : "!bg-[#ffd438] !text-[#1c1308]"
                 }`}
                 title="Aktivuje režim vyřazení: poté stačí kliknout na libovolného bubáka na bojišti"
               >
-                <span>{eliminateMode ? "🎯" : "🏳️"}</span>
-                <span>{eliminateMode ? "Zvolte bubáka (Zrušit ✕)" : "Vyřaď bubáka"}</span>
+                <LadaThematicIcon name={eliminateMode ? "target" : "surrender"} size={14} />
+                <span>{eliminateMode ? "Zvolte bubáka (Zrušit)" : "Vyřaď bubáka"}</span>
               </button>
             )}
           </div>
@@ -1155,29 +1179,32 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
             <button
               type="button"
               onClick={() => setHandFullText(!handFullText)}
-              className="lada-button text-xs py-1.5 px-2.5"
+              className="lada-button text-xs py-1.5 px-2.5 flex items-center gap-1"
               title="Přepnout zobrazení karet mezi čipy a plným textem"
             >
-              {handFullText ? "ℹ️ Čipy" : "ℹ️ Text"}
+              <LadaThematicIcon name="info" size={12} />
+              <span>{handFullText ? "Čipy" : "Text"}</span>
             </button>
             <button
               type="button"
               onClick={() => onOpenPiles("all")}
-              className="lada-button text-xs py-1.5 px-2.5"
+              className="lada-button text-xs py-1.5 px-2.5 flex items-center gap-1"
               title="Zobrazit lízací balíček a odhozené karty"
             >
-              📚 Balíček ({combat.draw.length})
+              <LadaThematicIcon name="book" size={13} />
+              <span>Balíček ({combat.draw.length})</span>
             </button>
             <button
               type="button"
               onClick={() => setHandHidden(!handHidden)}
-              className="lada-button text-xs py-1.5 px-2"
+              className="lada-button text-xs py-1.5 px-2 flex items-center justify-center"
               title={handHidden ? "Ukázat ruku karet" : "Schovat ruku karet"}
             >
-              {handHidden ? "🖐️" : "✋"}
+              <LadaThematicIcon name="hand" size={14} />
             </button>
           </div>
         </div>
+
 
         {/* Hand of Cards Carousel */}
         {!handHidden && (
@@ -1208,8 +1235,9 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                     }}
                   >
                     {isSelected && (
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30 bg-[#1c1308] text-[#ffd438] text-[0.62rem] font-black px-2 py-0.2 rounded-full whitespace-nowrap shadow-xs">
-                        Zvoleno 👉 Klepněte na bubáka
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30 bg-[#1c1308] text-[#ffd438] text-[0.62rem] font-black px-2 py-0.2 rounded-full whitespace-nowrap shadow-xs flex items-center gap-1">
+                        <LadaThematicIcon name="target" size={12} animated />
+                        <span>Zvoleno — klepněte na bubáka</span>
                       </div>
                     )}
                     <CardView

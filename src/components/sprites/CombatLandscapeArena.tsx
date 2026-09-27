@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { LocationId } from "../../types";
 import { sound } from "../../lib/sound";
+import { LadaThematicIcon, renderLadaText } from "./LadaThematicIcon";
 
 interface CombatLandscapeArenaProps {
   locId: LocationId | string;
@@ -81,8 +82,8 @@ export const CombatLandscapeArena: React.FC<CombatLandscapeArenaProps> = ({
             className="absolute anim-comic-pop-float flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#fff8e7] border-2 border-[#1c1308] shadow-[0_3px_0_#1c1308] text-[#1c1308] font-bold text-xs sm:text-sm whitespace-nowrap z-50"
             style={{ left: `${p.x}%`, top: `${p.y}%` }}
           >
-            <span className="text-base sm:text-lg select-none">{p.icon}</span>
-            <span className="font-serif tracking-wide">{p.text}</span>
+            <LadaThematicIcon name={p.icon} size={22} animated className="select-none flex-shrink-0" />
+            <span className="font-serif tracking-wide">{renderLadaText(p.text, 18, true)}</span>
           </div>
         ))}
       </div>
@@ -676,7 +677,7 @@ function renderVesnice(trigger: TriggerEasterEgg, bounce: string | null) {
         className={`anim-lada-sun-pulse interactive-scenic ${bounce === "vesnice-sun" ? "anim-easter-bounce" : ""}`}
         style={{ transformOrigin: "160px 75px" }}
         onClick={(e) =>
-          trigger(e, "vesnice-sun", () => sound.playChime(), "Sluníčko se usmívá! ☀️", "☀️")
+          trigger(e, "vesnice-sun", () => sound.playChime(), "Sluníčko se usmívá!", "sun")
         }
       >
         {/* Soft Golden Outer Halo */}
@@ -1211,7 +1212,7 @@ function renderVesnice(trigger: TriggerEasterEgg, bounce: string | null) {
           className={`anim-wind-sway interactive-scenic ${bounce === "vesnice-slunecnice" ? "anim-easter-bounce" : ""}`}
           style={{ transformOrigin: "42px 48px" }}
           onClick={(e) =>
-            trigger(e, "vesnice-slunecnice", () => sound.playChime(), "Cink-cink! 🌻", "🌻")
+            trigger(e, "vesnice-slunecnice", () => sound.playChime(), "Cink-cink!", "sunflower")
           }
         >
           <line x1="42" y1="48" x2="42" y2="-6" stroke="#2b5e1e" strokeWidth="4" />
@@ -1224,7 +1225,7 @@ function renderVesnice(trigger: TriggerEasterEgg, bounce: string | null) {
         <g
           transform="translate(106, -10)"
           className={`interactive-scenic ${bounce === "vesnice-kocour" ? "anim-easter-bounce" : ""}`}
-          onClick={(e) => trigger(e, "vesnice-kocour", () => sound.playMeow(), "Mňáááu! 🐾", "🐱")}
+          onClick={(e) => trigger(e, "vesnice-kocour", () => sound.playMeow(), "Mňáááu!", "cat")}
         >
           {/* Kocourův kroutící se ocásek */}
           <g className="anim-cat-tail" style={{ transformOrigin: "6px 14px" }}>
@@ -1268,7 +1269,7 @@ function renderVesnice(trigger: TriggerEasterEgg, bounce: string | null) {
         transform="translate(65, 172)"
         className={`anim-animal-graze interactive-scenic ${bounce === "vesnice-koza" ? "anim-easter-bounce" : ""}`}
         style={{ transformOrigin: "12px 35px" }}
-        onClick={(e) => trigger(e, "vesnice-koza", () => sound.playChime(), "Bééé-mééé! 🐐", "🐐")}
+        onClick={(e) => trigger(e, "vesnice-koza", () => sound.playChime(), "Bééé-mééé!", "goat")}
       >
         {/* Goat Legs */}
         <line
@@ -1351,7 +1352,7 @@ function renderVesnice(trigger: TriggerEasterEgg, bounce: string | null) {
         className={`anim-goose-waddle interactive-scenic ${bounce === "vesnice-husa" ? "anim-easter-bounce" : ""}`}
         style={{ transformOrigin: "15px 25px" }}
         onClick={(e) =>
-          trigger(e, "vesnice-husa", () => sound.playComicPop(0.8), "Gá-gá-gá! 🪿", "🪿")
+          trigger(e, "vesnice-husa", () => sound.playComicPop(0.8), "Gá-gá-gá!", "duck")
         }
       >
         {/* Mother Goose */}
@@ -1449,7 +1450,7 @@ function renderMlyn(trigger: TriggerEasterEgg, bounce: string | null) {
       {/* Early Morning Sun behind Hill - Clickable */}
       <g
         className={`interactive-scenic ${bounce === "mlyn-sun" ? "anim-easter-bounce" : ""}`}
-        onClick={(e) => trigger(e, "mlyn-sun", () => sound.playChime(), "Ranní sluníčko! ☀️", "☀️")}
+        onClick={(e) => trigger(e, "mlyn-sun", () => sound.playChime(), "Ranní sluníčko!", "sun")}
       >
         <circle
           cx="860"
@@ -1805,7 +1806,7 @@ function renderMlyn(trigger: TriggerEasterEgg, bounce: string | null) {
         transform="translate(545, 260)"
         className={`interactive-scenic ${bounce === "mlyn-kolo" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "mlyn-kolo", () => sound.playSplash(), "Klap-klap-klap! 💧", "⚙️")
+          trigger(e, "mlyn-kolo", () => sound.playSplash(), "Klap-klap-klap!", "water")
         }
       >
         {/* Spinning wheel structure */}
@@ -1911,7 +1912,7 @@ function renderMlyn(trigger: TriggerEasterEgg, bounce: string | null) {
       <g
         transform="translate(230, 222)"
         className={`interactive-scenic ${bounce === "mlyn-zaba" ? "anim-easter-bounce" : ""}`}
-        onClick={(e) => trigger(e, "mlyn-zaba", () => sound.playCroak(), "Kuňk-kuňk! 🐸", "🐸")}
+        onClick={(e) => trigger(e, "mlyn-zaba", () => sound.playCroak(), "Kuňk-kuňk!", "frog")}
       >
         {/* River stone */}
         <ellipse cx="14" cy="22" rx="16" ry="7" fill="#697682" stroke="#1c1308" strokeWidth="2" />
@@ -1964,7 +1965,7 @@ function renderMlyn(trigger: TriggerEasterEgg, bounce: string | null) {
           =================================================================== */}
       <g
         className={`interactive-scenic ${bounce === "mlyn-kachny" ? "anim-easter-bounce" : ""}`}
-        onClick={(e) => trigger(e, "mlyn-kachny", () => sound.playBubblePop(), "Káč-káč! 🦆", "🦆")}
+        onClick={(e) => trigger(e, "mlyn-kachny", () => sound.playBubblePop(), "Káč-káč!", "duck")}
       >
         <g transform="translate(210, 290)" className="anim-water-bob">
           <ellipse cx="12" cy="8" rx="14" ry="8" fill="#7a5832" stroke="#1c1308" strokeWidth="2" />
@@ -2007,7 +2008,7 @@ function renderMlyn(trigger: TriggerEasterEgg, bounce: string | null) {
         transform="translate(485, 290)"
         className={`anim-catfish-dive interactive-scenic ${bounce === "mlyn-pstruh" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "mlyn-pstruh", () => sound.playSplash(), "Šplouch! Pstruh! 🐟", "🐟")
+          trigger(e, "mlyn-pstruh", () => sound.playSplash(), "Šplouch! Pstruh!", "fish")
         }
       >
         <path d="M0 8 Q8 -8 18 0 Q10 8 0 8 Z" fill="#8cb9db" stroke="#1c1308" strokeWidth="1.8" />
@@ -2099,7 +2100,7 @@ function renderLes(trigger: TriggerEasterEgg, bounce: string | null) {
         transform="translate(152, 125)"
         className={`interactive-scenic ${bounce === "les-veverka" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "les-veverka", () => sound.playChime(), "Čip-čip! Veverka! 🐿️", "🐿️")
+          trigger(e, "les-veverka", () => sound.playChime(), "Čip-čip! Veverka!", "squirrel")
         }
       >
         {/* Animated Bushy Tail */}
@@ -2139,7 +2140,7 @@ function renderLes(trigger: TriggerEasterEgg, bounce: string | null) {
         transform="translate(282, 135)"
         className={`anim-woodpecker-peck interactive-scenic ${bounce === "les-strakapoud" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "les-strakapoud", () => sound.playWoodpeckerPeck(), "Ťuk-ťuk-ťuk! 🪵", "🪶")
+          trigger(e, "les-strakapoud", () => sound.playWoodpeckerPeck(), "Ťuk-ťuk-ťuk!", "feather")
         }
       >
         {/* Stiff tail brace against bark */}
@@ -2162,7 +2163,7 @@ function renderLes(trigger: TriggerEasterEgg, bounce: string | null) {
         transform="translate(45, 215)"
         className={`interactive-scenic ${bounce === "les-zajic" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "les-zajic", () => sound.playChime(), "Hop-hop! Zajíček! 🐇", "🐇")
+          trigger(e, "les-zajic", () => sound.playChime(), "Hop-hop! Zajíček!", "hare")
         }
       >
         {/* Wiggling Long Ears */}
@@ -2330,7 +2331,7 @@ function renderLes(trigger: TriggerEasterEgg, bounce: string | null) {
       <g
         transform="translate(730, 80)"
         className={`interactive-scenic ${bounce === "les-sova" ? "anim-easter-bounce" : ""}`}
-        onClick={(e) => trigger(e, "les-sova", () => sound.playOwlHoot(), "Húúú-húúú! 🦉", "🦉")}
+        onClick={(e) => trigger(e, "les-sova", () => sound.playOwlHoot(), "Húúú-húúú!", "owl")}
       >
         {/* Pine Tree */}
         <polygon points="38,0 8,75 68,75" fill="#16381d" stroke="#1c1308" strokeWidth="3.5" />
@@ -2399,7 +2400,7 @@ function renderLes(trigger: TriggerEasterEgg, bounce: string | null) {
       <g
         className={`interactive-scenic ${bounce === "les-svetlusky" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "les-svetlusky", () => sound.playChime(), "Blik-blik! Světlušky! ✨", "✨")
+          trigger(e, "les-svetlusky", () => sound.playChime(), "Blik-blik! Světlušky!", "sparkle")
         }
       >
         <g transform="translate(220, 160)" className="anim-firefly-1">
@@ -2432,7 +2433,7 @@ function renderLes(trigger: TriggerEasterEgg, bounce: string | null) {
       <g
         className={`interactive-scenic ${bounce === "les-muchomurka" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "les-muchomurka", () => sound.playSneezePuff(), "Hepčík! 🍄", "🍄")
+          trigger(e, "les-muchomurka", () => sound.playSneezePuff(), "Hepčík!", "mushroom")
         }
       >
         <g transform="translate(460, 215)">
@@ -2518,7 +2519,7 @@ function renderRybnik(trigger: TriggerEasterEgg, bounce: string | null) {
       <g
         transform="translate(780, 85)"
         className={`interactive-scenic ${bounce === "rybnik-mesic" ? "anim-easter-bounce" : ""}`}
-        onClick={(e) => trigger(e, "rybnik-mesic", () => sound.playChime(), "Dobrou noc! 🌙", "🌙")}
+        onClick={(e) => trigger(e, "rybnik-mesic", () => sound.playChime(), "Dobrou noc!", "moon")}
       >
         {/* Atmospheric Pulsing Halo */}
         <circle cx="0" cy="0" r="64" fill="#ffea94" opacity="0.3" className="anim-moon-glow" />
@@ -2566,7 +2567,7 @@ function renderRybnik(trigger: TriggerEasterEgg, bounce: string | null) {
         transform="translate(735, 68)"
         className={`anim-bat-flutter interactive-scenic ${bounce === "rybnik-netopyr" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "rybnik-netopyr", () => sound.playPipeSmoke(), "Fííí! Netopýr! 🦇", "🦇")
+          trigger(e, "rybnik-netopyr", () => sound.playPipeSmoke(), "Fííí! Netopýr!", "bat")
         }
       >
         <ellipse cx="0" cy="0" rx="3" ry="4.5" fill="#1c1308" />
@@ -2836,7 +2837,7 @@ function renderRybnik(trigger: TriggerEasterEgg, bounce: string | null) {
         transform="translate(180, 150)"
         className={`anim-dragonfly-hover interactive-scenic ${bounce === "rybnik-vazka" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "rybnik-vazka", () => sound.playChime(), "Bzzzk! Vážka! ✨", "✨")
+          trigger(e, "rybnik-vazka", () => sound.playChime(), "Bzzzk! Vážka!", "sparkle")
         }
       >
         <line
@@ -2899,7 +2900,7 @@ function renderRybnik(trigger: TriggerEasterEgg, bounce: string | null) {
       <g
         transform="translate(75, 240)"
         className={`anim-water-bob interactive-scenic ${bounce === "rybnik-zaba" ? "anim-easter-bounce" : ""}`}
-        onClick={(e) => trigger(e, "rybnik-zaba", () => sound.playCroak(), "Kuňk-kuňk! 🐸", "🐸")}
+        onClick={(e) => trigger(e, "rybnik-zaba", () => sound.playCroak(), "Kuňk-kuňk!", "frog")}
       >
         <ellipse cx="16" cy="14" rx="15" ry="6" fill="#2d5e2a" stroke="#1c1308" strokeWidth="1.8" />
         {/* Frog body */}
@@ -2958,8 +2959,8 @@ function renderRybnik(trigger: TriggerEasterEgg, bounce: string | null) {
               e,
               "rybnik-hrnicky",
               () => sound.playBubblePop(),
-              "Žbluňk! Dušička v hrnečku! 🏺",
-              "🏺",
+              "Žbluňk! Dušička v hrnečku!",
+              "pot",
             )
           }
         >
@@ -3010,7 +3011,7 @@ function renderZricenina(trigger: TriggerEasterEgg, bounce: string | null) {
         strokeWidth="3.5"
         className={`interactive-scenic ${bounce === "zricenina-slunce" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "zricenina-slunce", () => sound.playChime(), "Západ slunce! 🌇", "☀️")
+          trigger(e, "zricenina-slunce", () => sound.playChime(), "Západ slunce!", "sun")
         }
       />
 
@@ -3195,8 +3196,8 @@ function renderZricenina(trigger: TriggerEasterEgg, bounce: string | null) {
               e,
               "zricenina-prapor",
               () => sound.playPipeSmoke(),
-              "Fí-fí! Prapor vlaje! 🚩",
-              "🚩",
+              "Fí-fí! Prapor vlaje!",
+              "flag",
             )
           }
         >
@@ -3220,8 +3221,8 @@ function renderZricenina(trigger: TriggerEasterEgg, bounce: string | null) {
               e,
               "zricenina-pochoden",
               () => sound.playFireCrackle(),
-              "Prásk! Pochodeň praská! 🔥",
-              "🔥",
+              "Prásk! Pochodeň praská!",
+              "fire",
             )
           }
         >
@@ -3295,8 +3296,8 @@ function renderZricenina(trigger: TriggerEasterEgg, bounce: string | null) {
             e,
             "zricenina-krkavec",
             () => sound.playRavenCroak(),
-            "Krá-krá! Krkavec! 🦅",
-            "🦅",
+            "Krá-krá! Krkavec!",
+            "raven",
           )
         }
       >
@@ -3325,7 +3326,7 @@ function renderZricenina(trigger: TriggerEasterEgg, bounce: string | null) {
         transform="translate(68, 230)"
         className={`interactive-scenic ${bounce === "zricenina-jesterka" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "zricenina-jesterka", () => sound.playChime(), "Hbitá ještěrka! 🦎", "🦎")
+          trigger(e, "zricenina-jesterka", () => sound.playChime(), "Hbitá ještěrka!", "lizard")
         }
       >
         <ellipse cx="12" cy="10" rx="14" ry="6" fill="#696556" stroke="#1c1308" strokeWidth="2" />
@@ -3375,7 +3376,7 @@ function renderHrbitov(trigger: TriggerEasterEgg, bounce: string | null) {
         transform="translate(860, 65)"
         className={`interactive-scenic ${bounce === "hrbitov-mesic" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "hrbitov-mesic", () => sound.playChime(), "Mrazivý srpek měsíce... 🌙", "🌙")
+          trigger(e, "hrbitov-mesic", () => sound.playChime(), "Mrazivý srpek měsíce...", "moon")
         }
       >
         <path
@@ -3525,8 +3526,8 @@ function renderHrbitov(trigger: TriggerEasterEgg, bounce: string | null) {
             e,
             "hrbitov-kaple",
             () => sound.playFireCrackle(),
-            "V kapličce plápolá svíčka... 🕯️",
-            "🕯️",
+            "V kapličce plápolá svíčka...",
+            "candle",
           )
         }
       >
@@ -3638,7 +3639,7 @@ function renderHrbitov(trigger: TriggerEasterEgg, bounce: string | null) {
           transform="translate(50, -42)"
           className={`interactive-scenic ${bounce === "hrbitov-vyr" ? "anim-easter-bounce" : ""}`}
           onClick={(e) =>
-            trigger(e, "hrbitov-vyr", () => sound.playOwlHoot(), "Húúú-húúú! Výr velký! 🦉", "🦉")
+            trigger(e, "hrbitov-vyr", () => sound.playOwlHoot(), "Húúú-húúú! Výr velký!", "owl")
           }
         >
           {/* Owl body */}
@@ -3668,7 +3669,7 @@ function renderHrbitov(trigger: TriggerEasterEgg, bounce: string | null) {
         transform="translate(60, 238)"
         className={`interactive-scenic ${bounce === "hrbitov-myska" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "hrbitov-myska", () => sound.playChime(), "Písk-písk! Myška! 🐁", "🐁")
+          trigger(e, "hrbitov-myska", () => sound.playChime(), "Písk-písk! Myška!", "mouse")
         }
       >
         {/* Twitching long tail */}
@@ -3696,7 +3697,7 @@ function renderHrbitov(trigger: TriggerEasterEgg, bounce: string | null) {
       <g
         className={`interactive-scenic ${bounce === "hrbitov-bludicky" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "hrbitov-bludicky", () => sound.playChime(), "Tajemná bludička! 👻", "👻")
+          trigger(e, "hrbitov-bludicky", () => sound.playChime(), "Tajemná bludička!", "ghost")
         }
       >
         <g transform="translate(320, 175)" className="anim-bludicka-1">
@@ -3925,7 +3926,7 @@ function renderBoss(trigger: TriggerEasterEgg, bounce: string | null) {
         transform="translate(520, 265)"
         className={`interactive-scenic ${bounce === "boss-vir" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "boss-vir", () => sound.playBubblePop(), "Huuu! Hluboký vír! 🌀", "🌀")
+          trigger(e, "boss-vir", () => sound.playBubblePop(), "Huuu! Hluboký vír!", "vortex")
         }
       >
         {/* Outer dark water eddy ring */}
@@ -4146,7 +4147,7 @@ function renderBoss(trigger: TriggerEasterEgg, bounce: string | null) {
         transform="translate(320, 150)"
         className={`interactive-scenic ${bounce === "boss-totem" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "boss-totem", () => sound.playRavenCroak(), "Tajemný bůžek hledí! 🗿", "🗿")
+          trigger(e, "boss-totem", () => sound.playRavenCroak(), "Tajemný bůžek hledí!", "totem")
         }
       >
         <rect
@@ -4172,7 +4173,7 @@ function renderBoss(trigger: TriggerEasterEgg, bounce: string | null) {
         transform="translate(230, 185)"
         className={`interactive-scenic ${bounce === "boss-cedule" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "boss-cedule", () => sound.playWoodpeckerPeck(), "Pozor! Černá tůň! ☠️", "⚠️")
+          trigger(e, "boss-cedule", () => sound.playWoodpeckerPeck(), "Pozor! Černá tůň!", "warning")
         }
       >
         <line
@@ -4204,7 +4205,7 @@ function renderBoss(trigger: TriggerEasterEgg, bounce: string | null) {
         transform="translate(460, 230)"
         className={`anim-catfish-dive interactive-scenic ${bounce === "boss-sumec" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "boss-sumec", () => sound.playSplash(), "Šplouch! Vousatý sumec! 🐟", "🐟")
+          trigger(e, "boss-sumec", () => sound.playSplash(), "Šplouch! Vousatý sumec!", "fish")
         }
       >
         {/* Catfish body diving down */}
@@ -4241,7 +4242,7 @@ function renderBoss(trigger: TriggerEasterEgg, bounce: string | null) {
         transform="translate(190, 160)"
         className={`anim-dragonfly-hover interactive-scenic ${bounce === "boss-vazka" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "boss-vazka", () => sound.playChime(), "Bzzzk! Bouřková vážka! ⚡", "⚡")
+          trigger(e, "boss-vazka", () => sound.playChime(), "Bzzzk! Bouřková vážka!", "speed")
         }
       >
         <line

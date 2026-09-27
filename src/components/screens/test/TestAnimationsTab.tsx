@@ -4,6 +4,7 @@ import { HunterSprite } from "../../sprites/HunterSprite";
 import { EnemySprite } from "../../sprites/EnemySprite";
 import { LadaHitParticles, LadaDizzyHalo, HitParticleTheme } from "../../sprites/LadaHitParticles";
 import { sound } from "../../../lib/sound";
+import { LadaThematicIcon } from "../../sprites/LadaThematicIcon";
 
 type BogeyCategory = "strasidla" | "voda" | "peklo" | "hvozd" | "lovci";
 
@@ -559,7 +560,7 @@ export const TestAnimationsTab: React.FC = () => {
       {/* 1. HEADER EXPLANATION */}
       <div className="bg-[#fff9ea] p-3.5 sm:p-4 rounded-2xl border-3 border-[#1c1308] shadow-[0_4px_0_#1c1308] flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <span className="text-2xl">🎬</span>
+          <LadaThematicIcon name="film" size={26} animated />
           <div>
             <h2 className="font-title font-black text-base sm:text-lg text-[#1c1308] leading-tight">
               Animační zkušebna bubáků a lovců
@@ -573,11 +574,11 @@ export const TestAnimationsTab: React.FC = () => {
         {/* Category switcher pills */}
         <div className="flex flex-wrap items-center gap-1 bg-[#eedcb0] p-1 rounded-xl border border-[#1c1308]">
           {[
-            { id: "strasidla" as BogeyCategory, icon: "👻", label: "Strašidla (11)" },
-            { id: "voda" as BogeyCategory, icon: "💧", label: "Vodní (4)" },
-            { id: "peklo" as BogeyCategory, icon: "😈", label: "Peklo (7)" },
-            { id: "hvozd" as BogeyCategory, icon: "🌲", label: "Hvozd (11)" },
-            { id: "lovci" as BogeyCategory, icon: "🏹", label: "Lovci (4)" },
+            { id: "strasidla" as BogeyCategory, icon: "ghost", label: "Strašidla (11)" },
+            { id: "voda" as BogeyCategory, icon: "water", label: "Vodní (4)" },
+            { id: "peklo" as BogeyCategory, icon: "devil", label: "Peklo (7)" },
+            { id: "hvozd" as BogeyCategory, icon: "forest", label: "Hvozd (11)" },
+            { id: "lovci" as BogeyCategory, icon: "hunter", label: "Lovci (4)" },
           ].map((cat) => (
             <button
               key={cat.id}
@@ -596,7 +597,7 @@ export const TestAnimationsTab: React.FC = () => {
                   : "text-[#5c3e21] hover:bg-[#fff2cc]"
               }`}
             >
-              <span>{cat.icon}</span>
+              <LadaThematicIcon name={cat.icon} size={14} animated />
               <span>{cat.label}</span>
             </button>
           ))}
@@ -613,8 +614,8 @@ export const TestAnimationsTab: React.FC = () => {
             <div className="absolute bottom-5 left-0 right-0 h-1.5 bg-[#8c5e31]/25" />
 
             {/* Folk details on floor */}
-            <div className="absolute bottom-2 left-6 text-xs opacity-60">🌾</div>
-            <div className="absolute bottom-3 right-8 text-xs opacity-60">🍄</div>
+            <LadaThematicIcon name="field" size={16} animated className="absolute bottom-2 left-6 opacity-60" />
+            <LadaThematicIcon name="mushroom" size={16} animated className="absolute bottom-3 right-8 opacity-60" />
 
             {/* Top HUD badge */}
             <div className="absolute top-2 left-2 right-2 z-20 flex items-center justify-between pointer-events-none">
@@ -622,13 +623,13 @@ export const TestAnimationsTab: React.FC = () => {
                 {currentBogey.name}
               </span>
               <span className="bg-[#fff8e8]/90 text-[#1c1308] text-[0.62rem] font-bold px-2 py-0.5 rounded-full border border-[#1c1308] shadow-xs">
-                {animType === "idle" && "🟢 Klidový střeh"}
-                {animType === "atk_fluid" && "⚡ Plynulý útok"}
-                {animType === "atk_frame" && `⚔️ Útok: Fáze ${activeFrame}/5`}
-                {animType === "move_fluid" && `🐾 Skok (${moveDir})`}
-                {animType === "move_frame" && `🐾 Pohyb: Fáze ${activeFrame}/4`}
-                {animType === "hit" && "💥 Zásah (3 fáze plynule)"}
-                {animType === "hit_frame" && `💥 Zásah: Fáze ${activeFrame}/3`}
+                {animType === "idle" && "Klidový střeh"}
+                {animType === "atk_fluid" && "Plynulý útok"}
+                {animType === "atk_frame" && `Útok: Fáze ${activeFrame}/5`}
+                {animType === "move_fluid" && `Skok (${moveDir})`}
+                {animType === "move_frame" && `Pohyb: Fáze ${activeFrame}/4`}
+                {animType === "hit" && "Zásah (3 fáze plynule)"}
+                {animType === "hit_frame" && `Zásah: Fáze ${activeFrame}/3`}
               </span>
             </div>
 
@@ -707,7 +708,7 @@ export const TestAnimationsTab: React.FC = () => {
                 }`}
                 title="Přehrávat animaci neustále dokola pro ladění plynulosti"
               >
-                <span>🔁</span>
+                <LadaThematicIcon name="reset" size={12} animated />
                 <span>{isLooping ? "Smyčka zapnuta" : "Opakovat"}</span>
               </button>
             </div>
@@ -716,7 +717,7 @@ export const TestAnimationsTab: React.FC = () => {
           {/* Lore description card for the selected creature */}
           <div className="bg-[#fff8e8] p-2.5 rounded-xl border-2 border-[#1c1308] text-xs shadow-xs">
             <div className="font-title font-black text-[#1c1308] flex items-center gap-1">
-              <span>📖</span>
+              <LadaThematicIcon name="book" size={14} animated />
               <span>{currentBogey.name}</span>
             </div>
             <p className="text-[0.7rem] text-[#5c3e21] mt-0.5 leading-relaxed font-medium">
@@ -731,7 +732,7 @@ export const TestAnimationsTab: React.FC = () => {
           <div className="bg-[#fffdf7] p-3 rounded-2xl border-2 border-[#1c1308] shadow-[0_3px_0_#1c1308]">
             <div className="font-title font-black text-xs text-[#1c1308] mb-2 flex items-center justify-between">
               <span className="flex items-center gap-1">
-                <span>👹</span>
+                <LadaThematicIcon name="devil" size={14} animated />
                 <span>Výběr bubáka (všech 33 k dispozici):</span>
               </span>
               <span className="text-[0.65rem] text-[#8c5614] font-bold">
@@ -776,7 +777,7 @@ export const TestAnimationsTab: React.FC = () => {
           <div className="bg-[#fffdf7] p-3 rounded-2xl border-2 border-[#1c1308] shadow-[0_3px_0_#1c1308] space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-black text-[#1c1308] flex items-center gap-1">
-                <span>💥</span>
+                <LadaThematicIcon name="hit" size={14} animated />
                 <span>3-fázový zásah (Hitstop • Záklon • Odpružení)</span>
               </span>
               <button
@@ -784,7 +785,7 @@ export const TestAnimationsTab: React.FC = () => {
                 onClick={() => triggerHit("default")}
                 className="bg-[#e63e1e] hover:bg-[#ff5233] text-white text-xs font-black px-3 py-1 rounded-xl border border-[#1c1308] shadow-xs cursor-pointer active:scale-95 transition-all flex items-center gap-1.5"
               >
-                <span>▶️</span>
+                <LadaThematicIcon name="arrow_right" size={12} />
                 <span>Přehrát 3 fáze (300 ms)</span>
               </button>
             </div>
@@ -841,7 +842,7 @@ export const TestAnimationsTab: React.FC = () => {
             {!isHunter && currentHitSpec && (
               <div className="bg-[#fff9ea] p-2.5 rounded-xl border border-[#1c1308]/30 text-[0.68rem] text-[#4a2e16] leading-relaxed">
                 <div className="font-bold text-[#8c4b12] mb-0.5 flex items-center justify-between">
-                  <span>📌 Detail fáze pro {currentHitSpec.name}:</span>
+                  <span>Detail fáze pro {currentHitSpec.name}:</span>
                   <span className="text-[0.6rem] bg-[#ecdab4] px-1.5 py-0.2 rounded font-mono">
                     {animType === "hit_frame" ? `Fáze ${activeFrame}/3` : "Fáze 1 až 3"}
                   </span>
@@ -878,7 +879,7 @@ export const TestAnimationsTab: React.FC = () => {
                 className="bg-[#ffd438] hover:bg-[#ffe066] text-[#1c1308] font-black text-[0.68rem] py-1 px-1.5 rounded-xl border border-[#1c1308] shadow-2xs active:scale-95 transition-all cursor-pointer truncate flex items-center justify-center gap-1"
                 title="Komické žluté čtyřcípé hvězdičky a obláček prachu (Bác!)"
               >
-                <span>💥</span>
+                <LadaThematicIcon name="hit" size={14} animated />
                 <span>Hvězdičky Bác</span>
               </button>
               <button
@@ -887,7 +888,7 @@ export const TestAnimationsTab: React.FC = () => {
                 className="bg-[#fffdf2] hover:bg-[#fff7d1] text-[#704214] font-black text-[0.68rem] py-1 px-1.5 rounded-xl border border-[#1c1308] shadow-2xs active:scale-95 transition-all cursor-pointer truncate flex items-center justify-center gap-1"
                 title="Bílé krystalky soli a jiskření (Sssst!)"
               >
-                <span>🧂</span>
+                <LadaThematicIcon name="salt" size={14} animated />
                 <span>Zásah solí</span>
               </button>
               <button
@@ -896,7 +897,7 @@ export const TestAnimationsTab: React.FC = () => {
                 className="bg-[#c9e8fb] hover:bg-[#a6d8f8] text-[#1c4b7d] font-black text-[0.68rem] py-1 px-1.5 rounded-xl border border-[#1c1308] shadow-2xs active:scale-95 transition-all cursor-pointer truncate flex items-center justify-center gap-1"
                 title="Rybniční kapky vody a šplíchanec (Šplouch!)"
               >
-                <span>💦</span>
+                <LadaThematicIcon name="water" size={14} animated />
                 <span>Vodní kapky</span>
               </button>
               <button
@@ -909,7 +910,7 @@ export const TestAnimationsTab: React.FC = () => {
                     : "Pekelné černé saze a žhavé jiskry"
                 }
               >
-                <span>{isHunter ? "🛡️" : "🔥"}</span>
+                <LadaThematicIcon name={isHunter ? "block" : "fire"} size={14} animated />
                 <span>{isHunter ? "Hrdina zásah" : "Pekelné saze"}</span>
               </button>
             </div>
@@ -919,7 +920,7 @@ export const TestAnimationsTab: React.FC = () => {
           <div className="bg-[#fffdf7] p-3 rounded-2xl border-2 border-[#1c1308] shadow-[0_3px_0_#1c1308] space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-black text-[#1c1308] flex items-center gap-1">
-                <span>⚔️</span>
+                <LadaThematicIcon name="attack" size={14} animated />
                 <span>5-fázový útok</span>
               </span>
               <button
@@ -927,7 +928,7 @@ export const TestAnimationsTab: React.FC = () => {
                 onClick={triggerFluidAttack}
                 className="bg-[#e63e1e] hover:bg-[#ff5233] text-white text-xs font-black px-3 py-1 rounded-xl border border-[#1c1308] shadow-xs cursor-pointer active:scale-95 transition-all flex items-center gap-1.5"
               >
-                <span>▶️</span>
+                <LadaThematicIcon name="arrow_right" size={12} />
                 <span>Přehrát útok</span>
               </button>
             </div>
@@ -973,7 +974,7 @@ export const TestAnimationsTab: React.FC = () => {
             <div className="bg-[#fffdf7] p-3 rounded-2xl border-2 border-[#1c1308] shadow-[0_3px_0_#1c1308] space-y-2">
               <div className="flex flex-wrap items-center justify-between gap-1.5">
                 <span className="text-xs font-black text-[#1c1308] flex items-center gap-1">
-                  <span>🐾</span>
+                  <LadaThematicIcon name="paw" size={14} animated />
                   <span>4-fázový pohyb & skok</span>
                 </span>
                 <div className="flex items-center gap-1.5">
@@ -993,7 +994,7 @@ export const TestAnimationsTab: React.FC = () => {
                     onClick={triggerFluidMove}
                     className="bg-[#2d6cb5] hover:bg-[#3b82d4] text-white text-xs font-black px-2.5 py-1 rounded-xl border border-[#1c1308] shadow-xs cursor-pointer active:scale-95 transition-all flex items-center gap-1"
                   >
-                    <span>▶️</span>
+                    <LadaThematicIcon name="arrow_right" size={12} />
                     <span>Přehrát skok</span>
                   </button>
                 </div>
@@ -1043,7 +1044,7 @@ export const TestAnimationsTab: React.FC = () => {
               }}
               className="text-xs font-black text-[#8c5614] hover:text-[#1c1308] bg-[#eedcb0] hover:bg-[#ffd438] px-3 py-1 rounded-lg border border-[#1c1308] cursor-pointer transition-all flex items-center gap-1"
             >
-              <span>🔄</span>
+              <LadaThematicIcon name="reset" size={14} animated />
               <span>Klidový stav (Střeh)</span>
             </button>
           </div>
