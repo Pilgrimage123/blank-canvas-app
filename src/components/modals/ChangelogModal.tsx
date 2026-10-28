@@ -26,8 +26,98 @@ interface VersionEntry {
 // Záznamy v changelogu se mají dělat o něco méně detailní než doposud (stručnější, výstižné body zaměřené na podstatu).
 const CHANGELOG_DATA: VersionEntry[] = [
   {
-    version: "v0.9.7",
+    version: "v1.0.0",
     tag: "Aktuální verze",
+    date: "28. října",
+    title: "Chytré datové struktury, O(1) indexy a výkonnostní optimalizace",
+    badge: "Výkon & Architektura",
+    flavorQuote:
+      "„Když má ponocný v Hrusicích každou chalupu i strašidlo pěkně zapsané v rejstříku, najde raráška dřív, než stačí vyklepat dýmku!“",
+    flavorAuthor: "obecní kronikář z Hrusic",
+    highlights: [
+      {
+        category: "Předpočítané O(1) rejstříky a typová bezpečnost",
+        icon: "scroll",
+        items: [
+          "Okamžité vyhledávání O(1): zavedeny slovníkové indexy ENEMY_BY_ID, LOCATION_BY_ID a LOCATION_INDEX_BY_ID namísto opakovaného lineárního prohledávání polí.",
+          "Předpočítané skupiny pro střety a šenk: kandidáti bubáků dle lokací (CANDIDATES_BY_LOCATION) a cenové koše karet (SHOP_POOLS) se sestavují jednorázově při startu.",
+          "Zpřísněné typování: doplněny unie TraitId, CardId, NodeId a ShopTier a sjednocena struktura nabídky v šenku.",
+        ],
+      },
+      {
+        category: "Optimalizace herního jádra a vykreslování",
+        icon: "speed",
+        items: [
+          "Rychlé lízání a míchání karet: sjednocená funkce drawCardsFromPiles nahradila pomalé posuny polí (shift) dávkovým řezem s deterministickým domícháním odhozených karet.",
+          "Sjednocené vyhodnocení poražených bubáků: odměny (Štědrý/Skoupý) a Nákaza sjednoceny do sdílené funkce resolveDefeatedEnemies.",
+          "Memoizace bojiště a karet: rozdělení bubáků do řad probíhá v jediném průchodu přes useMemo a komponenta CardView je obalena v React.memo.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.9.9",
+    tag: "Předchozí verze",
+    date: "28. října",
+    title: "Čištění datových struktur, oprava výcviku a sjednocení RNG",
+    badge: "Refaktoring & Opravy",
+    flavorQuote:
+      "„Pořádek musí být jak ve světnici, tak v chalupářském zápisníku — co tam nepatří, šlo na hnůj!“",
+    flavorAuthor: "starý hospodář z Hrusic",
+    highlights: [
+      {
+        category: "Datové struktury a odstranění mrtvého kódu",
+        icon: "scroll",
+        items: [
+          "Sjednocení identifikátorů bubáků a bojových řad: odstraněny zastaralé aliasy a řady sjednoceny na hodnoty front a back.",
+          "Vyčištění stavového schématu: odstraněna nepoužívaná pole v GameState, šablonách bubáků i lokacích a vyřazeny mrtvé konstanty a funkce.",
+          "Automatická migrace uložených her: starší pozice v localStorage se při načtení plynule převedou na čisté schéma bez přepisování při průchodu menu.",
+        ],
+      },
+      {
+        category: "Opravy hratelnosti a konzistence",
+        icon: "target",
+        items: [
+          "Testovací souboje: neplatné identifikátory karet nahrazeny skutečnými kartami z databáze (Sůl do větru, Kropáč svěcenky, Zlaté vřetánko aj.).",
+          "Video výcvik: opraveno zastarávání stavu mezi kroky ukázky a sjednoceny popisky se skutečně hranými kartami.",
+          "Konzistentní RNG a uzel Nález: sjednoceno používání seedovaného generátoru náhody v soubojích a doplněna 35% šance na bonusovou kartu u Zapomenutého měšce.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.9.8",
+    tag: "Předchozí verze",
+    date: "19. října",
+    title: "Oprava chyb v boji, zacílení a herních mechanikách",
+    badge: "Stabilizace & Opravy chyb",
+    flavorQuote:
+      "„Všechny skryté šotky a nezbednosti jsme z naší kroniky vymetli poctivou březovou metlou!“",
+    flavorAuthor: "hrusický ponocný",
+    highlights: [
+      {
+        category: "Bojové mechaniky a zacílení",
+        icon: "target",
+        items: [
+          "Plynulé zacílení: klepnutí na tělo nepřítele hladce přepíná cíl bez přerušení vyskakovacím oknem; detail se otevře až při klepnutí na již zacíleného bubáka.",
+          "Nadechnutí bubáků (omen): posílení útoku se po provedení úderu či odvety správně vynuluje a nekumuluje se trvale.",
+          "Zpoždění odpočtu u speciálu: rána vyřezávanou slánkou hrdiny nyní správně uděluje odklad tahu bubáka dle jeho odolnosti.",
+        ],
+      },
+      {
+        category: "Vlastnosti bubáků a statistiky",
+        icon: "trophy",
+        items: [
+          "Odměny za přemožení: uplatněny vlastnosti Skoupý (−25 % krejcarů) a Štědrý (+30 % krejcarů) při rozprášení bubáka.",
+          "Statistiky na konci putování: zprovozněno počítadlo vybojovaných střetů a sledování nejvyšší dosažené Únavy.",
+          "Bezpečné vzdání hry: nahrazení systémového confirm okna bezpečným Ladovským dialogem.",
+        ],
+      },
+    ],
+  },
+  {
+    version: "v0.9.7",
+    tag: "Předchozí verze",
     date: "27. září",
     title: "Ladovské 2-fázové animované sprity namísto emotikonů",
     badge: "2-fázové Ladovské ikony",

@@ -17,55 +17,56 @@ interface CardViewProps {
   className?: string;
 }
 
-export const CardView: React.FC<CardViewProps> = ({
-  card,
-  stars,
-  onClick,
-  disabled = false,
-  canAfford = true,
-  isTargeted = false,
-  isHighlighted = false,
-  showFullTextDefault = false,
-  onHoverEnter,
-  onHoverLeave,
-  className = "",
-}) => {
-  const [showInfo, setShowInfo] = useState(false);
-  const cardId = typeof card === "string" ? card : card.id;
-  const def: CardDef = CARD_DB[cardId] || CARD_DB.metla || CARD_DB.kuraz || CARD_DB.sul;
+export const CardView: React.FC<CardViewProps> = React.memo(
+  ({
+    card,
+    stars,
+    onClick,
+    disabled = false,
+    canAfford = true,
+    isTargeted = false,
+    isHighlighted = false,
+    showFullTextDefault = false,
+    onHoverEnter,
+    onHoverLeave,
+    className = "",
+  }) => {
+    const [showInfo, setShowInfo] = useState(false);
+    const cardId = typeof card === "string" ? card : card.id;
+    const def: CardDef = CARD_DB[cardId] || CARD_DB.metla || CARD_DB.kuraz || CARD_DB.sul;
 
-  const rawStars = stars !== undefined ? stars : typeof card === "object" ? card.stars || 0 : 0;
-  const starCount = Math.min(5, Math.max(0, rawStars));
-  const mult = starValueMult(starCount);
+    const rawStars = stars !== undefined ? stars : typeof card === "object" ? card.stars || 0 : 0;
+    const starCount = Math.min(5, Math.max(0, rawStars));
+    const mult = starValueMult(starCount);
 
-  const effectiveDmg = def.dmg ? Math.round(def.dmg * mult) : undefined;
-  const effectiveBlock = def.block ? Math.round(def.block * mult) : undefined;
-  const effectiveDodge = def.dodge;
-  const effectiveDraw = def.draw;
-  const effectiveFatigue = def.fatigue ? Math.round(def.fatigue * mult) : undefined;
+    const effectiveDmg = def.dmg ? Math.round(def.dmg * mult) : undefined;
+    const effectiveBlock = def.block ? Math.round(def.block * mult) : undefined;
+    const effectiveDodge = def.dodge;
+    const effectiveDraw = def.draw;
+    const effectiveFatigue = def.fatigue ? Math.round(def.fatigue * mult) : undefined;
 
-  const getBorderColor = () => {
-    if (def.type === "attack") return "border-[#942718] bg-[#fff3ec]";
-    if (def.type === "defend") return "border-[#1b4372] bg-[#eef5fc]";
-    if (def.type === "junk") return "border-[#6e4e37] bg-[#f7f0e4]";
-    return "border-[#2d6328] bg-[#f0f8ec]";
-  };
+    const getBorderColor = () => {
+      if (def.type === "attack") return "border-[#942718] bg-[#fff3ec]";
+      if (def.type === "defend") return "border-[#1b4372] bg-[#eef5fc]";
+      if (def.type === "junk") return "border-[#6e4e37] bg-[#f7f0e4]";
+      return "border-[#2d6328] bg-[#f0f8ec]";
+    };
 
-  const getKindBadgeColor = () => {
-    if (def.type === "attack") return "bg-[#f08a73] text-[#240c06]";
-    if (def.type === "defend") return "bg-[#8ab6e8] text-[#06182e]";
-    if (def.type === "junk") return "bg-[#cbb69e] text-[#2b1b0e]";
-    return "bg-[#98d487] text-[#0f290a]";
-  };
+    const getKindBadgeColor = () => {
+      if (def.type === "attack") return "bg-[#f08a73] text-[#240c06]";
+      if (def.type === "defend") return "bg-[#8ab6e8] text-[#06182e]";
+      if (def.type === "junk") return "bg-[#cbb69e] text-[#2b1b0e]";
+      return "bg-[#98d487] text-[#0f290a]";
+    };
 
-  const isFullOpen = showInfo || showFullTextDefault;
+    const isFullOpen = showInfo || showFullTextDefault;
 
-  return (
-    <div
-      onClick={disabled ? undefined : onClick}
-      onMouseEnter={onHoverEnter}
-      onMouseLeave={onHoverLeave}
-      className={`
+    return (
+      <div
+        onClick={disabled ? undefined : onClick}
+        onMouseEnter={onHoverEnter}
+        onMouseLeave={onHoverLeave}
+        className={`
         relative select-none transition-all duration-150 rounded-xl border-[2.8px]
         flex flex-col justify-between p-1.5 pb-2 cursor-pointer shadow-[3px_4px_0_rgba(28,19,8,0.32)]
         ${getBorderColor()}
@@ -75,152 +76,153 @@ export const CardView: React.FC<CardViewProps> = ({
         ${isTargeted ? "scale-105" : ""}
         ${className}
       `}
-    >
-      {/* Top Banner: Card Kind */}
-      <div className="flex items-center justify-between border-b-[2px] border-[#1c1308] pb-1 -mx-1.5 -mt-1.5 px-2 pt-1 rounded-t-[9px] bg-[#eedcae]">
-        <span
-          className={`text-[0.62rem] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full border border-[#1c1308] ${getKindBadgeColor()}`}
-        >
-          {def.type === "attack"
-            ? "Útok"
-            : def.type === "defend"
-              ? "Obrana"
-              : def.type === "junk"
-                ? "Rušivá"
-                : "Příprava"}
-        </span>
-        <span className="text-[0.62rem] font-bold text-[#4d3b24]">
-          {def.pre > 0 ? `${def.pre} Aug` : "hned"}
-        </span>
-      </div>
-
-      {/* Card Emblem Art Icon in Josef Lada style */}
-      <div className="flex items-center justify-center my-1 h-9">{renderCardIcon(def.id)}</div>
-
-      {/* Card Title & Quality Stars */}
-      <div className="text-center">
-        <h4 className="font-title text-[0.82rem] font-bold leading-tight text-[#1c1308]">
-          {def.name}
-        </h4>
-        {starCount > 0 && (
-          <div
-            className="text-[0.68rem] font-black leading-none text-[#b36b00] mt-0.5 tracking-tight flex items-center justify-center gap-0.5"
-            title={`Jakost ${starCount}★ (+${Math.round(starCount * 10)} % síla účinku)`}
+      >
+        {/* Top Banner: Card Kind */}
+        <div className="flex items-center justify-between border-b-[2px] border-[#1c1308] pb-1 -mx-1.5 -mt-1.5 px-2 pt-1 rounded-t-[9px] bg-[#eedcae]">
+          <span
+            className={`text-[0.62rem] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full border border-[#1c1308] ${getKindBadgeColor()}`}
           >
-            <div className="flex items-center gap-0.5">
-              {Array.from({ length: starCount }).map((_, i) => (
-                <LadaThematicIcon key={i} name="star" size={11} />
-              ))}
+            {def.type === "attack"
+              ? "Útok"
+              : def.type === "defend"
+                ? "Obrana"
+                : def.type === "junk"
+                  ? "Rušivá"
+                  : "Příprava"}
+          </span>
+          <span className="text-[0.62rem] font-bold text-[#4d3b24]">
+            {def.pre > 0 ? `${def.pre} Aug` : "hned"}
+          </span>
+        </div>
+
+        {/* Card Emblem Art Icon in Josef Lada style */}
+        <div className="flex items-center justify-center my-1 h-9">{renderCardIcon(def.id)}</div>
+
+        {/* Card Title & Quality Stars */}
+        <div className="text-center">
+          <h4 className="font-title text-[0.82rem] font-bold leading-tight text-[#1c1308]">
+            {def.name}
+          </h4>
+          {starCount > 0 && (
+            <div
+              className="text-[0.68rem] font-black leading-none text-[#b36b00] mt-0.5 tracking-tight flex items-center justify-center gap-0.5"
+              title={`Jakost ${starCount}★ (+${Math.round(starCount * 10)} % síla účinku)`}
+            >
+              <div className="flex items-center gap-0.5">
+                {Array.from({ length: starCount }).map((_, i) => (
+                  <LadaThematicIcon key={i} name="star" size={11} />
+                ))}
+              </div>
             </div>
+          )}
+        </div>
+
+        {/* Action Chips */}
+        {!isFullOpen && (
+          <div className="flex flex-wrap items-center justify-center gap-1 my-1">
+            {effectiveDmg !== undefined && (
+              <span
+                className={`inline-flex items-center gap-1 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full ${
+                  starCount > 0
+                    ? "bg-[#ffece4] border-2 border-[#b8331d] text-[#942718] shadow-[0_1px_2px_rgba(184,51,29,0.25)]"
+                    : "bg-[#fce0d8] border border-[#942718] text-[#942718]"
+                }`}
+              >
+                <LadaThematicIcon name="attack" size={13} /> {effectiveDmg}
+              </span>
+            )}
+            {effectiveBlock !== undefined && (
+              <span
+                className={`inline-flex items-center gap-1 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full ${
+                  starCount > 0
+                    ? "bg-[#e5f0fc] border-2 border-[#15467e] text-[#1b4372] shadow-[0_1px_2px_rgba(27,67,114,0.25)]"
+                    : "bg-[#d8e8fc] border border-[#1b4372] text-[#1b4372]"
+                }`}
+              >
+                <LadaThematicIcon name="block" size={13} /> {effectiveBlock}
+              </span>
+            )}
+            {effectiveDodge !== undefined && (
+              <span className="inline-flex items-center gap-1 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full bg-[#ecdcd0] border border-[#593d25] text-[#593d25]">
+                <LadaThematicIcon name="dodge" size={13} /> {effectiveDodge}
+              </span>
+            )}
+            {effectiveDraw !== undefined && (
+              <span className="inline-flex items-center gap-1 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full bg-[#e4f4d8] border border-[#2d6328] text-[#2d6328]">
+                <LadaThematicIcon name="draw" size={13} /> +{effectiveDraw}
+              </span>
+            )}
+            {effectiveFatigue !== undefined && (
+              <span
+                className={`inline-flex items-center gap-1 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full ${
+                  starCount > 0
+                    ? "bg-[#fff2d2] border-2 border-[#a66d0c] text-[#825406] shadow-[0_1px_2px_rgba(166,109,12,0.25)]"
+                    : "bg-[#fff0d0] border border-[#d69818] text-[#825406]"
+                }`}
+              >
+                <LadaThematicIcon name="fatigue" size={13} /> {effectiveFatigue}
+              </span>
+            )}
           </div>
         )}
-      </div>
 
-      {/* Action Chips */}
-      {!isFullOpen && (
-        <div className="flex flex-wrap items-center justify-center gap-1 my-1">
-          {effectiveDmg !== undefined && (
-            <span
-              className={`inline-flex items-center gap-1 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full ${
-                starCount > 0
-                  ? "bg-[#ffece4] border-2 border-[#b8331d] text-[#942718] shadow-[0_1px_2px_rgba(184,51,29,0.25)]"
-                  : "bg-[#fce0d8] border border-[#942718] text-[#942718]"
-              }`}
-            >
-              <LadaThematicIcon name="attack" size={13} /> {effectiveDmg}
-            </span>
-          )}
-          {effectiveBlock !== undefined && (
-            <span
-              className={`inline-flex items-center gap-1 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full ${
-                starCount > 0
-                  ? "bg-[#e5f0fc] border-2 border-[#15467e] text-[#1b4372] shadow-[0_1px_2px_rgba(27,67,114,0.25)]"
-                  : "bg-[#d8e8fc] border border-[#1b4372] text-[#1b4372]"
-              }`}
-            >
-              <LadaThematicIcon name="block" size={13} /> {effectiveBlock}
-            </span>
-          )}
-          {effectiveDodge !== undefined && (
-            <span className="inline-flex items-center gap-1 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full bg-[#ecdcd0] border border-[#593d25] text-[#593d25]">
-              <LadaThematicIcon name="dodge" size={13} /> {effectiveDodge}
-            </span>
-          )}
-          {effectiveDraw !== undefined && (
-            <span className="inline-flex items-center gap-1 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full bg-[#e4f4d8] border border-[#2d6328] text-[#2d6328]">
-              <LadaThematicIcon name="draw" size={13} /> +{effectiveDraw}
-            </span>
-          )}
-          {effectiveFatigue !== undefined && (
-            <span
-              className={`inline-flex items-center gap-1 text-[0.8rem] font-black px-1.5 py-0.5 rounded-full ${
-                starCount > 0
-                  ? "bg-[#fff2d2] border-2 border-[#a66d0c] text-[#825406] shadow-[0_1px_2px_rgba(166,109,12,0.25)]"
-                  : "bg-[#fff0d0] border border-[#d69818] text-[#825406]"
-              }`}
-            >
-              <LadaThematicIcon name="fatigue" size={13} /> {effectiveFatigue}
-            </span>
-          )}
-        </div>
-      )}
-
-      {/* Extended text & flavor */}
-      {isFullOpen && (
-        <div className="text-[0.72rem] leading-tight my-1 font-semibold text-[#1c1308] bg-[#fff8ea] p-1.5 rounded-lg border border-[#1c1308]">
-          <div>{def.text}</div>
-          {starCount > 0 && (
-            <div className="text-[0.62rem] font-black text-[#8c5614] mt-1 bg-[#fffae8] px-1.5 py-0.5 rounded-md border border-[#d68b0e]/50 flex items-center justify-between">
-              <span className="inline-flex items-center gap-1">
-                Jakost:{" "}
-                <span className="inline-flex items-center gap-0.5">
-                  {Array.from({ length: starCount }).map((_, i) => (
-                    <LadaThematicIcon key={i} name="star" size={11} />
-                  ))}
+        {/* Extended text & flavor */}
+        {isFullOpen && (
+          <div className="text-[0.72rem] leading-tight my-1 font-semibold text-[#1c1308] bg-[#fff8ea] p-1.5 rounded-lg border border-[#1c1308]">
+            <div>{def.text}</div>
+            {starCount > 0 && (
+              <div className="text-[0.62rem] font-black text-[#8c5614] mt-1 bg-[#fffae8] px-1.5 py-0.5 rounded-md border border-[#d68b0e]/50 flex items-center justify-between">
+                <span className="inline-flex items-center gap-1">
+                  Jakost:{" "}
+                  <span className="inline-flex items-center gap-0.5">
+                    {Array.from({ length: starCount }).map((_, i) => (
+                      <LadaThematicIcon key={i} name="star" size={11} />
+                    ))}
+                  </span>
                 </span>
-              </span>
-              <span>+{Math.round(starCount * 10)} % účinku</span>
-            </div>
-          )}
+                <span>+{Math.round(starCount * 10)} % účinku</span>
+              </div>
+            )}
 
-          {def.flavor && (
-            <div className="text-[0.64rem] italic text-[#594432] mt-1 border-t border-[#dfcb9a] pt-1">
-              "{def.flavor}"
-            </div>
-          )}
-        </div>
-      )}
+            {def.flavor && (
+              <div className="text-[0.64rem] italic text-[#594432] mt-1 border-t border-[#dfcb9a] pt-1">
+                "{def.flavor}"
+              </div>
+            )}
+          </div>
+        )}
 
-      {/* Bottom Bar: Cost badge and Info toggle */}
-      <div className="flex items-center justify-between pt-1 mt-auto">
-        {/* Cost Bubble */}
-        <div
-          className={`
+        {/* Bottom Bar: Cost badge and Info toggle */}
+        <div className="flex items-center justify-between pt-1 mt-auto">
+          {/* Cost Bubble */}
+          <div
+            className={`
             w-6 h-6 rounded-full border-2 border-[#1c1308] flex items-center justify-center font-black text-[0.8rem]
             shadow-[0_2px_0_#1c1308]
             ${canAfford ? "bg-[#ffd438] text-[#1c1308]" : "bg-[#e0c896] text-[#786445]"}
           `}
-          title={`Spotřebuje ${def.cost} Akce`}
-        >
-          {def.cost}
-        </div>
+            title={`Spotřebuje ${def.cost} Akce`}
+          >
+            {def.cost}
+          </div>
 
-        {/* Info Toggle Button */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowInfo(!showInfo);
-          }}
-          className="w-5 h-5 rounded-full bg-[#fff8ea] border border-[#1c1308] text-[0.7rem] font-serif font-black italic flex items-center justify-center text-[#1c1308] hover:bg-[#ffe39e] active:scale-95"
-          title="Více informací o kartě"
-        >
-          i
-        </button>
+          {/* Info Toggle Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowInfo(!showInfo);
+            }}
+            className="w-5 h-5 rounded-full bg-[#fff8ea] border border-[#1c1308] text-[0.7rem] font-serif font-black italic flex items-center justify-center text-[#1c1308] hover:bg-[#ffe39e] active:scale-95"
+            title="Více informací o kartě"
+          >
+            i
+          </button>
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  },
+);
 
 function renderCardIcon(cardId: string) {
   switch (cardId) {

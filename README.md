@@ -38,4 +38,3 @@ npm run dev
 - Hra se odehrává přibližně **50 let před narozením Pepíka** (v polovině 19. století).
 - Nevystupuje v ní **Pepík ani jeho kamarádi**, ani **Pulec a Bubáček** (ti se narodí až o generaci později).
 - Starý hastrman **Brčál** i strašidlo **Mulisák** v tomto světě samozřejmě již přebývají a vystupují.
-

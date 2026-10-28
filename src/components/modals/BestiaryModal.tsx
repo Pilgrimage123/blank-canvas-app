@@ -1,5 +1,13 @@
-import React, { useState } from "react";
-import { ENEMY_DB, TRAITS, ENEMY_ACTIONS, LOCATIONS } from "../../data/gameData";
+import React, { useState, useMemo } from "react";
+import { EnemyTemplate, LocationId } from "../../types";
+import {
+  ENEMY_DB,
+  ENEMIES_BY_LOCATION,
+  TRAITS,
+  ENEMY_ACTIONS,
+  LOCATIONS,
+  LOCATION_BY_ID,
+} from "../../data/gameData";
 import { EnemySprite } from "../sprites/EnemySprite";
 import { getStagePercent } from "../../utils/spriteUtils";
 import { LadaThematicIcon } from "../sprites/LadaThematicIcon";
@@ -12,24 +20,20 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
   const [selectedLocFilter, setSelectedLocFilter] = useState<string>("all");
   const [selectedFamilyId, setSelectedFamilyId] = useState<string | null>(null);
   const [inspectedMember, setInspectedMember] = useState<{
-    family: (typeof uniqueFamilies)[0];
+    family: EnemyTemplate;
     variantIndex: number;
   } | null>(null);
 
-  // Group enemies so certik and rarasek don't duplicate needlessly, or show unique archetypes
-  const uniqueFamilies = ENEMY_DB.filter(
-    (e, idx, arr) => arr.findIndex((x) => x.id === e.id) === idx,
-  );
+  const uniqueFamilies = ENEMY_DB;
 
-  const filteredFamilies = uniqueFamilies.filter((family) => {
-    if (selectedLocFilter !== "all" && !family.loc.includes(selectedLocFilter as any)) {
-      return false;
-    }
-    if (selectedFamilyId && family.id !== selectedFamilyId) {
-      return false;
-    }
-    return true;
-  });
+  const filteredFamilies = useMemo(() => {
+    const baseList =
+      selectedLocFilter === "all"
+        ? ENEMY_DB
+        : ENEMIES_BY_LOCATION[selectedLocFilter as LocationId] || [];
+    if (!selectedFamilyId) return baseList;
+    return baseList.filter((family) => family.id === selectedFamilyId);
+  }, [selectedLocFilter, selectedFamilyId]);
 
   return (
     <div className="fixed inset-0 z-50 bg-[#1c1308]/75 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 select-none animate-fade-in">
@@ -77,7 +81,7 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
               Všechny ({uniqueFamilies.length})
             </button>
             {LOCATIONS.map((loc) => {
-              const count = uniqueFamilies.filter((e) => e.loc.includes(loc.id)).length;
+              const count = ENEMIES_BY_LOCATION[loc.id]?.length || 0;
               return (
                 <button
                   key={loc.id}
@@ -117,7 +121,7 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
           ) : (
             filteredFamilies.map((family) => {
               const locNames = family.loc
-                .map((lid) => LOCATIONS.find((l) => l.id === lid)?.name || lid)
+                .map((lid) => LOCATION_BY_ID[lid]?.name || lid)
                 .join(" • ");
 
               const familySpriteType =
@@ -165,7 +169,8 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
                                   className="bg-[#ffe8b3] text-[#1c1308] border border-[#1c1308] text-[0.65rem] font-bold px-1.5 py-0.2 rounded-md inline-flex items-center gap-1"
                                   title={tr?.desc}
                                 >
-                                  <LadaThematicIcon name="star" size={10} /> {tr?.name || traitKey}: {tr?.desc}
+                                  <LadaThematicIcon name="star" size={10} /> {tr?.name || traitKey}:{" "}
+                                  {tr?.desc}
                                 </span>
                               );
                             })
@@ -314,7 +319,8 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
                                 <LadaThematicIcon name="hp" size={12} /> <span>{v.hp} HP</span>
                               </div>
                               <div className="bg-[#fcf2d9] text-[#784e12] px-1.5 py-1 rounded-lg text-center border border-[#e3c481] flex items-center justify-center gap-1 shadow-2xs">
-                                <LadaThematicIcon name="attack" size={12} /> <span>{v.dmg} Zranění</span>
+                                <LadaThematicIcon name="attack" size={12} />{" "}
+                                <span>{v.dmg} Zranění</span>
                               </div>
                             </div>
                           </div>
@@ -327,7 +333,6 @@ export const BestiaryModal: React.FC<BestiaryModalProps> = ({ onClose }) => {
             })
           )}
         </div>
-
 
         {/* MODAL FOOTER */}
         <div className="flex-none bg-[#eedcb0] px-4 py-2.5 sm:px-6 sm:py-3 border-t-3 border-[#1c1308] flex items-center justify-between">
@@ -538,7 +543,6 @@ function getStageBadge(vidx: number): string {
       return `Stupeň ${vidx + 1}`;
   }
 }
-
 
 function getMemberLore(familyId: string, vidx: number, name: string): string {
   const map: Record<string, string[]> = {

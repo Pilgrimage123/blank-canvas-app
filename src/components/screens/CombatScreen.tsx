@@ -1,6 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
-import { GameState, CardDef, EnemyInstance } from "../../types";
-import { HEROES, CARD_DB, ENEMY_ACTIONS, TRAITS, LOCATIONS } from "../../data/gameData";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { GameState, CardDef, EnemyInstance, CardInstance } from "../../types";
+import {
+  HEROES,
+  CARD_DB,
+  ENEMY_ACTIONS,
+  TRAITS,
+  LOCATIONS,
+  LOCATION_BY_ID,
+} from "../../data/gameData";
 import { cardDamageCalc } from "../../utils/gameEngine";
 import { HunterSprite } from "../sprites/HunterSprite";
 import { EnemySprite } from "../sprites/EnemySprite";
@@ -20,7 +27,7 @@ interface CombatScreenProps {
   onIdea: () => void;
   onScenery: () => void;
   onSpecial: () => void;
-  onShiftRowQueue?: (rowType: "horni" | "dolni" | "front" | "back", defeatedUid: string) => void;
+  onShiftRowQueue?: (rowType: "front" | "back", defeatedUid: string) => void;
   onSetFocus: (uid: string) => void;
   onOpenEnemyDetail: (uid: string) => void;
   onOpenHeroDetail?: () => void;
@@ -66,7 +73,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
 
   // Rezervovaná místa po poražených bubácích v příslušné řadě (čeká se 3 sekundy na posun bojovníků za ním)
   const [pendingRowShifts, setPendingRowShifts] = useState<
-    Record<string, { rowType: "horni" | "dolni"; defIdx: number }>
+    Record<string, { rowType: "front" | "back"; defIdx: number }>
   >({});
   const rowShiftTimersRef = useRef<Record<string, NodeJS.Timeout>>({});
 
@@ -114,21 +121,12 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
       // - Stále bojující bubáci, kteří stáli ZA poraženým bubákem (např. za Raráškem Kostlivec a Helkal)
       //   přesně po 3 sekundách od začátku ústupu animovaným pohybem zaplní jeho uvolněné místo.
       newlyDefeated.forEach((defEnemy) => {
-        const isUpper =
-          defEnemy.row === "back" ||
-          defEnemy.row === "top" ||
-          defEnemy.row === "horni" ||
-          (!defEnemy.row && combat.enemies.indexOf(defEnemy) >= 4);
-        const rowType: "horni" | "dolni" = isUpper ? "horni" : "dolni";
+        const isUpper = defEnemy.row === "back";
+        const rowType: "front" | "back" = isUpper ? "back" : "front";
 
-        const rowEnemies = combat.enemies.filter((e) => {
-          const eUpper =
-            e.row === "back" ||
-            e.row === "top" ||
-            e.row === "horni" ||
-            (!e.row && combat.enemies.indexOf(e) >= 4);
-          return isUpper ? eUpper : !eUpper;
-        });
+        const rowEnemies = combat.enemies.filter((e) =>
+          isUpper ? e.row === "back" : e.row !== "back",
+        );
 
         const defIdx = rowEnemies.findIndex((e) => e.uid === defEnemy.uid);
         const hasFollowersBehind =
@@ -184,7 +182,8 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
       try {
         const hitWater = Boolean(
           combat?.enemies.some(
-            (e) => e.isHit && (e.tpl === "vodnik" || e.type === "vodnik" || e.tpl === "rusalka"),
+            (e) =>
+              e.isHit && (e.type === "vodnik" || e.type === "hastrman" || e.type === "rusalka"),
           ),
         );
         if (hitWater) {
@@ -199,14 +198,58 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
     }
   }, [anyEnemyHit, hunterHit, combat?.enemies]);
 
+  // Single-pass memoized enemy partitioning for rows, living, defeated, and focused target
+  const {
+    horniRadaEnemies,
+    dolniRadaEnemies,
+    horniRadaAlive,
+    dolniRadaAlive,
+    allDefeatedEnemies,
+    focusEnemy,
+  } = useMemo(() => {
+    const horni: EnemyInstance[] = [];
+    const dolni: EnemyInstance[] = [];
+    const horniAlive: EnemyInstance[] = [];
+    const dolniAlive: EnemyInstance[] = [];
+    const defeated: EnemyInstance[] = [];
+    const living: EnemyInstance[] = [];
+    let focused: EnemyInstance | undefined;
+
+    const enemies = combat?.enemies || [];
+    for (let i = 0; i < enemies.length; i++) {
+      const e = enemies[i];
+      if (e.row === "back") {
+        horni.push(e);
+        if (e.alive) horniAlive.push(e);
+      } else {
+        dolni.push(e);
+        if (e.alive) dolniAlive.push(e);
+      }
+
+      if (e.alive && e.hp > 0) {
+        living.push(e);
+        if (e.uid === combat?.focus) {
+          focused = e;
+        }
+      } else if (!e.alive) {
+        defeated.push(e);
+      }
+    }
+
+    return {
+      horniRadaEnemies: horni,
+      dolniRadaEnemies: dolni,
+      horniRadaAlive: horniAlive,
+      dolniRadaAlive: dolniAlive,
+      allDefeatedEnemies: defeated,
+      focusEnemy: focused || living[0] || enemies[0],
+    };
+  }, [combat?.enemies, combat?.focus]);
+
   if (!combat) return null;
 
   const hero = HEROES[state.hero] || HEROES.pobuda;
-  const curLoc =
-    LOCATIONS.find((l) => l.id === combat.locId) || LOCATIONS[state.locIndex] || LOCATIONS[0];
-  const livingEnemies = combat.enemies.filter((e) => e.alive && e.hp > 0);
-  const focusEnemy =
-    livingEnemies.find((e) => e.uid === combat.focus) || livingEnemies[0] || combat.enemies[0];
+  const curLoc = LOCATION_BY_ID[combat.locId] || LOCATIONS[state.locIndex] || LOCATIONS[0];
 
   // Breath gain calculation
   const baseBreath = hero.breath || 6;
@@ -262,11 +305,6 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
       return;
     }
 
-    // Set focus on this enemy
-    if (combat.focus !== enemy.uid) {
-      onSetFocus(enemy.uid);
-    }
-
     // If a card is primed / selected in hand, play it now against this enemy
     if (selectedHandIdx !== null && isPlayerTurn) {
       const cardToPlay = combat.hand[selectedHandIdx];
@@ -280,7 +318,13 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
       }
     }
 
-    // Open full detail modal when clicking his body
+    // Set focus on this enemy if not already focused
+    if (combat.focus !== enemy.uid) {
+      onSetFocus(enemy.uid);
+      return;
+    }
+
+    // Open full detail modal when clicking already focused enemy
     onOpenEnemyDetail(enemy.uid);
   };
 
@@ -318,12 +362,9 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
 
     const isMainTarget = enemy.uid === focusEnemy?.uid;
     if (activePreviewCardDef.intent === "row") {
-      const targetRow =
-        focusEnemy?.row || (combat.enemies.indexOf(focusEnemy!) < 4 ? "front" : "back");
-      const enemyRow = enemy.row || (combat.enemies.indexOf(enemy) < 4 ? "front" : "back");
-      const hasBackRow = combat.enemies.some(
-        (e) => (e.row === "back" || (!e.row && combat.enemies.indexOf(e) >= 4)) && e.alive,
-      );
+      const targetRow = focusEnemy?.row || "front";
+      const enemyRow = enemy.row || "front";
+      const hasBackRow = horniRadaAlive.length > 0;
       if (hasBackRow) {
         return enemyRow === targetRow ? cardDamageCalc(activePreviewCardDef, enemy, cardStars) : 0;
       }
@@ -339,21 +380,6 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
     }
     return 0;
   };
-
-  // Dvě řady na bojišti:
-  // Horní řada (na vyvýšeném travnatém břehu) a Dolní řada (na polní cestě)
-  const isEnemyUpperRow = (e: EnemyInstance) =>
-    e.row === "back" ||
-    e.row === "top" ||
-    e.row === "horni" ||
-    (!e.row && combat.enemies.indexOf(e) >= 4);
-
-  const horniRadaEnemies = combat.enemies.filter(isEnemyUpperRow);
-  const dolniRadaEnemies = combat.enemies.filter((e) => !isEnemyUpperRow(e));
-
-  const horniRadaAlive = horniRadaEnemies.filter((e) => e.alive);
-  const dolniRadaAlive = dolniRadaEnemies.filter((e) => e.alive);
-  const allDefeatedEnemies = combat.enemies.filter((e) => !e.alive);
 
   // Vyřazení bubáci nerespektují žádné řady, rozprostřou se na volné ploše terénu a uvelebí se
   // v přirozených, rozmanitých výškách (stojí nohama pevně na zemi na cestě či břehu,
@@ -407,7 +433,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
   const renderEnemyItem = (
     enemy: EnemyInstance,
     rowIdx: number,
-    rowType: "horni" | "dolni" | "front" | "back",
+    rowType: "front" | "back",
     isClusterItem = false,
     customRetreatStartX?: number,
   ) => {
@@ -420,7 +446,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
     const hpAfterPreview = Math.max(0, enemy.hp - Math.max(0, previewDmg - enemy.block));
     const isLethal = previewDmg > 0 && hpAfterPreview <= 0;
 
-    const isLower = rowType === "dolni" || rowType === "front";
+    const isLower = rowType === "front";
     const depthScale = isLower ? "scale-100" : "scale-90 sm:scale-95";
     const zIndexClass = isFocused ? "z-30" : isLower ? "z-20" : "z-10 hover:z-25";
     const verticalOffset = "translate-y-0";
@@ -480,20 +506,32 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                 className="absolute -top-5 right-0 z-30 anim-comic-pop bg-[#ffd438] text-[#1c1308] border-1.5 border-[#1c1308] font-black text-[0.62rem] px-1.5 py-0.2 rounded-full shadow-md flex items-center gap-1"
               >
                 {enemy.saltDot > 0 ? (
-                  <>Sssst! <LadaThematicIcon name="salt" size={12} /></>
+                  <>
+                    Sssst! <LadaThematicIcon name="salt" size={12} />
+                  </>
                 ) : (
-                  <>Bác! <LadaThematicIcon name="hit" size={12} /></>
+                  <>
+                    Bác! <LadaThematicIcon name="hit" size={12} />
+                  </>
                 )}
               </div>
             )}
             {enemy.alive && enemy.isAttacking && (
               <div className="absolute -top-5 left-0 z-30 anim-comic-pop bg-[#f06e56] text-white border-1.5 border-[#1c1308] font-black text-[0.62rem] px-1.5 py-0.2 rounded-full shadow-md flex items-center gap-1">
                 {enemy.nextAction === "bafnuti_z_dymky" ? (
-                  <>Puf! <LadaThematicIcon name="fog" size={12} /></>
-                ) : enemy.type === "vodnik" ? (
-                  <>Šplouch! <LadaThematicIcon name="water" size={12} /></>
+                  <>
+                    Puf! <LadaThematicIcon name="fog" size={12} />
+                  </>
+                ) : enemy.type === "vodnik" ||
+                  enemy.type === "hastrman" ||
+                  enemy.type === "rusalka" ? (
+                  <>
+                    Šplouch! <LadaThematicIcon name="water" size={12} />
+                  </>
                 ) : (
-                  <>Žuch! <LadaThematicIcon name="hit" size={12} /></>
+                  <>
+                    Žuch! <LadaThematicIcon name="hit" size={12} />
+                  </>
                 )}
               </div>
             )}
@@ -509,7 +547,6 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
             )}
           </div>
         ) : null}
-
 
         {/* 3. MÁVAJÍCÍ BÍLÁ VLAJKA KUS NAD PORAŽENÝM BUBÁKEM (JAKOŽE SE VZDÁVAJÍ) */}
         {isDefeated && (
@@ -667,7 +704,8 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
               <LadaThematicIcon name="info" size={12} />
             </button>
             <span className="text-[0.7rem] text-[#6e502c] font-semibold hidden md:inline-flex items-center gap-1">
-              <LadaThematicIcon name="target" size={12} /> Klepněte na tělo bubáka pro detailní informace a zacílení útoků!
+              <LadaThematicIcon name="target" size={12} /> Klepněte na tělo bubáka pro detailní
+              informace a zacílení útoků!
             </span>
           </div>
 
@@ -742,7 +780,6 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
           </div>
         </div>
       </div>
-
 
       {/* 2. THE MAIN BATTLEFIELD ARENA: JOSEF LADA LANDSCAPE STAGE */}
       <div className="flex-1 min-h-0 relative mb-2">
@@ -877,7 +914,8 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                 {/* Threat warning from focused enemy */}
                 {incomingThroughBlock > 0 && focusEnemy?.alive && (
                   <div className="text-[0.62rem] font-black text-[#c4321d] bg-[#fce0d8] rounded px-1 py-0.5 border border-[#c4321d] animate-pulse flex items-center justify-center gap-1">
-                    <LadaThematicIcon name="warning" size={11} /> Hrozí {incomingThroughBlock} poškození!
+                    <LadaThematicIcon name="warning" size={11} /> Hrozí {incomingThroughBlock}{" "}
+                    poškození!
                   </div>
                 )}
               </div>
@@ -891,9 +929,9 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                 {horniRadaEnemies.length > 0 && (
                   <div className="flex items-end justify-start gap-2 sm:gap-3 relative z-10 pr-1 sm:pr-2 mb-1 sm:mb-2 md:mb-3">
                     <div className="hidden md:flex items-center gap-1 text-[0.6rem] font-black text-[#523e2a] bg-[#ebdcb9]/85 border border-[#1c1308] px-1.5 py-0.5 rounded-full select-none shadow-xs whitespace-nowrap self-center mb-2 mr-1">
-                      <LadaThematicIcon name="field" size={12} /> Horní řada ({horniRadaAlive.length})
+                      <LadaThematicIcon name="field" size={12} /> Horní řada (
+                      {horniRadaAlive.length})
                     </div>
-
 
                     {/* Neporažení bojující bubáci v horní řadě s trvalou délkou řady */}
                     <div
@@ -904,7 +942,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                     >
                       {horniRadaEnemies.map((enemy, rowIdx) => {
                         if (enemy.alive) {
-                          return renderEnemyItem(enemy, rowIdx, "horni");
+                          return renderEnemyItem(enemy, rowIdx, "back");
                         }
                         if (pendingRowShifts[enemy.uid]) {
                           return (
@@ -946,7 +984,8 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                 <div className="flex items-end justify-start gap-2 sm:gap-3 relative z-20 pr-1 sm:pr-2">
                   {horniRadaEnemies.length > 0 && (
                     <div className="hidden md:flex items-center gap-1 text-[0.6rem] font-black text-[#523e2a] bg-[#ebdcb9]/85 border border-[#1c1308] px-1.5 py-0.5 rounded-full select-none shadow-xs whitespace-nowrap self-center mb-4 mr-1">
-                      <LadaThematicIcon name="village" size={12} /> Dolní řada ({dolniRadaAlive.length})
+                      <LadaThematicIcon name="village" size={12} /> Dolní řada (
+                      {dolniRadaAlive.length})
                     </div>
                   )}
 
@@ -959,7 +998,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                   >
                     {dolniRadaEnemies.map((enemy, rowIdx) => {
                       if (enemy.alive) {
-                        return renderEnemyItem(enemy, rowIdx, "dolni");
+                        return renderEnemyItem(enemy, rowIdx, "front");
                       }
                       if (pendingRowShifts[enemy.uid]) {
                         return (
@@ -1034,7 +1073,7 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
                           zIndex: pos.zIndex,
                         }}
                       >
-                        {renderEnemyItem(enemy, defIdx, "dolni", true, retreatStartX)}
+                        {renderEnemyItem(enemy, defIdx, "front", true, retreatStartX)}
                       </div>
                     );
                   })
@@ -1204,7 +1243,6 @@ export const CombatScreen: React.FC<CombatScreenProps> = ({
             </button>
           </div>
         </div>
-
 
         {/* Hand of Cards Carousel */}
         {!handHidden && (

@@ -1,4 +1,16 @@
-import { LocationDef, EnemyTemplate, CardDef, HeroDef, NodeDef } from "../types";
+import {
+  LocationDef,
+  LocationId,
+  EnemyTemplate,
+  EnemyTypeId,
+  EnemyCandidate,
+  CardDef,
+  CardId,
+  ShopTier,
+  HeroDef,
+  NodeDef,
+  TraitId,
+} from "../types";
 
 export const SAVE_KEY = "lovecBubaku_v03";
 export const OPT_KEY = "lovecBubaku_opt_v03";
@@ -8,21 +20,27 @@ export const PLAYER_HP = 80;
 export const PLAYER_READY = 25;
 export const START_SALT = 10;
 export const START_DRAW = 5;
-export const ESC_THRESHOLD = 12;
-export const ESC_EVERY = 4;
 export const AUG_MS = 900;
 
 export const LOCATIONS: LocationDef[] = [
-  { id: "vesnice", name: "Vesnice Hrusice", level: 10, entities: 1 },
-  { id: "mlyn", name: "Klapáčův mlýn", level: 11, entities: 2 },
-  { id: "les", name: "Hluboký bor", level: 12, entities: 2 },
-  { id: "rybnik", name: "Olšový rybník", level: 13, entities: 2 },
-  { id: "zricenina", name: "Hradní zřícenina", level: 14, entities: 2 },
-  { id: "hrbitov", name: "Starý hřbitov", level: 15, entities: 2 },
-  { id: "boss", name: "Černá tůň", level: 16, entities: 1, boss: true },
+  { id: "vesnice", name: "Vesnice Hrusice", level: 10 },
+  { id: "mlyn", name: "Klapáčův mlýn", level: 11 },
+  { id: "les", name: "Hluboký bor", level: 12 },
+  { id: "rybnik", name: "Olšový rybník", level: 13 },
+  { id: "zricenina", name: "Hradní zřícenina", level: 14 },
+  { id: "hrbitov", name: "Starý hřbitov", level: 15 },
+  { id: "boss", name: "Černá tůň", level: 16, boss: true },
 ];
 
-export const TRAITS: Record<string, { name: string; desc: string }> = {
+export const LOCATION_BY_ID: Record<LocationId, LocationDef> = Object.fromEntries(
+  LOCATIONS.map((loc) => [loc.id, loc]),
+) as Record<LocationId, LocationDef>;
+
+export const LOCATION_INDEX_BY_ID: Record<LocationId, number> = Object.fromEntries(
+  LOCATIONS.map((loc, idx) => [loc.id, idx]),
+) as Record<LocationId, number>;
+
+export const TRAITS: Record<TraitId, { name: string; desc: string }> = {
   svatokrad: { name: "Svatokrádežný", desc: "−25 % slabší zásahy křížovými kartami" },
   nakaza: { name: "Nakažlivý", desc: "Po jeho smrti ostatním klesne odpočet o 2 Aug" },
   uskok: { name: "Úskočný", desc: "Nejdřív bezpečně uhne před prvním úderem" },
@@ -39,7 +57,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Rarášek",
     type: "rarasek",
     loc: ["vesnice", "mlyn", "zricenina"],
-    band: [2, 14],
     traits: ["svatokrad"],
     roles: ["linie"],
     pool: ["uder", "zlovest", "odveta", "bafnuti_z_dymky", "vtipek"],
@@ -48,7 +65,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 6,
     ready: 26,
     odolnost: 42,
-    shift: 0,
     variants: [
       { level: 2, hp: 4, dmg: 2, name: "Churavý rarášek" },
       { level: 6, hp: 12, dmg: 6, name: "Vyhublý rarášek" },
@@ -61,7 +77,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Mrtvák ze škarpy",
     type: "mrtvak",
     loc: ["vesnice", "mlyn", "hrbitov"],
-    band: [3, 15],
     traits: ["nakaza"],
     roles: ["linie", "podpora"],
     pool: ["uder", "zatuhnuti", "puch"],
@@ -70,7 +85,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 6,
     ready: 22,
     odolnost: 40,
-    shift: 1,
     variants: [
       { level: 3, hp: 7, dmg: 2, name: "Malátný mrtvák" },
       { level: 7, hp: 15, dmg: 6, name: "Tlející mrtvák" },
@@ -83,7 +97,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Bubák od stodoly",
     type: "bubak",
     loc: ["vesnice", "mlyn", "les"],
-    band: [3, 15],
     traits: [],
     roles: ["linie"],
     pool: ["uder", "zlovest", "ukryt", "skrek"],
@@ -92,7 +105,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 6,
     ready: 25,
     odolnost: 40,
-    shift: 1,
     variants: [
       { level: 3, hp: 6, dmg: 4, name: "Neduživý bubák" },
       { level: 7, hp: 14, dmg: 8, name: "Strašidelný bubák" },
@@ -105,7 +117,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Starý kostlivec",
     type: "kostlivec",
     loc: ["mlyn", "zricenina", "hrbitov"],
-    band: [4, 16],
     traits: ["uskok"],
     roles: ["linie", "delostrelba"],
     pool: ["uder", "odveta", "skrek"],
@@ -114,7 +125,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 5,
     ready: 27,
     odolnost: 38,
-    shift: 2,
     variants: [
       { level: 4, hp: 7, dmg: 4, name: "Chrastící kostík" },
       { level: 8, hp: 14, dmg: 8, name: "Kostlivec ze hřbitova" },
@@ -127,7 +137,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Polednice",
     type: "polednice",
     loc: ["les", "vesnice"],
-    band: [4, 16],
     traits: ["nocni"],
     roles: ["podpora"],
     pool: ["zlovest", "vabnicka", "zatuhnuti", "skrek", "puch"],
@@ -136,7 +145,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 7,
     ready: 24,
     odolnost: 38,
-    shift: 2,
     variants: [
       { level: 4, hp: 6, dmg: 4, name: "Stínová polednice" },
       { level: 8, hp: 13, dmg: 6, name: "Polní polednice" },
@@ -149,7 +157,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Divoch helkal",
     type: "helkal",
     loc: ["les", "zricenina"],
-    band: [5, 17],
     traits: ["tezkop"],
     roles: ["linie", "delostrelba"],
     pool: ["uder", "zlovest", "skrek"],
@@ -158,7 +165,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 8,
     ready: 23,
     odolnost: 50,
-    shift: 3,
     variants: [
       { level: 5, hp: 13, dmg: 6, name: "Užvaněný helkal" },
       { level: 9, hp: 23, dmg: 10, name: "Lesní helkal" },
@@ -171,7 +177,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Klekánice z šera",
     type: "klekanice",
     loc: ["les", "hrbitov"],
-    band: [5, 17],
     traits: ["nocni", "uskok"],
     roles: ["podpora"],
     pool: ["zatuhnuti", "zlovest", "uder", "skrek", "puch"],
@@ -180,7 +185,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 6,
     ready: 27,
     odolnost: 44,
-    shift: 3,
     variants: [
       { level: 5, hp: 9, dmg: 4, name: "Tichá klekánička" },
       { level: 9, hp: 16, dmg: 8, name: "Večerní klekánice" },
@@ -191,9 +195,8 @@ export const ENEMY_DB: EnemyTemplate[] = [
   {
     id: "hastrman",
     name: "Hastrman od stoky",
-    type: "vodnik",
+    type: "hastrman",
     loc: ["rybnik", "mlyn"],
-    band: [6, 18],
     traits: ["vodni"],
     roles: ["delostrelba"],
     pool: ["uder", "vabnicka", "zlovest", "rybnicni_mlha", "vtipek"],
@@ -202,7 +205,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 6,
     ready: 25,
     odolnost: 48,
-    shift: 4,
     variants: [
       { level: 6, hp: 14, dmg: 6, name: "Blatouchový hastrmánek" },
       { level: 10, hp: 24, dmg: 10, name: "Hastrman od stoky" },
@@ -215,7 +217,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Nocležní upírák",
     type: "upir",
     loc: ["les", "zricenina", "hrbitov"],
-    band: [6, 18],
     traits: ["nocni", "svatokrad"],
     roles: ["linie", "podpora"],
     pool: ["uder", "zlovest", "bafnuti_z_dymky", "vabnicka"],
@@ -224,7 +225,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 6,
     ready: 28,
     odolnost: 45,
-    shift: 4,
     variants: [
       { level: 6, hp: 14, dmg: 8, name: "Vyhublý upírák" },
       { level: 10, hp: 23, dmg: 12, name: "Nocležní upírák" },
@@ -235,9 +235,8 @@ export const ENEMY_DB: EnemyTemplate[] = [
   {
     id: "bila",
     name: "Bílá paní",
-    type: "bila_pani",
+    type: "bila",
     loc: ["zricenina", "hrbitov"],
-    band: [6, 18],
     traits: ["uskok"],
     roles: ["podpora"],
     pool: ["vabnicka", "ukryt", "zlovest", "skrek", "rybnicni_mlha"],
@@ -246,7 +245,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 7,
     ready: 23,
     odolnost: 36,
-    shift: 4,
     variants: [
       { level: 6, hp: 13, dmg: 4, name: "Bledé zjevení" },
       { level: 10, hp: 21, dmg: 8, name: "Zámecká paní" },
@@ -259,7 +257,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Hrobník-bubák",
     type: "hrobnik",
     loc: ["hrbitov"],
-    band: [7, 19],
     traits: ["skoupy", "nakaza"],
     roles: ["linie"],
     pool: ["uder", "ukryt", "odveta", "puch", "skrek"],
@@ -268,7 +265,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 6,
     ready: 25,
     odolnost: 46,
-    shift: 5,
     variants: [
       { level: 7, hp: 20, dmg: 8, name: "Starý hrobník" },
       { level: 11, hp: 31, dmg: 14, name: "Hřbitovní bubák" },
@@ -279,9 +275,8 @@ export const ENEMY_DB: EnemyTemplate[] = [
   {
     id: "ohnivy",
     name: "Ohnivý muž",
-    type: "ohnivy_muz",
+    type: "ohnivy",
     loc: ["zricenina", "les"],
-    band: [7, 19],
     traits: ["tezkop"],
     roles: ["delostrelba"],
     pool: ["uder", "odveta", "zlovest", "bafnuti_z_dymky", "puch"],
@@ -290,7 +285,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 8,
     ready: 22,
     odolnost: 52,
-    shift: 5,
     variants: [
       { level: 7, hp: 18, dmg: 10, name: "Jiskřička" },
       { level: 11, hp: 29, dmg: 16, name: "Dýmající muž" },
@@ -303,7 +297,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Vodník z černé tůně",
     type: "vodnik",
     loc: ["rybnik", "boss"],
-    band: [8, 20],
     traits: ["vodni", "stedry"],
     roles: ["linie"],
     pool: [
@@ -320,7 +313,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 6,
     ready: 26,
     odolnost: 50,
-    shift: 6,
     variants: [
       { level: 8, hp: 27, dmg: 12, name: "Říční vodníček" },
       { level: 12, hp: 41, dmg: 16, name: "Tůňový vodník" },
@@ -333,7 +325,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Hospodský čert",
     type: "cert",
     loc: ["boss", "zricenina"],
-    band: [8, 20],
     traits: ["svatokrad", "tezkop"],
     roles: ["linie"],
     pool: ["uder", "odveta", "zlovest", "vabnicka", "bafnuti_z_dymky", "kouzelna_polivcicka"],
@@ -342,7 +333,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 7,
     ready: 24,
     odolnost: 54,
-    shift: 6,
     variants: [
       { level: 8, hp: 29, dmg: 12, name: "Šenkýřský čertík" },
       { level: 12, hp: 43, dmg: 20, name: "Karbanický čert" },
@@ -355,7 +345,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Pavouk",
     type: "pavouk",
     loc: ["mlyn", "zricenina", "les", "vesnice"],
-    band: [1, 13],
     traits: ["uskok"],
     roles: ["linie", "podpora"],
     pool: ["uder", "zatuhnuti", "ukryt", "vtipek"],
@@ -364,7 +353,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 6,
     ready: 28,
     odolnost: 36,
-    shift: 0,
     variants: [
       { level: 1, hp: 3, dmg: 2, name: "Koutníček ze světnice" },
       { level: 5, hp: 11, dmg: 6, name: "Křižák ze seníku" },
@@ -377,7 +365,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Pekelné dudy",
     type: "pekelne_dudy",
     loc: ["vesnice", "mlyn", "zricenina"],
-    band: [1, 13],
     traits: ["svatokrad"],
     roles: ["podpora", "delostrelba"],
     pool: ["skrek", "vabnicka", "uder", "bafnuti_z_dymky"],
@@ -386,7 +373,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 6,
     ready: 25,
     odolnost: 42,
-    shift: 0,
     variants: [
       { level: 1, hp: 4, dmg: 2, name: "Pískavé dudy" },
       { level: 5, hp: 12, dmg: 6, name: "Ožehlé kozí dudy" },
@@ -399,7 +385,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Svítící oko",
     type: "svitici_oko",
     loc: ["hrbitov", "zricenina", "les", "rybnik"],
-    band: [1, 13],
     traits: ["nocni", "uskok"],
     roles: ["delostrelba", "podpora"],
     pool: ["zlovest", "zatuhnuti", "uder", "skrek"],
@@ -408,7 +393,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 5,
     ready: 29,
     odolnost: 35,
-    shift: 0,
     variants: [
       { level: 1, hp: 3, dmg: 2, name: "Jiskřivé očko" },
       { level: 5, hp: 10, dmg: 6, name: "Bludné noční oko" },
@@ -421,7 +405,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Netopýr",
     type: "netopyr",
     loc: ["zricenina", "mlyn", "hrbitov", "les"],
-    band: [1, 13],
     traits: ["nocni", "uskok"],
     roles: ["linie", "delostrelba"],
     pool: ["uder", "odveta", "skrek", "ukryt"],
@@ -430,7 +413,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 5,
     ready: 30,
     odolnost: 38,
-    shift: 0,
     variants: [
       { level: 1, hp: 3, dmg: 2, name: "Netopýrek z půdy" },
       { level: 5, hp: 11, dmg: 6, name: "Hradní ušatec" },
@@ -443,7 +425,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Čertova babička",
     type: "certova_babicka",
     loc: ["zricenina", "vesnice", "boss", "mlyn"],
-    band: [3, 15],
     traits: ["svatokrad", "stedry"],
     roles: ["podpora", "linie"],
     pool: ["kouzelna_polivcicka", "bafnuti_z_dymky", "uder", "zlovest", "vtipek"],
@@ -452,7 +433,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 6,
     ready: 24,
     odolnost: 48,
-    shift: 1,
     variants: [
       { level: 3, hp: 8, dmg: 4, name: "Čertí chůva" },
       { level: 7, hp: 17, dmg: 8, name: "Hospodyně z pekla" },
@@ -465,7 +445,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Loupežník",
     type: "loupeznik",
     loc: ["les", "zricenina", "vesnice"],
-    band: [4, 16],
     traits: ["tezkop", "stedry"],
     roles: ["linie"],
     pool: ["uder", "odveta", "zlovest", "ukryt", "bafnuti_z_dymky"],
@@ -474,7 +453,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 7,
     ready: 24,
     odolnost: 48,
-    shift: 2,
     variants: [
       { level: 4, hp: 12, dmg: 6, name: "Neduživý loupežníček" },
       { level: 8, hp: 23, dmg: 10, name: "Hvozdový loupežník" },
@@ -487,7 +465,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Lupič s bambitkami",
     type: "lupic",
     loc: ["les", "zricenina", "mlyn"],
-    band: [3, 15],
     traits: ["uskok", "nocni"],
     roles: ["delostrelba", "podpora"],
     pool: ["uder", "vabnicka", "ukryt", "zatuhnuti", "bafnuti_z_dymky"],
@@ -496,7 +473,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 5,
     ready: 28,
     odolnost: 38,
-    shift: 1,
     variants: [
       { level: 3, hp: 7, dmg: 4, name: "Kapsář ze stezky" },
       { level: 7, hp: 15, dmg: 8, name: "Úskočný lupič" },
@@ -509,7 +485,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Ropucha",
     type: "ropucha",
     loc: ["rybnik", "mlyn", "vesnice", "les"],
-    band: [1, 13],
     traits: ["vodni", "tezkop"],
     roles: ["linie", "podpora"],
     pool: ["uder", "puch", "zatuhnuti", "ukryt", "vtipek"],
@@ -518,7 +493,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 6,
     ready: 25,
     odolnost: 40,
-    shift: 0,
     variants: [
       { level: 1, hp: 4, dmg: 2, name: "Ropuška z kaluže" },
       { level: 5, hp: 12, dmg: 6, name: "Bradavičnatá ropucha" },
@@ -531,7 +505,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Ohnivý kohout",
     type: "ohnivy_kohout",
     loc: ["vesnice", "mlyn", "zricenina"],
-    band: [1, 13],
     traits: ["svatokrad", "uskok"],
     roles: ["linie", "delostrelba"],
     pool: ["uder", "zlovest", "skrek", "odveta", "bafnuti_z_dymky"],
@@ -540,7 +513,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 5,
     ready: 28,
     odolnost: 36,
-    shift: 0,
     variants: [
       { level: 1, hp: 3, dmg: 2, name: "Jiskřivé kuřátko" },
       { level: 5, hp: 11, dmg: 6, name: "Ožehlý kohoutek" },
@@ -553,7 +525,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Černý pes",
     type: "cerny_pes",
     loc: ["hrbitov", "zricenina", "les", "vesnice"],
-    band: [1, 13],
     traits: ["nocni", "tezkop"],
     roles: ["linie"],
     pool: ["uder", "odveta", "zlovest", "skrek", "puch"],
@@ -562,7 +533,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 6,
     ready: 26,
     odolnost: 44,
-    shift: 0,
     variants: [
       { level: 1, hp: 4, dmg: 2, name: "Černý voříšek ze hřbitova" },
       { level: 5, hp: 12, dmg: 6, name: "Hřbitovní černý chrt" },
@@ -575,7 +545,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Divoženka",
     type: "divozenka",
     loc: ["les", "mlyn", "vesnice"],
-    band: [2, 14],
     traits: ["uskok", "nocni"],
     roles: ["podpora", "linie"],
     pool: ["uder", "vabnicka", "vtipek", "skrek", "zatuhnuti"],
@@ -584,7 +553,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 6,
     ready: 27,
     odolnost: 38,
-    shift: 0,
     variants: [
       { level: 2, hp: 5, dmg: 4, name: "Plachá divoženka z křoví" },
       { level: 6, hp: 13, dmg: 6, name: "Lesní žínka tanečnice" },
@@ -597,7 +565,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Jeskyňka",
     type: "jeskynka",
     loc: ["zricenina", "les", "hrbitov"],
-    band: [2, 14],
     traits: ["svatokrad", "uskok"],
     roles: ["podpora", "delostrelba"],
     pool: ["vabnicka", "zatuhnuti", "uder", "skrek", "vtipek"],
@@ -606,7 +573,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 5,
     ready: 29,
     odolnost: 37,
-    shift: 0,
     variants: [
       { level: 2, hp: 4, dmg: 4, name: "Drobounká modravá jeskyňka" },
       { level: 6, hp: 12, dmg: 8, name: "Lstivá skalní víla" },
@@ -619,7 +585,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Létající rarach",
     type: "letajici_rarach",
     loc: ["zricenina", "mlyn", "les", "vesnice"],
-    band: [2, 14],
     traits: ["uskok", "svatokrad"],
     roles: ["delostrelba", "linie"],
     pool: ["uder", "vtipek", "skrek", "odveta", "bafnuti_z_dymky"],
@@ -628,7 +593,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 5,
     ready: 30,
     odolnost: 36,
-    shift: 0,
     variants: [
       { level: 2, hp: 4, dmg: 4, name: "Prchlivý poletuch" },
       { level: 6, hp: 12, dmg: 8, name: "Větrný rarach ze komína" },
@@ -641,7 +605,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Lesní muž",
     type: "lesni_muz",
     loc: ["les", "zricenina", "mlyn"],
-    band: [2, 14],
     traits: ["tezkop", "stedry"],
     roles: ["linie", "delostrelba"],
     pool: ["uder", "odveta", "zlovest", "ukryt", "bafnuti_z_dymky"],
@@ -650,7 +613,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 7,
     ready: 23,
     odolnost: 50,
-    shift: 0,
     variants: [
       { level: 2, hp: 6, dmg: 4, name: "Malý mechový mužík" },
       { level: 6, hp: 15, dmg: 8, name: "Kůrový lesní divoch" },
@@ -663,7 +625,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Rusalka",
     type: "rusalka",
     loc: ["rybnik", "les", "mlyn", "boss"],
-    band: [3, 15],
     traits: ["vodni", "uskok"],
     roles: ["podpora", "delostrelba"],
     pool: ["vabnicka", "rybnicni_mlha", "zatuhnuti", "uder", "vtipek"],
@@ -672,7 +633,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 6,
     ready: 27,
     odolnost: 40,
-    shift: 1,
     variants: [
       { level: 3, hp: 6, dmg: 4, name: "Plachá rusalenka ze strouhy" },
       { level: 7, hp: 14, dmg: 8, name: "Tančící rusalka od jezu" },
@@ -685,7 +645,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Permoník",
     type: "permonik",
     loc: ["zricenina", "mlyn", "hrbitov", "boss"],
-    band: [3, 15],
     traits: ["tezkop", "stedry"],
     roles: ["linie", "podpora"],
     pool: ["uder", "ukryt", "odveta", "bafnuti_z_dymky", "kouzelna_polivcicka"],
@@ -694,7 +653,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 6,
     ready: 25,
     odolnost: 48,
-    shift: 1,
     variants: [
       { level: 3, hp: 7, dmg: 4, name: "Důlní permoníček ze štoly" },
       { level: 7, hp: 15, dmg: 8, name: "Havířský permoník s kladívkem" },
@@ -707,7 +665,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Kmotra liška",
     type: "kmotra_liska",
     loc: ["les", "vesnice", "mlyn"],
-    band: [2, 14],
     traits: ["uskok", "stedry"],
     roles: ["podpora", "delostrelba"],
     pool: ["vabnicka", "ukryt", "vtipek", "odveta", "uder"],
@@ -716,7 +673,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 5,
     ready: 30,
     odolnost: 36,
-    shift: 0,
     variants: [
       { level: 2, hp: 5, dmg: 4, name: "Lištička s modrým šátkem" },
       { level: 6, hp: 12, dmg: 6, name: "Kmotřička se žlutým šátkem a brýlemi" },
@@ -729,7 +685,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Čert elegán",
     type: "cert_elegan",
     loc: ["vesnice", "zricenina", "boss"],
-    band: [4, 16],
     traits: ["svatokrad", "stedry"],
     roles: ["linie", "podpora"],
     pool: ["uder", "odveta", "zlovest", "vabnicka", "bafnuti_z_dymky"],
@@ -738,7 +693,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 6,
     ready: 27,
     odolnost: 48,
-    shift: 2,
     variants: [
       { level: 4, hp: 10, dmg: 6, name: "Čert voják" },
       { level: 8, hp: 21, dmg: 10, name: "Čert myslivec" },
@@ -751,7 +705,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     name: "Lotr intelektuál",
     type: "lotr_intelektual",
     loc: ["les", "mlyn", "zricenina"],
-    band: [3, 15],
     traits: ["uskok", "skoupy"],
     roles: ["podpora", "delostrelba"],
     pool: ["zatuhnuti", "vabnicka", "ukryt", "vtipek", "uder"],
@@ -760,7 +713,6 @@ export const ENEMY_DB: EnemyTemplate[] = [
     interval: 5,
     ready: 29,
     odolnost: 40,
-    shift: 1,
     variants: [
       { level: 3, hp: 7, dmg: 4, name: "Lupičský čtenář" },
       { level: 7, hp: 15, dmg: 8, name: "Studovaný lapka" },
@@ -1349,7 +1301,6 @@ export const FLAVOR_BY_LOC: Record<string, Record<string, string>> = {
 
 export const SHOP_PRICE = { levna: 6, stred: 10, draha: 14 };
 export const REMOVE_COST = 6;
-export const UPGRADE_COST = 8;
 export const REST_COST = 5;
 
 // ==================== HVĚZDIČKOVÝ SYSTÉM JAKOSTI KARET (Hnát) ====================
@@ -1390,13 +1341,6 @@ export function rollShopCardStars(rand?: () => number): number {
   return 3;
 }
 
-export const UPGRADE_MAP: Record<string, string> = {
-  metla: "ostra_metla",
-  kuraz: "velkakuraz",
-  sul: "ostra",
-  kriz: "velkykriz",
-  odvar: "kosik",
-};
 export const AI_WEIGHT: Record<string, number> = {
   uder: 2,
   zlovest: 2,
@@ -1411,3 +1355,99 @@ export const AI_WEIGHT: Record<string, number> = {
   kouzelna_polivcicka: 2,
   rybnicni_mlha: 2,
 };
+
+// ==================== PŘEDPOČÍTANÉ INDEXY A VYHLEDÁVACÍ TABULKY (O(1) PŘÍSTUP) ====================
+
+export const ENEMY_BY_ID: Record<EnemyTypeId, EnemyTemplate> = Object.fromEntries(
+  ENEMY_DB.map((tpl) => [tpl.id, tpl]),
+) as Record<EnemyTypeId, EnemyTemplate>;
+
+export const ENEMIES_BY_LOCATION: Record<LocationId, EnemyTemplate[]> = LOCATIONS.reduce(
+  (acc, loc) => {
+    const filtered = ENEMY_DB.filter((e) => e.loc.includes(loc.id));
+    acc[loc.id] = filtered.length > 0 ? filtered : ENEMY_DB.slice();
+    return acc;
+  },
+  {} as Record<LocationId, EnemyTemplate[]>,
+);
+
+export const CANDIDATES_BY_LOCATION: Record<LocationId, EnemyCandidate[]> = LOCATIONS.reduce(
+  (acc, loc) => {
+    const pool = ENEMIES_BY_LOCATION[loc.id];
+    const candidates: EnemyCandidate[] = [];
+    for (const tpl of pool) {
+      if (tpl.variants) {
+        tpl.variants.forEach((variant, variantIndex) => {
+          candidates.push({ tpl, variant, variantIndex });
+        });
+      }
+    }
+    acc[loc.id] = candidates;
+    return acc;
+  },
+  {} as Record<LocationId, EnemyCandidate[]>,
+);
+
+const BOSS_IDS = new Set<EnemyTypeId>(["vodnik", "cert", "certova_babicka"]);
+
+export const BOSS_CANDIDATES_BY_LOCATION: Record<LocationId, EnemyCandidate[]> = LOCATIONS.reduce(
+  (acc, loc) => {
+    const pool = ENEMIES_BY_LOCATION[loc.id];
+    const bossPool = pool.filter((e) => BOSS_IDS.has(e.id));
+    const effectivePool = bossPool.length > 0 ? bossPool : pool;
+    const candidates: EnemyCandidate[] = [];
+    for (const tpl of effectivePool) {
+      if (tpl.variants) {
+        tpl.variants.forEach((variant, variantIndex) => {
+          candidates.push({ tpl, variant, variantIndex });
+        });
+      }
+    }
+    acc[loc.id] = candidates;
+    return acc;
+  },
+  {} as Record<LocationId, EnemyCandidate[]>,
+);
+
+export const SHOP_POOLS: Record<ShopTier, CardId[]> = Object.values(CARD_DB).reduce(
+  (acc, card) => {
+    if (card.type !== "junk" && card.shop) {
+      acc[card.shop].push(card.id);
+    }
+    return acc;
+  },
+  { levna: [], stred: [], draha: [] } as Record<ShopTier, CardId[]>,
+);
+
+export const BONUS_FIND_POOL: CardId[] = [
+  "sul",
+  "kriz",
+  "metla",
+  "kuraz",
+  "odvar",
+  "ukrok",
+  "slofik",
+  "chleb_sul",
+];
+
+export const BEFORE_NODES_POOL: string[] = [
+  "zalata",
+  "zkratka",
+  "pripraveny",
+  "hejno",
+  "namraza",
+  "mlha",
+  "hospoda",
+  "farar",
+];
+
+export const AFTER_NODES_POOL: string[] = [
+  "nalez",
+  "poklad",
+  "myto",
+  "past",
+  "hospoda",
+  "babicka_setkani",
+];
+
+export const HERO_LIST: HeroDef[] = Object.values(HEROES);

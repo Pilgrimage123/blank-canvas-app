@@ -23,7 +23,7 @@ const inlineFavicon = `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/s
 
 htmlContent = htmlContent.replace(
   /<link rel="icon"[^>]*>/i,
-  `<link rel="icon" type="image/svg+xml" href="${inlineFavicon}" />`
+  `<link rel="icon" type="image/svg+xml" href="${inlineFavicon}" />`,
 );
 
 // Write to all output locations

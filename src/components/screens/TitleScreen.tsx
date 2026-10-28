@@ -196,7 +196,13 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
             }`}
           >
             <LadaThematicIcon
-              name={downloadMsg.status === "loading" ? "hourglass" : downloadMsg.status === "success" ? "check" : "warning"}
+              name={
+                downloadMsg.status === "loading"
+                  ? "hourglass"
+                  : downloadMsg.status === "success"
+                    ? "check"
+                    : "warning"
+              }
               size={14}
               animated
             />

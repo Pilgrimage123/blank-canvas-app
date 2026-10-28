@@ -36,7 +36,9 @@ export const MapScreen: React.FC<MapScreenProps> = ({
             <span>·</span>
             <span className="text-[#b8331d] inline-flex items-center gap-1">
               <LadaThematicIcon name="hp" size={13} animated />
-              <span>{state.hp}/{state.maxHp} HP</span>
+              <span>
+                {state.hp}/{state.maxHp} HP
+              </span>
             </span>
             <span>·</span>
             <span className="text-[#8c5614] inline-flex items-center gap-1">
@@ -57,7 +59,11 @@ export const MapScreen: React.FC<MapScreenProps> = ({
             <LadaThematicIcon name="coin" size={16} animated />
             <span>{state.salt} krejcarů</span>
           </div>
-          <button type="button" onClick={onOpenDeck} className="lada-button text-xs py-1.5 px-3 inline-flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={onOpenDeck}
+            className="lada-button text-xs py-1.5 px-3 inline-flex items-center gap-1.5"
+          >
             <LadaThematicIcon name="book" size={14} animated />
             <span>Balíček</span>
           </button>

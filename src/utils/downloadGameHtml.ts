@@ -2,7 +2,7 @@
  * Helper to download the standalone single-file HTML bundle of the game.
  */
 export async function downloadGameHtml(
-  onProgress?: (status: "loading" | "success" | "error", message?: string) => void
+  onProgress?: (status: "loading" | "success" | "error", message?: string) => void,
 ): Promise<void> {
   if (onProgress) {
     onProgress("loading", "Připravuji soubor ke stažení...");

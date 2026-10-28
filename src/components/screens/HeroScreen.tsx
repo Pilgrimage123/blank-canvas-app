@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { HEROES } from "../../data/gameData";
+import { HEROES, HERO_LIST } from "../../data/gameData";
 import { HunterSprite } from "../sprites/HunterSprite";
 import { HeroDetailModal } from "../modals/HeroDetailModal";
 import { LadaThematicIcon } from "../sprites/LadaThematicIcon";
@@ -22,7 +22,11 @@ export const HeroScreen: React.FC<HeroScreenProps> = ({ onSelectHero, onBack }) 
             Klikněte na libovolnou kartu pro kompletní informace, rozpis balíčku a taktické rady.
           </p>
         </div>
-        <button type="button" onClick={onBack} className="lada-button text-sm py-2 px-4 inline-flex items-center gap-1.5">
+        <button
+          type="button"
+          onClick={onBack}
+          className="lada-button text-sm py-2 px-4 inline-flex items-center gap-1.5"
+        >
           <LadaThematicIcon name="back" size={16} />
           <span>Zpět</span>
         </button>
@@ -30,7 +34,7 @@ export const HeroScreen: React.FC<HeroScreenProps> = ({ onSelectHero, onBack }) 
 
       {/* Hero Selection Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto w-full my-auto pb-6">
-        {Object.values(HEROES).map((h) => {
+        {HERO_LIST.map((h) => {
           return (
             <div
               key={h.id}

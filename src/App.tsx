@@ -15,26 +15,26 @@ import {
   rollEnemyAction,
   cardDamageCalc,
   calculateStaggerDelay,
-  generateUid,
   generateShopOffer,
+  shuffleArray,
+  drawCardsFromPiles,
+  resolveDefeatedEnemies,
 } from "./utils/gameEngine";
 import {
   HEROES,
   CARD_DB,
   ENEMY_DB,
+  ENEMY_BY_ID,
   NODE_DB,
-  NODE_EFFECTS,
-  FLAVOR_BY_LOC,
   LOCATIONS,
+  LOCATION_BY_ID,
+  LOCATION_INDEX_BY_ID,
+  BONUS_FIND_POOL,
   BREATH_BASE,
   HAND_CAP_BASE,
-  UPGRADE_MAP,
-  UPGRADE_COST,
   REMOVE_COST,
   REST_COST,
   START_DRAW,
-  ESC_THRESHOLD,
-  ESC_EVERY,
   AUG_MS,
   MAX_CARD_STARS,
   starEmoji,
@@ -75,11 +75,12 @@ export function App() {
   const [showGuideModal, setShowGuideModal] = useState<boolean>(false);
   const [showChangelogModal, setShowChangelogModal] = useState<boolean>(false);
   const [showBestiaryModal, setShowBestiaryModal] = useState<boolean>(false);
+  const [showAbandonConfirm, setShowAbandonConfirm] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Tutorial / Movie runner state
-  const [tutorialStep, setTutorialStep] = useState<number>(0);
+  // Movie tutorial runner state
   const [movieActive, setMovieActive] = useState<boolean>(false);
+  const [movieStep, setMovieStep] = useState<number>(0);
   const [movieCaption, setMovieCaption] = useState<string>("");
   const movieTimerRef = useRef<any>(null);
 
@@ -128,14 +129,17 @@ export function App() {
     }
   };
 
-  // Abandon run
+  // Abandon run - safe in-app dialog
   const handleAbandonRun = () => {
-    if (window.confirm("Opravdu chcete putování vzdát? Zápis v kronice bude smazán.")) {
-      clearSavedGame();
-      setState(null);
-      setHasSave(false);
-      showToast("Putování bylo ukončeno.");
-    }
+    setShowAbandonConfirm(true);
+  };
+
+  const handleConfirmAbandon = () => {
+    clearSavedGame();
+    setState(null);
+    setHasSave(false);
+    setShowAbandonConfirm(false);
+    showToast("Putování bylo ukončeno.");
   };
 
   // Choose Node on Map
@@ -190,33 +194,49 @@ export function App() {
         let nextHp = state.hp;
         let nextFatigue = state.fatigueOut;
         let nextDeck = [...state.deckAll];
+        let nextLog = state.log;
+        const rng = state.rand || Math.random;
 
         if (nodeId === "nalez") {
           const gain = 5 + state.locIndex;
           nextSalt += gain;
-          showToast(`Nalezen měšec: +${gain} krejcarů!`);
+          if (rng() < 0.35) {
+            const bonusId = BONUS_FIND_POOL[Math.floor(rng() * BONUS_FIND_POOL.length)] || "metla";
+            nextDeck.push(makeCard(bonusId, 0));
+            const cardName = CARD_DB[bonusId]?.name || bonusId;
+            showToast(`Nalezen měšec: +${gain} krejcarů a karta ${cardName}!`);
+            nextLog = addLog(`Nalezen měšec: +${gain} krejcarů a karta ${cardName}.`, nextLog);
+          } else {
+            showToast(`Nalezen měšec: +${gain} krejcarů!`);
+            nextLog = addLog(`Nalezen měšec: +${gain} krejcarů.`, nextLog);
+          }
         } else if (nodeId === "poklad") {
           const gain = 10 + state.locIndex * 3;
           nextSalt += gain;
           showToast(`Poklad u kapličky: +${gain} krejcarů!`);
+          nextLog = addLog(`Poklad u kapličky: +${gain} krejcarů.`, nextLog);
         } else if (nodeId === "myto") {
           if (nextSalt >= 4) {
             nextSalt -= 4;
             showToast("Zaplaceno obecní mýto: −4 krejcary.");
+            nextLog = addLog("Zaplaceno obecní mýto: −4 krejcary.", nextLog);
           } else {
             nextFatigue += 4;
             showToast("Bez mincí na mýto: +4 Únavy do nohou.");
+            nextLog = addLog("Bez mincí na mýto: +4 Únavy.", nextLog);
           }
         } else if (nodeId === "past") {
           const dmg = 5 + state.locIndex;
           nextHp = Math.max(1, nextHp - dmg);
           showToast(`Pytlácké železo: −${dmg} životů!`);
+          nextLog = addLog(`Pytlácké železo: −${dmg} životů.`, nextLog);
         } else if (nodeId === "babicka_setkani") {
           const maxHp = HEROES[state.hero]?.hp || 80;
           const heal = 6;
           nextHp = Math.min(maxHp, nextHp + heal);
           nextFatigue = Math.max(0, nextFatigue - 5);
           showToast(`Setkání s Babičkou a Barunkou: +${heal} HP a −5 Únavy!`);
+          nextLog = addLog(`Setkání s Babičkou a Barunkou: +${heal} HP a −5 Únavy.`, nextLog);
         }
 
         const nextLocIdx = state.locIndex + 1;
@@ -228,6 +248,7 @@ export function App() {
             hp: nextHp,
             fatigueOut: nextFatigue,
             deckAll: nextDeck,
+            log: nextLog,
             awaitingAfter: false,
             phase: "end" as const,
           };
@@ -243,6 +264,7 @@ export function App() {
           hp: nextHp,
           fatigueOut: nextFatigue,
           deckAll: nextDeck,
+          log: nextLog,
           locIndex: nextLocIdx,
           awaitingAfter: false,
           combatMods: {},
@@ -259,11 +281,13 @@ export function App() {
   const startCombat = (baseState: GameState) => {
     const curLoc = LOCATIONS[baseState.locIndex] || LOCATIONS[0];
     const hero = HEROES[baseState.hero] || HEROES.pobuda;
+    const rng = baseState.rand || Math.random;
     let enemies = createCombatEnemies(
       curLoc,
       baseState.options,
       baseState.combatMods || {},
       hero.ready,
+      rng,
     );
     if (hero.enemyStartDelay) {
       enemies = enemies.map((e) => ({ ...e, timer: e.timer + hero.enemyStartDelay! }));
@@ -273,23 +297,22 @@ export function App() {
     const heroPreCombatDelay = Math.max(1, 50 - hero.ready);
 
     // Draw initial cards
-    const deckCopy = [...baseState.deckAll.map((c) => ({ ...c }))];
-    // Shuffle
-    for (let i = deckCopy.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [deckCopy[i], deckCopy[j]] = [deckCopy[j], deckCopy[i]];
-    }
+    const deckCopy = shuffleArray(
+      baseState.deckAll.map((c) => ({ ...c })),
+      rng,
+    );
 
     const startDrawCount = START_DRAW + (hero.extraStartCards || 0);
-    const hand: any[] = [];
-    const draw = [...deckCopy];
-    for (let i = 0; i < startDrawCount && draw.length > 0; i++) {
-      hand.push(draw.shift());
-    }
+    const { draw, hand } = drawCardsFromPiles(deckCopy, [], [], startDrawCount, rng);
 
     const nextState: GameState = {
       ...baseState,
       phase: "combat",
+      stats: {
+        ...baseState.stats,
+        fights: baseState.stats.fights + 1,
+        maxFatigue: Math.max(baseState.stats.maxFatigue, baseState.fatigueOut || 0),
+      },
       combat: {
         locId: curLoc.id,
         time: 0,
@@ -314,7 +337,6 @@ export function App() {
         draw,
         discard: [],
         hand,
-        escApplied: 0,
         waitingInput: false,
       },
       log: addLog(
@@ -425,13 +447,16 @@ export function App() {
         }
 
         if (def.draw) {
-          for (let i = 0; i < def.draw; i++) {
-            if (draw.length === 0 && discard.length > 0) {
-              draw = [...discard];
-              discard = [];
-            }
-            if (draw.length > 0) hand.push(draw.shift()!);
-          }
+          const drawn = drawCardsFromPiles(
+            draw,
+            discard,
+            hand,
+            def.draw,
+            prevState.rand || Math.random,
+          );
+          draw = drawn.draw;
+          discard = drawn.discard;
+          hand = drawn.hand;
         }
 
         if (def.stiffen) {
@@ -445,17 +470,15 @@ export function App() {
         }
 
         if (def.dmg && target && target.alive) {
-          const targetRow = target.row || (enemies.indexOf(target) < 4 ? "front" : "back");
-          const hasMultipleRows = enemies.some(
-            (em) => em.alive && (em.row === "back" || (!em.row && enemies.indexOf(em) >= 4)),
-          );
+          const targetRow = target.row || "front";
+          const hasMultipleRows = enemies.some((em) => em.alive && em.row === "back");
 
           enemies = enemies.map((e) => {
             if (!e.alive) return e;
             const isMain = e.uid === target.uid;
             let d = 0;
             if (def.intent === "row") {
-              const eRow = e.row || (enemies.indexOf(e) < 4 ? "front" : "back");
+              const eRow = e.row || "front";
               if (hasMultipleRows) {
                 d = eRow === targetRow ? cardDamageCalc(def, e, cardStars) : 0;
               } else {
@@ -536,6 +559,7 @@ export function App() {
               return {
                 ...e,
                 revenge: false,
+                omen: 0,
                 timer: e.interval,
                 isAttacking: true,
               };
@@ -550,27 +574,16 @@ export function App() {
       }
 
       // Check dead enemies
-      enemies.forEach((e) => {
-        if (!e.alive && e.hp <= 0 && !e.rewardGiven) {
-          stats.kills += 1;
-          const reward = 4 + prevState.locIndex;
-          salt += reward;
-          e.rewardGiven = true;
-          logs = addLog(`${e.name} se rozplynul! Získáváte +${reward} krejcarů.`, logs);
-
-          if (e.traits.includes("nakaza")) {
-            logs = addLog(
-              `Nákaza z ${e.name} popohnala odpočet ostatních nepřátel (-2 Aug)!`,
-              logs,
-            );
-            enemies.forEach((other) => {
-              if (other.alive && other.uid !== e.uid) {
-                other.timer = Math.max(0, other.timer - 2);
-              }
-            });
-          }
-        }
-      });
+      const defeatRes = resolveDefeatedEnemies(
+        enemies,
+        prevState.locIndex,
+        salt,
+        stats,
+        logs,
+        addLog,
+      );
+      salt = defeatRes.salt;
+      logs = defeatRes.logs;
 
       // Enemy Timer decrements and actions
       const actingEnemies = enemies.map((e) => {
@@ -582,6 +595,7 @@ export function App() {
         };
       });
 
+      const rng = prevState.rand || Math.random;
       for (let i = 0; i < actingEnemies.length; i++) {
         const e = actingEnemies[i];
         if (!e.alive || e.timer > 0) continue;
@@ -592,6 +606,7 @@ export function App() {
         const rawDmg = e.dmg + (e.omen || 0);
 
         if (act === "uder") {
+          e.omen = 0;
           if (playerDodge > 0) {
             playerDodge -= 1;
             logs = addLog(`${e.name} udeřil, ale vyhnuli jste se! (Úhyb)`, logs);
@@ -619,7 +634,7 @@ export function App() {
         } else if (act === "vabnicka") {
           const livingAllies = actingEnemies.filter((ally) => ally.uid !== e.uid && ally.alive);
           if (livingAllies.length > 0) {
-            const ally = livingAllies[Math.floor(Math.random() * livingAllies.length)];
+            const ally = livingAllies[Math.floor(rng() * livingAllies.length)];
             const speedUp = Math.min(4, Math.max(1, Math.round(A / 2)));
             ally.timer = Math.max(1, ally.timer - speedUp);
             logs = addLog(`${e.name} zaskřehotal a popohnal ${ally.name} (−${speedUp} Aug)!`, logs);
@@ -628,6 +643,7 @@ export function App() {
           }
         } else if (act === "odveta") {
           e.revenge = false;
+          e.omen = 0;
           if (playerDodge > 0) {
             playerDodge -= 1;
             logs = addLog(`${e.name} dokončil Odvetu úderem, ale vyhnuli jste se! (Úhyb)`, logs);
@@ -657,10 +673,7 @@ export function App() {
             for (let k = 0; k < count; k++) {
               draw.push(makeCard("leknuti"));
             }
-            for (let k = draw.length - 1; k > 0; k--) {
-              const j = Math.floor(Math.random() * (k + 1));
-              [draw[k], draw[j]] = [draw[j], draw[k]];
-            }
+            draw = shuffleArray(draw, rng);
             logs = addLog(`${e.name} zaječel! Vmíchal ${count}× Leknutí do balíčku.`, logs);
           }
         } else if (act === "puch") {
@@ -709,7 +722,7 @@ export function App() {
 
         e.timer = e.interval;
         e.isAttacking = true;
-        rollEnemyAction(e, actingEnemies);
+        rollEnemyAction(e, actingEnemies, rng);
       }
       enemies = actingEnemies;
 
@@ -725,6 +738,9 @@ export function App() {
           logs = addLog("Příprava na střet dokončena — jste rychlejší a na tahu!", logs);
         }
       }
+
+      // Update max fatigue stat
+      stats.maxFatigue = Math.max(stats.maxFatigue, playerFatigue);
 
       // Win / Lose verification
       const allDead = enemies.every((e) => !e.alive);
@@ -898,83 +914,68 @@ export function App() {
 
   // Posun bojovníků v řadě po 3 sekundách od začátku ústupu poraženého bubáka
   // Bubáci stojící ZA ním se animovaně posunou dopředu, bubáci PŘED ním a v DRUHÉ řadě se nehýbou vůbec!
-  const handleShiftRowQueue = useCallback(
-    (rowType: "horni" | "dolni" | "front" | "back", defeatedUid: string) => {
-      setState((prev) => {
-        if (!prev || !prev.combat) return prev;
-        const combat = prev.combat;
+  const handleShiftRowQueue = useCallback((rowType: "front" | "back", defeatedUid: string) => {
+    setState((prev) => {
+      if (!prev || !prev.combat) return prev;
+      const combat = prev.combat;
 
-        const isTargetRow = (e: EnemyInstance) => {
-          if (rowType === "horni" || rowType === "back") {
-            return (
-              e.row === "back" ||
-              e.row === "top" ||
-              e.row === "horni" ||
-              (!e.row && combat.enemies.indexOf(e) >= 4)
-            );
-          } else {
-            return (
-              e.row === "front" || e.row === "dolni" || (!e.row && combat.enemies.indexOf(e) < 4)
-            );
-          }
-        };
+      const isTargetRow = (e: EnemyInstance) =>
+        rowType === "back" ? e.row === "back" : e.row !== "back";
 
-        const rowEnemies = combat.enemies.filter(isTargetRow);
-        const defIdx = rowEnemies.findIndex((e) => e.uid === defeatedUid);
-        if (defIdx === -1) return prev;
+      const rowEnemies = combat.enemies.filter(isTargetRow);
+      const defIdx = rowEnemies.findIndex((e) => e.uid === defeatedUid);
+      if (defIdx === -1) return prev;
 
-        // Pouze stále bojující bubáci, kteří stáli ZA poraženým bubákem (indexy > defIdx)
-        const followersBehind = rowEnemies.slice(defIdx + 1).filter((e) => e.alive);
-        if (followersBehind.length === 0) return prev;
+      // Pouze stále bojující bubáci, kteří stáli ZA poraženým bubákem (indexy > defIdx)
+      const followersBehind = rowEnemies.slice(defIdx + 1).filter((e) => e.alive);
+      if (followersBehind.length === 0) return prev;
 
-        const followersSet = new Set(followersBehind.map((e) => e.uid));
+      const followersSet = new Set(followersBehind.map((e) => e.uid));
 
-        // Spustíme animaci pohybu vpřed pro následovníky v řadě
-        let updatedEnemies = combat.enemies.map((e) => {
-          if (followersSet.has(e.uid)) {
-            return {
-              ...e,
-              isMoving: true,
-              moveDirection: "forward" as const,
-            };
-          }
-          return e;
-        });
-
-        // Přesuneme poraženého bubáka na konec jeho řady v seznamu, aby následovníci zaplnili uvolněná místa
-        const defGlobalIdx = updatedEnemies.findIndex((e) => e.uid === defeatedUid);
-        if (defGlobalIdx !== -1) {
-          const [defEnemy] = updatedEnemies.splice(defGlobalIdx, 1);
-          let lastFollowerIdx = -1;
-          updatedEnemies.forEach((e, i) => {
-            if (followersSet.has(e.uid)) lastFollowerIdx = i;
-          });
-          if (lastFollowerIdx !== -1) {
-            updatedEnemies.splice(lastFollowerIdx + 1, 0, defEnemy);
-          } else {
-            updatedEnemies.push(defEnemy);
-          }
+      // Spustíme animaci pohybu vpřed pro následovníky v řadě
+      const updatedEnemies = combat.enemies.map((e) => {
+        if (followersSet.has(e.uid)) {
+          return {
+            ...e,
+            isMoving: true,
+            moveDirection: "forward" as const,
+          };
         }
-
-        const names = followersBehind.map((e) => e.name).join(", ");
-        const rowName = rowType === "horni" || rowType === "back" ? "horní řadě" : "dolní řadě";
-        const logs = addLog(
-          `${names} v ${rowName} po 3 sekundách postupují dopředu a zaplňují uvolněné místo!`,
-          prev.log,
-        );
-
-        return {
-          ...prev,
-          log: logs,
-          combat: {
-            ...combat,
-            enemies: updatedEnemies,
-          },
-        };
+        return e;
       });
-    },
-    [],
-  );
+
+      // Přesuneme poraženého bubáka na konec jeho řady v seznamu, aby následovníci zaplnili uvolněná místa
+      const defGlobalIdx = updatedEnemies.findIndex((e) => e.uid === defeatedUid);
+      if (defGlobalIdx !== -1) {
+        const [defEnemy] = updatedEnemies.splice(defGlobalIdx, 1);
+        let lastFollowerIdx = -1;
+        updatedEnemies.forEach((e, i) => {
+          if (followersSet.has(e.uid)) lastFollowerIdx = i;
+        });
+        if (lastFollowerIdx !== -1) {
+          updatedEnemies.splice(lastFollowerIdx + 1, 0, defEnemy);
+        } else {
+          updatedEnemies.push(defEnemy);
+        }
+      }
+
+      const names = followersBehind.map((e) => e.name).join(", ");
+      const rowName = rowType === "back" ? "horní řadě" : "dolní řadě";
+      const logs = addLog(
+        `${names} v ${rowName} po 3 sekundách postupují dopředu a zaplňují uvolněné místo!`,
+        prev.log,
+      );
+
+      return {
+        ...prev,
+        log: logs,
+        combat: {
+          ...combat,
+          enemies: updatedEnemies,
+        },
+      };
+    });
+  }, []);
 
   // Player action: Mrknutí (Wait 1 Aug)
   const handleBlink = () => {
@@ -1004,13 +1005,18 @@ export function App() {
 
     setState((prev) => {
       if (!prev || !prev.combat) return prev;
+      const nextFatigue = prev.combat.fatigue + 2;
       return {
         ...prev,
         log: addLog(`Nádech: +${gain} Akcí, +2 Únavy.`, prev.log),
+        stats: {
+          ...prev.stats,
+          maxFatigue: Math.max(prev.stats.maxFatigue, nextFatigue),
+        },
         combat: {
           ...prev.combat,
           actions: prev.combat.actions + gain,
-          fatigue: prev.combat.fatigue + 2,
+          fatigue: nextFatigue,
           cdBreath: 1,
           playerTimer: 1,
         },
@@ -1045,14 +1051,13 @@ export function App() {
     if (!state?.combat || state.combat.playerTimer > 0 || state.combat.actions < 2) return;
     setState((prev) => {
       if (!prev || !prev.combat) return prev;
-      const draw = [...prev.combat.draw];
-      const discard = [...prev.combat.discard];
-      const hand = [...prev.combat.hand];
-      if (draw.length === 0 && discard.length > 0) {
-        draw.push(...discard);
-        discard.length = 0;
-      }
-      if (draw.length > 0) hand.push(draw.shift()!);
+      const { draw, discard, hand } = drawCardsFromPiles(
+        prev.combat.draw,
+        prev.combat.discard,
+        prev.combat.hand,
+        1,
+        prev.rand || Math.random,
+      );
 
       return {
         ...prev,
@@ -1110,32 +1115,30 @@ export function App() {
         const through = d - blk;
         const newHp = Math.max(0, target.hp - through);
         if (sp.dot) target.saltDot = (target.saltDot || 0) + sp.dot;
+        const delay = calculateStaggerDelay(through, target.odolnost);
+        target.timer += delay;
         target.hp = newHp;
         target.block -= blk;
         target.alive = newHp > 0;
         target.isHit = true;
         target.hitNonce = (target.hitNonce || 0) + 1;
         stats.dmgDealt += through;
-        logs = addLog(`${sp.name} zasáhla ${target.name} za ${through} HP!`, logs);
+        logs = addLog(
+          `${sp.name} zasáhla ${target.name} za ${through} HP (${delay > 0 ? `+${delay} Aug odklad` : "bez odkladu"})!`,
+          logs,
+        );
 
         if (!target.alive) {
-          stats.kills += 1;
-          const reward = 4 + prev.locIndex;
-          salt += reward;
-          target.rewardGiven = true;
-          logs = addLog(`${target.name} se rozplynul! Získáváte +${reward} krejcarů.`, logs);
-
-          if (target.traits.includes("nakaza")) {
-            logs = addLog(
-              `Nákaza z ${target.name} popohnala odpočet ostatních nepřátel (-2 Aug)!`,
-              logs,
-            );
-            enemies.forEach((other) => {
-              if (other.alive && other.uid !== target.uid) {
-                other.timer = Math.max(0, other.timer - 2);
-              }
-            });
-          }
+          const defeatRes = resolveDefeatedEnemies(
+            enemies,
+            prev.locIndex,
+            salt,
+            stats,
+            logs,
+            addLog,
+          );
+          salt = defeatRes.salt;
+          logs = defeatRes.logs;
         }
       }
 
@@ -1147,13 +1150,10 @@ export function App() {
       let draw = [...c.draw];
       let discard = [...c.discard];
       if (sp.draw) {
-        for (let i = 0; i < sp.draw; i++) {
-          if (draw.length === 0 && discard.length > 0) {
-            draw = [...discard];
-            discard = [];
-          }
-          if (draw.length > 0) hand.push(draw.shift()!);
-        }
+        const drawn = drawCardsFromPiles(draw, discard, hand, sp.draw, prev.rand || Math.random);
+        draw = drawn.draw;
+        discard = drawn.discard;
+        hand = drawn.hand;
         logs = addLog(
           `${sp.name}: líznuto ${sp.draw} karet, −${Math.abs(sp.fat || 0)} Únavy.`,
           logs,
@@ -1227,13 +1227,10 @@ export function App() {
         }
 
         if (def.draw) {
-          for (let i = 0; i < def.draw; i++) {
-            if (draw.length === 0 && discard.length > 0) {
-              draw = [...discard];
-              discard = [];
-            }
-            if (draw.length > 0) hand.push(draw.shift()!);
-          }
+          const drawn = drawCardsFromPiles(draw, discard, hand, def.draw, prev.rand || Math.random);
+          draw = drawn.draw;
+          discard = drawn.discard;
+          hand = drawn.hand;
         }
 
         const pauseTime = hand.length > combatState.handCap;
@@ -1437,8 +1434,7 @@ export function App() {
   };
 
   // Start Interactive Tutorial
-  const handleStartTutorial = () => {
-    const dummyHero = HEROES.pobuda;
+  const handleStartTutorial = (asMovie: boolean = false) => {
     const dummyEnemy: EnemyInstance = {
       uid: "dummy_1",
       tpl: "bubak",
@@ -1446,6 +1442,7 @@ export function App() {
       type: "bubak",
       traits: [],
       role: "linie",
+      row: "front",
       hp: 18,
       maxHp: 18,
       dmg: 8,
@@ -1465,7 +1462,6 @@ export function App() {
     const dummyState: GameState = {
       seed: "vycvik",
       rand: () => 0.5,
-      uidn: 1,
       locIndex: 0,
       hero: "pobuda",
       salt: 10,
@@ -1490,7 +1486,6 @@ export function App() {
         maxFatigue: 0,
       },
       options,
-      pending: null,
       shopOffer: null,
       log: ["Farář přivádí cvičného bubáka: Vyzkoušejte si Nádech, karty a Augenblicky."],
       phase: "combat",
@@ -1498,6 +1493,7 @@ export function App() {
       fatigueOut: 0,
       path: [],
       tutorial: true,
+      movie: asMovie,
       combat: {
         locId: "vesnice",
         time: 0,
@@ -1522,36 +1518,33 @@ export function App() {
         draw: [makeCard("metla"), makeCard("kuraz")],
         discard: [],
         hand: [makeCard("metla"), makeCard("kuraz"), makeCard("odvar")],
-        escApplied: 0,
         waitingInput: true,
       },
     };
 
     setState(dummyState);
-    setTutorialStep(1);
-    showToast("Výcvik: Farář vám ukáže základy.");
+    if (!asMovie) {
+      showToast("Výcvik: Farář vám ukáže základy.");
+    }
   };
 
   // Start Test Arena Full 8-Bogey Fight (4 in front row, 4 in back row)
   const handleStartTestFullFight = (heroId: HeroId, locId: LocationId) => {
     const heroDef = HEROES[heroId] || HEROES.pobuda;
-    const resolvedLocIndex = Math.max(
-      0,
-      LOCATIONS.findIndex((l) => l.id === locId),
-    );
-    const locDef = LOCATIONS[resolvedLocIndex] || LOCATIONS[0];
+    const resolvedLocIndex = LOCATION_INDEX_BY_ID[locId] ?? 0;
+    const locDef = LOCATION_BY_ID[locId] || LOCATIONS[0];
     const enemies = createTestEightEnemies(options, heroDef.ready, locId);
 
     const testDeck = [
       makeCard("metla"),
       makeCard("kuraz"),
-      makeCard("kosa"), // Plošný útok na celou řadu
+      makeCard("rada"), // Plošný útok na celou řadu
       makeCard("odvar"),
-      makeCard("lucerna"), // Splash útok
-      makeCard("srp"),
-      makeCard("dymka"),
-      makeCard("retez"),
-      makeCard("kadidlo"),
+      makeCard("kropac"), // Splash útok
+      makeCard("ostra"),
+      makeCard("vretanko"),
+      makeCard("chleb_sul"),
+      makeCard("velkakuraz"),
       makeCard("metla"),
       makeCard("kuraz"),
     ];
@@ -1559,7 +1552,6 @@ export function App() {
     const testState: GameState = {
       seed: "test_arena_8",
       rand: () => Math.random(),
-      uidn: 1,
       locIndex: resolvedLocIndex,
       hero: heroId,
       salt: 30,
@@ -1578,7 +1570,6 @@ export function App() {
         maxFatigue: 0,
       },
       options,
-      pending: null,
       shopOffer: null,
       log: [
         `Testovací souboj: ${heroDef.name} vs. 8 bubáků ve dvou řadách (${locDef.name})!`,
@@ -1613,7 +1604,6 @@ export function App() {
         draw: testDeck.slice(5),
         discard: [],
         hand: testDeck.slice(0, 5),
-        escApplied: 0,
         waitingInput: true,
       },
     };
@@ -1626,16 +1616,13 @@ export function App() {
   // Start Test Arena Preset Fight (e.g. 4 or 2 bogeys, or -1 for Loupežnická banda)
   const handleStartTestPresetFight = (count: number, heroId: HeroId, locId: LocationId) => {
     const heroDef = HEROES[heroId] || HEROES.pobuda;
-    const resolvedLocIndex = Math.max(
-      0,
-      LOCATIONS.findIndex((l) => l.id === locId),
-    );
-    const locDef = LOCATIONS[resolvedLocIndex] || LOCATIONS[0];
+    const resolvedLocIndex = LOCATION_INDEX_BY_ID[locId] ?? 0;
+    const locDef = LOCATION_BY_ID[locId] || LOCATIONS[0];
 
     let enemies: EnemyInstance[];
     if (count === -1) {
-      const loupeznikTpl = ENEMY_DB.find((e) => e.id === "loupeznik") || ENEMY_DB[0];
-      const lupicTpl = ENEMY_DB.find((e) => e.id === "lupic") || ENEMY_DB[0];
+      const loupeznikTpl = ENEMY_BY_ID.loupeznik || ENEMY_DB[0];
+      const lupicTpl = ENEMY_BY_ID.lupic || ENEMY_DB[0];
       const l1 = instantiateEnemyVariant(
         loupeznikTpl,
         loupeznikTpl.variants[2],
@@ -1644,6 +1631,8 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        2,
       );
       l1.row = "front";
       const l2 = instantiateEnemyVariant(
@@ -1654,14 +1643,16 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        2,
       );
       l2.row = "back";
       enemies = [l1, l2];
     } else if (count === -2) {
       // Úroveň 1: Ropucha, Ohnivý kohout, Černý pes (barghest)
-      const pesTpl = ENEMY_DB.find((e) => e.id === "cerny_pes") || ENEMY_DB[0];
-      const ropuchaTpl = ENEMY_DB.find((e) => e.id === "ropucha") || ENEMY_DB[0];
-      const kohoutTpl = ENEMY_DB.find((e) => e.id === "ohnivy_kohout") || ENEMY_DB[0];
+      const pesTpl = ENEMY_BY_ID.cerny_pes || ENEMY_DB[0];
+      const ropuchaTpl = ENEMY_BY_ID.ropucha || ENEMY_DB[0];
+      const kohoutTpl = ENEMY_BY_ID.ohnivy_kohout || ENEMY_DB[0];
       const e1 = instantiateEnemyVariant(
         pesTpl,
         pesTpl.variants[2],
@@ -1670,6 +1661,8 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        2,
       );
       e1.row = "front";
       const e2 = instantiateEnemyVariant(
@@ -1680,6 +1673,8 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        2,
       );
       e2.row = "front";
       const e3 = instantiateEnemyVariant(
@@ -1690,15 +1685,17 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        2,
       );
       e3.row = "back";
       enemies = [e1, e2, e3];
     } else if (count === -3) {
       // Úroveň 2: Divoženka, Jeskyňka (modrá elfka), Létající rarach, Lesní muž
-      const lesniTpl = ENEMY_DB.find((e) => e.id === "lesni_muz") || ENEMY_DB[0];
-      const divozenkaTpl = ENEMY_DB.find((e) => e.id === "divozenka") || ENEMY_DB[0];
-      const rarachTpl = ENEMY_DB.find((e) => e.id === "letajici_rarach") || ENEMY_DB[0];
-      const jeskynkaTpl = ENEMY_DB.find((e) => e.id === "jeskynka") || ENEMY_DB[0];
+      const lesniTpl = ENEMY_BY_ID.lesni_muz || ENEMY_DB[0];
+      const divozenkaTpl = ENEMY_BY_ID.divozenka || ENEMY_DB[0];
+      const rarachTpl = ENEMY_BY_ID.letajici_rarach || ENEMY_DB[0];
+      const jeskynkaTpl = ENEMY_BY_ID.jeskynka || ENEMY_DB[0];
       const e1 = instantiateEnemyVariant(
         lesniTpl,
         lesniTpl.variants[2],
@@ -1707,6 +1704,8 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        2,
       );
       e1.row = "front";
       const e2 = instantiateEnemyVariant(
@@ -1717,6 +1716,8 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        2,
       );
       e2.row = "front";
       const e3 = instantiateEnemyVariant(
@@ -1727,6 +1728,8 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        2,
       );
       e3.row = "back";
       const e4 = instantiateEnemyVariant(
@@ -1737,13 +1740,15 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        2,
       );
       e4.row = "back";
       enemies = [e1, e2, e3, e4];
     } else if (count === -4) {
       // Úroveň 3: Rusalka, Permoník
-      const permonikTpl = ENEMY_DB.find((e) => e.id === "permonik") || ENEMY_DB[0];
-      const rusalkaTpl = ENEMY_DB.find((e) => e.id === "rusalka") || ENEMY_DB[0];
+      const permonikTpl = ENEMY_BY_ID.permonik || ENEMY_DB[0];
+      const rusalkaTpl = ENEMY_BY_ID.rusalka || ENEMY_DB[0];
       const e1 = instantiateEnemyVariant(
         permonikTpl,
         permonikTpl.variants[2],
@@ -1752,6 +1757,8 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        2,
       );
       e1.row = "front";
       const e2 = instantiateEnemyVariant(
@@ -1762,12 +1769,14 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        2,
       );
       e2.row = "back";
       enemies = [e1, e2];
     } else if (count === -5) {
       // Všichni 4 členové rodiny Permoníků (s pastelovými špičatými čapkami a krumpáči)
-      const permonikTpl = ENEMY_DB.find((e) => e.id === "permonik") || ENEMY_DB[0];
+      const permonikTpl = ENEMY_BY_ID.permonik || ENEMY_DB[0];
       const e0 = instantiateEnemyVariant(
         permonikTpl,
         permonikTpl.variants[0],
@@ -1776,6 +1785,8 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        0,
       );
       e0.row = "front";
       const e1 = instantiateEnemyVariant(
@@ -1786,6 +1797,8 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        1,
       );
       e1.row = "front";
       const e2 = instantiateEnemyVariant(
@@ -1796,6 +1809,8 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        2,
       );
       e2.row = "back";
       const e3 = instantiateEnemyVariant(
@@ -1806,13 +1821,15 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        3,
       );
       e3.row = "back";
       enemies = [e0, e1, e2, e3];
     } else if (count === -6) {
-      const foxTpl = ENEMY_DB.find((e) => e.id === "kmotra_liska") || ENEMY_DB[0];
-      const devilTpl = ENEMY_DB.find((e) => e.id === "cert_elegan") || ENEMY_DB[0];
-      const scholarTpl = ENEMY_DB.find((e) => e.id === "lotr_intelektual") || ENEMY_DB[0];
+      const foxTpl = ENEMY_BY_ID.kmotra_liska || ENEMY_DB[0];
+      const devilTpl = ENEMY_BY_ID.cert_elegan || ENEMY_DB[0];
+      const scholarTpl = ENEMY_BY_ID.lotr_intelektual || ENEMY_DB[0];
       const fox = instantiateEnemyVariant(
         foxTpl,
         foxTpl.variants[2],
@@ -1821,6 +1838,8 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        2,
       );
       fox.row = "back";
       const devil = instantiateEnemyVariant(
@@ -1831,6 +1850,8 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        2,
       );
       devil.row = "front";
       const scholar = instantiateEnemyVariant(
@@ -1841,6 +1862,8 @@ export function App() {
         options,
         {},
         heroDef.ready,
+        Math.random,
+        2,
       );
       scholar.row = "back";
       enemies = [devil, fox, scholar];
@@ -1852,16 +1875,15 @@ export function App() {
     const testDeck = [
       makeCard("metla"),
       makeCard("kuraz"),
-      makeCard("kosa"),
+      makeCard("rada"),
       makeCard("odvar"),
-      makeCard("metla"),
-      makeCard("kuraz"),
+      makeCard("kropac"),
+      makeCard("chleb_sul"),
     ];
 
     const testState: GameState = {
       seed: "test_arena_preset",
       rand: () => Math.random(),
-      uidn: 1,
       locIndex: resolvedLocIndex,
       hero: heroId,
       salt: 20,
@@ -1880,7 +1902,6 @@ export function App() {
         maxFatigue: 0,
       },
       options,
-      pending: null,
       shopOffer: null,
       log: [`Testovací souboj: ${count} bubáci (${locDef.name}).`],
       phase: "combat",
@@ -1912,7 +1933,6 @@ export function App() {
         draw: testDeck.slice(4),
         discard: [],
         hand: testDeck.slice(0, 4),
-        escApplied: 0,
         waitingInput: true,
       },
     };
@@ -1987,52 +2007,62 @@ export function App() {
 
   // Start Automated Movie Tutorial
   const handleStartMovie = () => {
-    handleStartTutorial();
+    clearTimeout(movieTimerRef.current);
+    handleStartTutorial(true);
     setMovieActive(true);
+    setMovieStep(0);
     setMovieCaption("Vítejte ve video výcviku! Sledujte spodní dok s Akcemi a kartami...");
-
-    let step = 0;
-    const runMovieStep = () => {
-      step++;
-      if (step === 1) {
-        setMovieCaption(
-          "1. Krok: Tlačítko Nádech vám dobije Akce pro zahrání karet a zvedne Únavu.",
-        );
-        handleBreath();
-        movieTimerRef.current = setTimeout(runMovieStep, 2400);
-      } else if (step === 2) {
-        setMovieCaption("2. Krok: Zahrajeme Hozenou sůl! Karta má nápřah 2 Augenblicky.");
-        handlePlayCard(0);
-        movieTimerRef.current = setTimeout(runMovieStep, 2800);
-      } else if (step === 3) {
-        setMovieCaption(
-          "3. Krok: Zranění zpozdilo útok bubáka! Nyní zahrajeme Kříž na hruď pro získání Bloku.",
-        );
-        handlePlayCard(0);
-        movieTimerRef.current = setTimeout(runMovieStep, 2800);
-      } else if (step === 4) {
-        setMovieCaption("4. Krok: Vyzkoušíme Mrknutí — čas popojde o 1 Aug, aniž by stál Akce.");
-        handleBlink();
-        movieTimerRef.current = setTimeout(runMovieStep, 2200);
-      } else if (step === 5) {
-        setMovieCaption("5. Krok: Speciální Vyřezávaná slánka mimo ruku! Naloží Sůl na kůži.");
-        handleSpecial();
-        movieTimerRef.current = setTimeout(runMovieStep, 3000);
-      } else {
-        setMovieCaption("Konec ukázky! Nyní si můžete souboj dohrát sami.");
-        setTimeout(() => {
-          setMovieActive(false);
-          setMovieCaption("");
-        }, 3000);
-      }
-    };
-
-    movieTimerRef.current = setTimeout(runMovieStep, 2200);
+    movieTimerRef.current = setTimeout(() => {
+      setMovieStep(1);
+    }, 2200);
   };
+
+  useEffect(() => {
+    if (!movieActive || movieStep === 0) return;
+
+    if (movieStep === 1) {
+      setMovieCaption("1. Krok: Tlačítko Nádech vám dobije Akce pro zahrání karet a zvedne Únavu.");
+      handleBreath();
+      movieTimerRef.current = setTimeout(() => setMovieStep(2), 2400);
+    } else if (movieStep === 2) {
+      setMovieCaption("2. Krok: Zahrajeme Březovou metlu! Karta má nápřah 2 Augenblicky.");
+      handlePlayCard(0);
+      movieTimerRef.current = setTimeout(() => setMovieStep(3), 2800);
+    } else if (movieStep === 3) {
+      setMovieCaption(
+        "3. Krok: Zranění zpozdilo útok bubáka! Nyní zahrajeme Kuráž pro získání Bloku.",
+      );
+      handlePlayCard(0);
+      movieTimerRef.current = setTimeout(() => setMovieStep(4), 2800);
+    } else if (movieStep === 4) {
+      setMovieCaption("4. Krok: Vyzkoušíme Mrknutí — čas popojde o 1 Aug, aniž by stál Akce.");
+      handleBlink();
+      movieTimerRef.current = setTimeout(() => setMovieStep(5), 2200);
+    } else if (movieStep === 5) {
+      setMovieCaption(
+        "5. Krok: Speciální Vyřezávaná slánka mimo ruku! Zasáhne bubáka a naloží Sůl na kůži.",
+      );
+      handleSpecial();
+      movieTimerRef.current = setTimeout(() => setMovieStep(6), 3000);
+    } else if (movieStep === 6) {
+      setMovieCaption("Konec ukázky! Nyní si můžete souboj dohrát sami.");
+      movieTimerRef.current = setTimeout(() => {
+        setMovieActive(false);
+        setMovieStep(0);
+        setMovieCaption("");
+      }, 3000);
+    }
+
+    return () => {
+      clearTimeout(movieTimerRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [movieActive, movieStep]);
 
   const handleStopMovie = () => {
     clearTimeout(movieTimerRef.current);
     setMovieActive(false);
+    setMovieStep(0);
     setMovieCaption("");
     showToast("Video výcvik ukončen.");
   };
@@ -2073,14 +2103,14 @@ export function App() {
             setState((prev) =>
               prev
                 ? { ...prev, phase: "title" }
-                : { ...createNewRun("pobuda", options), phase: "title" },
+                : { ...createNewRun("pobuda", options, false), phase: "title" },
             )
           }
           onOptions={() =>
             setState((prev) =>
               prev
                 ? { ...prev, phase: "options" }
-                : { ...createNewRun("pobuda", options), phase: "options" },
+                : { ...createNewRun("pobuda", options, false), phase: "options" },
             )
           }
         />
@@ -2088,17 +2118,17 @@ export function App() {
 
       {currentPhase === "title" && (
         <TitleScreen
-          onNewRun={() => setState({ ...createNewRun("pobuda", options), phase: "hero" })}
+          onNewRun={() => setState({ ...createNewRun("pobuda", options, false), phase: "hero" })}
           onContinue={handleContinueRun}
           hasSavedRun={hasSave}
-          onTraining={handleStartTutorial}
+          onTraining={() => handleStartTutorial(false)}
           onMovie={handleStartMovie}
           onIntro={() => setShowGuideModal(true)}
           onOptions={() =>
             setState((prev) =>
               prev
                 ? { ...prev, phase: "options" }
-                : { ...createNewRun("pobuda", options), phase: "options" },
+                : { ...createNewRun("pobuda", options, false), phase: "options" },
             )
           }
           onChangelog={() => setShowChangelogModal(true)}
@@ -2106,7 +2136,7 @@ export function App() {
             setState((prev) =>
               prev
                 ? { ...prev, phase: "test" }
-                : { ...createNewRun("pobuda", options), phase: "test" },
+                : { ...createNewRun("pobuda", options, false), phase: "test" },
             )
           }
           onBestiary={() => setShowBestiaryModal(true)}
@@ -2255,6 +2285,43 @@ export function App() {
 
       {/* 7. Bestiary / Overview of all bogeys Modal */}
       {showBestiaryModal && <BestiaryModal onClose={() => setShowBestiaryModal(false)} />}
+
+      {/* 8. Abandon Confirmation Modal */}
+      {showAbandonConfirm && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 select-none"
+        >
+          <div className="lada-card max-w-sm w-full p-5 bg-[#fffdf7] border-3 border-[#1c1308] shadow-[6px_8px_0_rgba(28,19,8,0.4)] flex flex-col items-center text-center">
+            <div className="w-12 h-12 rounded-full bg-[#fce0d8] border-2 border-[#1c1308] flex items-center justify-center mb-3">
+              <LadaThematicIcon name="warning" size={26} animated />
+            </div>
+            <h3 className="font-title text-xl font-black text-[#1c1308] mb-1">
+              Vzdát toto putování?
+            </h3>
+            <p className="text-xs font-medium text-[#5c3e21] mb-5 leading-relaxed">
+              Veškerý postup krajem i získané krejcary a karty budou smazány a vrátíte se na náves.
+            </p>
+            <div className="flex items-center gap-2.5 w-full">
+              <button
+                type="button"
+                onClick={() => setShowAbandonConfirm(false)}
+                className="lada-button flex-1 text-xs py-2 px-3"
+              >
+                Zpět na cestu
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmAbandon}
+                className="lada-button lada-button-danger flex-1 text-xs py-2 px-3"
+              >
+                Ano, vzdát se
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

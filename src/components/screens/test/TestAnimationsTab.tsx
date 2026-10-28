@@ -614,8 +614,18 @@ export const TestAnimationsTab: React.FC = () => {
             <div className="absolute bottom-5 left-0 right-0 h-1.5 bg-[#8c5e31]/25" />
 
             {/* Folk details on floor */}
-            <LadaThematicIcon name="field" size={16} animated className="absolute bottom-2 left-6 opacity-60" />
-            <LadaThematicIcon name="mushroom" size={16} animated className="absolute bottom-3 right-8 opacity-60" />
+            <LadaThematicIcon
+              name="field"
+              size={16}
+              animated
+              className="absolute bottom-2 left-6 opacity-60"
+            />
+            <LadaThematicIcon
+              name="mushroom"
+              size={16}
+              animated
+              className="absolute bottom-3 right-8 opacity-60"
+            />
 
             {/* Top HUD badge */}
             <div className="absolute top-2 left-2 right-2 z-20 flex items-center justify-between pointer-events-none">

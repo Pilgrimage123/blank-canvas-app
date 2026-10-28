@@ -350,7 +350,6 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
                     </span>
                   )}
                 </div>
-
               </div>
 
               {/* Lore Narrative Paragraphs */}
@@ -494,4 +493,3 @@ export const HeroDetailModal: React.FC<HeroDetailModalProps> = ({ hero, onSelect
     </div>
   );
 };
-

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { GameState } from "../../types";
 import {
   CARD_DB,
@@ -23,6 +23,12 @@ interface ShopScreenProps {
   onLeaveShop: () => void;
 }
 
+interface DeckGroup {
+  id: string;
+  stars: number;
+  count: number;
+}
+
 export const ShopScreen: React.FC<ShopScreenProps> = ({
   state,
   onBuyCard,
@@ -33,39 +39,34 @@ export const ShopScreen: React.FC<ShopScreenProps> = ({
 }) => {
   const offer = state.shopOffer || [];
 
-  // Group cards in deck by ID and star rating
-  interface DeckGroup {
-    id: string;
-    stars: number;
-    count: number;
-  }
+  const { deckGroups, eligibleUpgrades } = useMemo(() => {
+    const groupMap = new Map<string, DeckGroup>();
 
-  const deckGroups: DeckGroup[] = [];
-  const groupIndexMap: Record<string, number> = {};
-
-  state.deckAll.forEach((c) => {
-    const stars = c.stars || 0;
-    const key = `${c.id}__${stars}`;
-    if (groupIndexMap[key] !== undefined) {
-      deckGroups[groupIndexMap[key]].count += 1;
-    } else {
-      groupIndexMap[key] = deckGroups.length;
-      deckGroups.push({ id: c.id, stars, count: 1 });
+    for (let i = 0; i < state.deckAll.length; i++) {
+      const c = state.deckAll[i];
+      const stars = c.stars || 0;
+      const key = `${c.id}__${stars}`;
+      const existing = groupMap.get(key);
+      if (existing) {
+        existing.count += 1;
+      } else {
+        groupMap.set(key, { id: c.id, stars, count: 1 });
+      }
     }
-  });
 
-  // Sort groups: card name, then star rating
-  deckGroups.sort((a, b) => {
-    const nameA = CARD_DB[a.id]?.name || a.id;
-    const nameB = CARD_DB[b.id]?.name || b.id;
-    if (nameA !== nameB) return nameA.localeCompare(nameB, "cs");
-    return a.stars - b.stars;
-  });
+    const groups = Array.from(groupMap.values()).sort((a, b) => {
+      const nameA = CARD_DB[a.id]?.name || a.id;
+      const nameB = CARD_DB[b.id]?.name || b.id;
+      if (nameA !== nameB) return nameA.localeCompare(nameB, "cs");
+      return a.stars - b.stars;
+    });
 
-  // Eligible upgrades (any card below MAX_CARD_STARS, excluding junk)
-  const eligibleUpgrades = deckGroups.filter(
-    (g) => g.stars < MAX_CARD_STARS && CARD_DB[g.id]?.type !== "junk",
-  );
+    const upgrades = groups.filter(
+      (g) => g.stars < MAX_CARD_STARS && CARD_DB[g.id]?.type !== "junk",
+    );
+
+    return { deckGroups: groups, eligibleUpgrades: upgrades };
+  }, [state.deckAll]);
 
   return (
     <div className="flex flex-col min-h-screen bg-parchment-pattern p-4 sm:p-6 select-none max-w-5xl mx-auto w-full">

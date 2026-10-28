@@ -16,7 +16,11 @@ export const TutorialGuideModal: React.FC<TutorialGuideModalProps> = ({ onClose 
               Jak se hraje Lovec bubáků
             </h3>
           </div>
-          <button type="button" onClick={onClose} className="lada-button text-xs py-1.5 px-3 inline-flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={onClose}
+            className="lada-button text-xs py-1.5 px-3 inline-flex items-center gap-1.5"
+          >
             <span>Zavřít</span>
             <LadaThematicIcon name="close" size={12} />
           </button>

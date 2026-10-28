@@ -15,7 +15,11 @@ export const CombatLogModal: React.FC<CombatLogModalProps> = ({ logs, onClose })
             <LadaThematicIcon name="scroll" size={26} animated />
             <h3 className="font-title text-2xl font-black text-[#1c1308]">Bojový deník</h3>
           </div>
-          <button type="button" onClick={onClose} className="lada-button text-xs py-1.5 px-3 inline-flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={onClose}
+            className="lada-button text-xs py-1.5 px-3 inline-flex items-center gap-1.5"
+          >
             <span>Zavřít</span>
             <LadaThematicIcon name="close" size={12} />
           </button>
@@ -28,7 +32,10 @@ export const CombatLogModal: React.FC<CombatLogModalProps> = ({ logs, onClose })
             </div>
           ) : (
             logs.map((entry, idx) => (
-              <div key={idx} className="p-1.5 border-b border-[#dfcb9a] last:border-b-0 flex items-start gap-1.5">
+              <div
+                key={idx}
+                className="p-1.5 border-b border-[#dfcb9a] last:border-b-0 flex items-start gap-1.5"
+              >
                 <span className="text-[#8c5614] select-none">•</span>
                 <span className="flex-1 leading-snug">{renderLadaText(entry, 15, true)}</span>
               </div>

@@ -67,7 +67,11 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
             Přizpůsobte si obtížnost, chování bubáků a pevný seed putování.
           </p>
         </div>
-        <button type="button" onClick={onBack} className="lada-button text-sm py-2 px-4 inline-flex items-center gap-1.5">
+        <button
+          type="button"
+          onClick={onBack}
+          className="lada-button text-sm py-2 px-4 inline-flex items-center gap-1.5"
+        >
           <LadaThematicIcon name="back" size={16} />
           <span>Zpět</span>
         </button>
@@ -182,7 +186,11 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
               placeholder="např. Hrusice1848"
               className="bg-[#fff8e8] border-2 border-[#1c1308] rounded-xl px-3 py-2 text-sm font-bold text-[#1c1308] flex-1 disabled:opacity-50"
             />
-            <button type="button" onClick={rollNewSeed} className="lada-button text-xs py-2 px-3 inline-flex items-center gap-1">
+            <button
+              type="button"
+              onClick={rollNewSeed}
+              className="lada-button text-xs py-2 px-3 inline-flex items-center gap-1"
+            >
               <LadaThematicIcon name="reset" size={14} animated />
               <span>Nový</span>
             </button>
@@ -200,7 +208,8 @@ export const OptionsScreen: React.FC<OptionsScreenProps> = ({
             </span>
           </div>
           <p className="text-xs font-semibold text-[#543b24]">
-            Stáhněte si kompletní hru v jediném HTML souboru (veškeré karty, bubáci, animace i syntetizované zvuky jsou uvnitř). Funguje na jakémkoliv zařízení i bez internetu.
+            Stáhněte si kompletní hru v jediném HTML souboru (veškeré karty, bubáci, animace i
+            syntetizované zvuky jsou uvnitř). Funguje na jakémkoliv zařízení i bez internetu.
           </p>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 pt-1">
             <button

@@ -4,13 +4,14 @@ export interface LocationDef {
   id: LocationId;
   name: string;
   level: number;
-  entities: number;
   boss?: boolean;
 }
 
+export type TraitId =
+  "svatokrad" | "nakaza" | "uskok" | "tezkop" | "nocni" | "vodni" | "skoupy" | "stedry";
+
 export type EnemyTypeId =
   | "bubak"
-  | "certik"
   | "rarasek"
   | "mrtvak"
   | "kostlivec"
@@ -20,9 +21,7 @@ export type EnemyTypeId =
   | "hastrman"
   | "upir"
   | "bila"
-  | "bila_pani"
   | "ohnivy"
-  | "ohnivy_muz"
   | "vodnik"
   | "hrobnik"
   | "cert"
@@ -48,6 +47,8 @@ export type EnemyTypeId =
 
 export type EnemyRole = "linie" | "podpora" | "delostrelba";
 
+export type EnemyRow = "front" | "back";
+
 export type EnemyActionId =
   | "uder"
   | "zlovest"
@@ -72,10 +73,9 @@ export interface EnemyVariantDef {
 export interface EnemyTemplate {
   id: EnemyTypeId;
   name: string;
-  type: string;
+  type: EnemyTypeId;
   loc: LocationId[];
-  band: [number, number];
-  traits: string[];
+  traits: TraitId[];
   roles: EnemyRole[];
   pool: EnemyActionId[];
   hp: number;
@@ -83,16 +83,21 @@ export interface EnemyTemplate {
   interval: number;
   ready: number;
   odolnost?: number;
-  shift?: number;
   variants: EnemyVariantDef[];
+}
+
+export interface EnemyCandidate {
+  tpl: EnemyTemplate;
+  variant: EnemyVariantDef;
+  variantIndex: number;
 }
 
 export interface EnemyInstance {
   uid: string;
   tpl: EnemyTypeId;
   name: string;
-  type: string;
-  traits: string[];
+  type: EnemyTypeId;
+  traits: TraitId[];
   role: EnemyRole;
   level?: number;
   variantIndex?: number;
@@ -108,7 +113,6 @@ export interface EnemyInstance {
   nextAction: EnemyActionId | null;
   omen: number;
   revenge: boolean;
-  revengeHit?: boolean;
   stiffen: number;
   saltDot: number;
   alive: boolean;
@@ -121,14 +125,39 @@ export interface EnemyInstance {
   isMoving?: boolean;
   moveFrame?: number;
   moveDirection?: "forward" | "backward" | "up" | "down" | "lateral";
-  row?: "front" | "back" | "top" | "bottom" | "horni" | "dolni";
+  row: EnemyRow;
 }
 
 export type CardType = "attack" | "defend" | "prep" | "junk";
 export type CardIntent = "single" | "self" | "row" | "splash";
+export type ShopTier = "levna" | "stred" | "draha";
+
+export type CardId =
+  | "metla"
+  | "ostra_metla"
+  | "kuraz"
+  | "velkakuraz"
+  | "sul"
+  | "kriz"
+  | "odvar"
+  | "ostra"
+  | "velkykriz"
+  | "kosik"
+  | "kropac"
+  | "rada"
+  | "ukrok"
+  | "slofik"
+  | "hole"
+  | "leknuti"
+  | "smradek"
+  | "mokra_lumparna"
+  | "vretanko"
+  | "chleb_sul"
+  | "barunka_rada"
+  | string;
 
 export interface CardDef {
-  id: string;
+  id: CardId;
   name: string;
   type: CardType;
   cost: number;
@@ -145,17 +174,17 @@ export interface CardDef {
   draw?: number;
   dot?: number;
   stiffen?: number;
-  shop?: "levna" | "stred" | "draha";
+  shop?: ShopTier;
 }
 
 export interface CardInstance {
   inst: string;
-  id: string;
+  id: CardId;
   stars?: number;
 }
 
 export interface ShopOfferItem {
-  id: string;
+  id: CardId;
   stars?: number;
 }
 
@@ -179,7 +208,6 @@ export interface HeroDef {
   startDodge?: number;
   extraStartCards?: number;
   enemyStartDelay?: number;
-  krizBonus?: number;
   deck: Record<string, number>;
   special: {
     id: string;
@@ -193,6 +221,22 @@ export interface HeroDef {
     fat?: number;
   };
 }
+
+export type NodeId =
+  | "babicka_setkani"
+  | "hospoda"
+  | "farar"
+  | "nalez"
+  | "zalata"
+  | "zkratka"
+  | "pripraveny"
+  | "hejno"
+  | "namraza"
+  | "mlha"
+  | "myto"
+  | "poklad"
+  | "past"
+  | string;
 
 export interface NodeDef {
   polarity: "kladny" | "zaporny";
@@ -233,7 +277,6 @@ export interface CombatState {
   playerTimer: number;
   playerBusy: string | null;
   pendingCard: { card: CardInstance; target: string | null } | null;
-  pendingPost?: number;
   cdBreath: number;
   cdSleep: number;
   cdSpecial: number;
@@ -246,14 +289,16 @@ export interface CombatState {
   draw: CardInstance[];
   discard: CardInstance[];
   hand: CardInstance[];
-  escApplied: number;
   waitingInput: boolean;
 }
+
+export type GamePhase =
+  "splash" | "title" | "hero" | "map" | "combat" | "shop" | "end" | "options" | "test";
 
 export interface GameState {
   seed: string;
   rand: () => number;
-  uidn: number;
+  rngStep: number;
   locIndex: number;
   hero: string;
   salt: number;
@@ -263,28 +308,12 @@ export interface GameState {
   deckAll: CardInstance[];
   stats: RunStats;
   options: RunOptions;
-  pending: any;
-  shopOffer: (ShopOfferItem | string)[] | null;
+  shopOffer: ShopOfferItem[] | null;
   log: string[];
-  phase:
-    | "splash"
-    | "title"
-    | "hero"
-    | "map"
-    | "node"
-    | "combat"
-    | "shop"
-    | "discard"
-    | "piles"
-    | "end"
-    | "options"
-    | "tutorial"
-    | "test";
-  rngStep: number;
+  phase: GamePhase;
   fatigueOut: number;
   path: { locId: LocationId; before: string[]; after: string[]; cleared: boolean }[];
   awaitingAfter?: boolean;
-  pendingAfter?: string | null;
   combatMods?: {
     startBlock?: number;
     enemyReadyDelta?: number;
@@ -294,15 +323,6 @@ export interface GameState {
     handCapDelta?: number;
   };
   combat?: CombatState | null;
-  previewNodeId?: string;
-  lastNode?: string;
   tutorial?: boolean;
   movie?: boolean;
-  tutorialPart?: number;
-  tutorialStep?: number;
-  tutorialForceCategory?: string[] | null;
-  tutorialForceAct?: string | null;
-  tutorialForceEndTurn?: boolean;
-  tutorialChecklist?: Record<string, boolean>;
-  _ending?: boolean;
 }

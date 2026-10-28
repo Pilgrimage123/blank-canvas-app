@@ -82,7 +82,12 @@ export const CombatLandscapeArena: React.FC<CombatLandscapeArenaProps> = ({
             className="absolute anim-comic-pop-float flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#fff8e7] border-2 border-[#1c1308] shadow-[0_3px_0_#1c1308] text-[#1c1308] font-bold text-xs sm:text-sm whitespace-nowrap z-50"
             style={{ left: `${p.x}%`, top: `${p.y}%` }}
           >
-            <LadaThematicIcon name={p.icon} size={22} animated className="select-none flex-shrink-0" />
+            <LadaThematicIcon
+              name={p.icon}
+              size={22}
+              animated
+              className="select-none flex-shrink-0"
+            />
             <span className="font-serif tracking-wide">{renderLadaText(p.text, 18, true)}</span>
           </div>
         ))}
@@ -4173,7 +4178,13 @@ function renderBoss(trigger: TriggerEasterEgg, bounce: string | null) {
         transform="translate(230, 185)"
         className={`interactive-scenic ${bounce === "boss-cedule" ? "anim-easter-bounce" : ""}`}
         onClick={(e) =>
-          trigger(e, "boss-cedule", () => sound.playWoodpeckerPeck(), "Pozor! Černá tůň!", "warning")
+          trigger(
+            e,
+            "boss-cedule",
+            () => sound.playWoodpeckerPeck(),
+            "Pozor! Černá tůň!",
+            "warning",
+          )
         }
       >
         <line

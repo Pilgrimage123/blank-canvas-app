@@ -1,6 +1,6 @@
 import React from "react";
 import { HeroId, LocationId } from "../../../types";
-import { HEROES, LOCATIONS } from "../../../data/gameData";
+import { HEROES, HERO_LIST, LOCATIONS, LOCATION_BY_ID } from "../../../data/gameData";
 import { HunterSprite } from "../../sprites/HunterSprite";
 import { EnemySprite } from "../../sprites/EnemySprite";
 import { LadaThematicIcon } from "../../sprites/LadaThematicIcon";
@@ -40,7 +40,8 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex-1 text-center md:text-left">
             <div className="inline-flex items-center gap-1.5 bg-[#c4321d] text-white px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider mb-2 border border-[#1c1308]">
-              <LadaThematicIcon name="speed" size={13} animated /><span>Hlavní testovací souboj</span>
+              <LadaThematicIcon name="speed" size={13} animated />
+              <span>Hlavní testovací souboj</span>
             </div>
             <h2 className="font-title font-black text-xl sm:text-2xl text-[#1c1308] mb-1">
               Plný počet bubáků (8 protivníků)
@@ -130,7 +131,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
             </span>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            {Object.values(HEROES).map((h) => {
+            {HERO_LIST.map((h) => {
               const isSelected = selectedHero === h.id;
               return (
                 <button
@@ -169,7 +170,7 @@ export const TestFightsTab: React.FC<TestFightsTabProps> = ({
               <span>Zvolte krajinu pro test:</span>
             </div>
             <span className="text-[0.68rem] bg-[#ffd438] text-[#1c1308] px-2 py-0.5 rounded-full border border-[#1c1308] font-black">
-              {LOCATIONS.find((l) => l.id === selectedLoc)?.name || selectedLoc}
+              {LOCATION_BY_ID[selectedLoc]?.name || selectedLoc}
             </span>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">

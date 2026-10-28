@@ -109,6 +109,7 @@ export interface LadaIconProps {
   style?: React.CSSProperties;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function normalizeIconName(name: string): LadaIconName {
   const n = (name || "").trim().toLowerCase();
   if (
@@ -2724,6 +2725,7 @@ export const LadaThematicIcon: React.FC<LadaIconProps> = ({
 
 const EMOJI_REGEX = /(\p{Extended_Pictographic}+)/gu;
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function renderLadaText(
   text: string,
   iconSize: number | string = 16,
